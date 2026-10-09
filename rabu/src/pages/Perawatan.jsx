@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import './Perawatan.css';
 
 function Perawatan() {
   const [jadwal, setJadwal] = useState([
