@@ -6,6 +6,8 @@ import Sidebar from './components/Sidebar';
 import Dashboard from './components/Dashboard';
 import Perawatan from './pages/Perawatan';
 import DataTanaman from './pages/DataTanaman';
+import PemulihanTanaman from './pages/PemulihanTanaman';
+import PenanggungJawab from './pages/PenanggungJawab';
 
 function App() {
   const [halamanAktif, setHalamanAktif] = useState('dashboard');
@@ -51,11 +53,11 @@ function App() {
         )}
 
         {halamanAktif === 'misi' && (
-          <h1>Halaman Misi Penyelamatan</h1>
+          <PemulihanTanaman />
         )}
 
         {halamanAktif === 'estafet' && (
-          <h1>Halaman Estafet Penjaga</h1>
+          <PenanggungJawab />
         )}
       </main>
     </div>

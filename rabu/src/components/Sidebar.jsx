@@ -4,8 +4,12 @@ function Sidebar({ halamanAktif, gantiHalaman }) {
     { id: 'dashboard', ikon: '▦', nama: 'Dashboard' },
     { id: 'tanaman', ikon: '🌿', nama: 'Data Tanaman' },
     { id: 'jadwal', ikon: '📅', nama: 'Jadwal Perawatan' },
-    { id: 'misi', ikon: '♡', nama: 'Misi Penyelamatan' },
-    { id: 'estafet', ikon: '♧', nama: 'Estafet Penjaga' },
+    { id: 'misi', ikon: '🌱', nama: 'Pemulihan Tanaman' },
+    {
+      id: 'estafet',
+      ikon: '🪴',
+      nama: 'Penanggung Jawab Tanaman',
+    },
   ];
 
   return (
@@ -16,6 +20,7 @@ function Sidebar({ halamanAktif, gantiHalaman }) {
           alt="Logo RaBu"
           className="brand-logo"
         />
+
         <div>
           <h2>RaBu</h2>
           <p>RawatBumi</p>
@@ -44,6 +49,7 @@ function Sidebar({ halamanAktif, gantiHalaman }) {
 
       <div className="sidebar-bottom">
         <div className="profile-avatar">P</div>
+
         <div>
           <strong>Pengelola</strong>
           <p>Tim RaBu</p>
@@ -54,4 +60,3 @@ function Sidebar({ halamanAktif, gantiHalaman }) {
 }
 
 export default Sidebar;
-
