@@ -1,5 +1,12 @@
+function Sidebar({ halamanAktif, gantiHalaman }) {
+  const menu = [
+    { id: 'dashboard', ikon: '▦', nama: 'Dashboard' },
+    { id: 'tanaman', ikon: '🌿', nama: 'Data Tanaman' },
+    { id: 'jadwal', ikon: '📅', nama: 'Jadwal Perawatan' },
+    { id: 'misi', ikon: '♡', nama: 'Misi Penyelamatan' },
+    { id: 'estafet', ikon: '♧', nama: 'Estafet Penjaga' },
+  ];
 
-function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="brand">
@@ -13,25 +20,19 @@ function Sidebar() {
       <p className="menu-label">MENU UTAMA</p>
 
       <nav className="navigation">
-        <a href="#dashboard" className="nav-link active">
-          <span>▦</span> Dashboard
-        </a>
-
-        <a href="#tanaman" className="nav-link">
-          <span>🌿</span> Data Tanaman
-        </a>
-
-        <a href="#jadwal" className="nav-link">
-          <span>📅</span> Jadwal Perawatan
-        </a>
-
-        <a href="#misi" className="nav-link">
-          <span>♡</span> Misi Penyelamatan
-        </a>
-
-        <a href="#estafet" className="nav-link">
-          <span>♧</span> Estafet Penjaga
-        </a>
+        {menu.map((item) => (
+          <a
+            key={item.id}
+            href={`#${item.id}`}
+            className={`nav-link ${halamanAktif === item.id ? 'active' : ''}`}
+            onClick={(event) => {
+              event.preventDefault();
+              gantiHalaman(item.id);
+            }}
+          >
+            <span>{item.ikon}</span> {item.nama}
+          </a>
+        ))}
       </nav>
 
       <div className="sidebar-bottom">

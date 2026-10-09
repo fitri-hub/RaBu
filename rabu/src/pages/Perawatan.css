@@ -1,0 +1,297 @@
+/* ===== HALAMAN PERAWATAN RABU ===== */
+
+.page-section {
+  width: 100%;
+  padding: 28px;
+  color: #173f32;
+  box-sizing: border-box;
+}
+
+/* Header halaman */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.breadcrumb {
+  margin: 0 0 8px;
+  color: #729184;
+  font-size: 14px;
+}
+
+.page-header h1 {
+  margin: 0;
+  color: #164e3c;
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.page-header p {
+  line-height: 1.6;
+}
+
+.page-header h1 + p {
+  margin: 8px 0 0;
+  color: #6d8379;
+  font-size: 15px;
+}
+
+/* Kartu ringkasan */
+.care-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.care-card {
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #e4eee6;
+  border-radius: 18px;
+  box-shadow: 0 4px 14px rgba(30, 75, 51, 0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.care-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(30, 75, 51, 0.09);
+}
+
+.care-card span {
+  color: #6b8175;
+  font-size: 14px;
+}
+
+.care-card h2 {
+  margin: 12px 0 0;
+  color: #176344;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+/* Panel daftar jadwal */
+.care-panel {
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #e4eee6;
+  border-radius: 18px;
+  box-shadow: 0 4px 14px rgba(30, 75, 51, 0.05);
+}
+
+.panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.panel-heading h3 {
+  margin: 0;
+  color: #164e3c;
+  font-size: 21px;
+}
+
+.panel-heading p {
+  margin: 7px 0 0;
+  color: #7b8d83;
+  font-size: 14px;
+}
+
+.panel-heading select {
+  min-width: 180px;
+  padding: 11px 14px;
+  color: #315c49;
+  background: #f8fbf8;
+  border: 1px solid #dce9df;
+  border-radius: 10px;
+  font: inherit;
+  cursor: pointer;
+  outline: none;
+}
+
+.panel-heading select:focus {
+  border-color: #39845d;
+}
+
+/* Daftar perawatan */
+.care-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.care-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px;
+  background: #fbfdfb;
+  border: 1px solid #e8f0e9;
+  border-radius: 14px;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.care-item:hover {
+  background: #f3f9f3;
+  border-color: #cfe3d2;
+}
+
+.care-item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  background: #e6f3e7;
+  border-radius: 14px;
+  font-size: 24px;
+}
+
+.care-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.care-item-info h4 {
+  margin: 0 0 7px;
+  color: #244c39;
+  font-size: 16px;
+  font-weight: 650;
+}
+
+.care-item-info p {
+  margin: 4px 0;
+  color: #718479;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* Status jadwal */
+.care-item-action {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.care-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.care-status.done {
+  color: #237447;
+  background: #e1f4e5;
+}
+
+.care-status.pending {
+  color: #94620d;
+  background: #fff1d3;
+}
+
+/* Tombol aksi */
+.care-item-action button {
+  padding: 9px 14px;
+  color: #ffffff;
+  background: #28784e;
+  border: none;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.care-item-action button:hover {
+  background: #195d3a;
+}
+
+.care-empty {
+  padding: 32px 16px;
+  color: #7b8d83;
+  text-align: center;
+  background: #f8fbf8;
+  border-radius: 12px;
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+  .page-section {
+    padding: 20px;
+  }
+
+  .care-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .care-item {
+    align-items: flex-start;
+  }
+}
+
+/* HP */
+@media (max-width: 600px) {
+  .page-section {
+    padding: 14px;
+  }
+
+  .page-header h1 {
+    font-size: 24px;
+  }
+
+  .care-summary {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .care-card {
+    padding: 18px;
+  }
+
+  .care-panel {
+    padding: 15px;
+  }
+
+  .panel-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .panel-heading select {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .care-item {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .care-item-info {
+    flex-basis: calc(100% - 64px);
+  }
+
+  .care-item-action {
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    padding-top: 10px;
+    border-top: 1px solid #e8f0e9;
+  }
+}
