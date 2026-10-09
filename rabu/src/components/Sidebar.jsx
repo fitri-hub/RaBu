@@ -1,3 +1,4 @@
+
 function Sidebar({ halamanAktif, gantiHalaman }) {
   const menu = [
     { id: 'dashboard', ikon: '▦', nama: 'Dashboard' },
@@ -10,7 +11,11 @@ function Sidebar({ halamanAktif, gantiHalaman }) {
   return (
     <aside className="sidebar">
       <div className="brand">
-        <span className="brand-icon">🌱</span>
+        <img
+          src="/logo-rabu.png"
+          alt="Logo RaBu"
+          className="brand-logo"
+        />
         <div>
           <h2>RaBu</h2>
           <p>RawatBumi</p>
@@ -24,7 +29,9 @@ function Sidebar({ halamanAktif, gantiHalaman }) {
           <a
             key={item.id}
             href={`#${item.id}`}
-            className={`nav-link ${halamanAktif === item.id ? 'active' : ''}`}
+            className={`nav-link ${
+              halamanAktif === item.id ? 'active' : ''
+            }`}
             onClick={(event) => {
               event.preventDefault();
               gantiHalaman(item.id);
@@ -47,3 +54,4 @@ function Sidebar({ halamanAktif, gantiHalaman }) {
 }
 
 export default Sidebar;
+

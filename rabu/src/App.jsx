@@ -1,13 +1,26 @@
+
 import { useState } from 'react';
 import './App.css';
+
 import Sidebar from './components/Sidebar';
 import Dashboard from './components/Dashboard';
 import Perawatan from './pages/Perawatan';
+import DataTanaman from './pages/DataTanaman';
 
 function App() {
   const [halamanAktif, setHalamanAktif] = useState('dashboard');
+  const [filterTanaman, setFilterTanaman] = useState('Semua');
+  const [filterJadwal, setFilterJadwal] = useState('Semua');
 
-  function gantiHalaman(halaman) {
+  function bukaHalaman(halaman, filter = 'Semua') {
+    if (halaman === 'tanaman') {
+      setFilterTanaman(filter);
+    }
+
+    if (halaman === 'jadwal') {
+      setFilterJadwal(filter);
+    }
+
     setHalamanAktif(halaman);
   }
 
@@ -15,15 +28,26 @@ function App() {
     <div className="app">
       <Sidebar
         halamanAktif={halamanAktif}
-        gantiHalaman={gantiHalaman}
+        gantiHalaman={(halaman) => bukaHalaman(halaman)}
       />
 
-      <main className="main-content" id={halamanAktif}>
-        {halamanAktif === 'dashboard' && <Dashboard />}
-        {halamanAktif === 'jadwal' && <Perawatan />}
+      <main className="main-content">
+        {halamanAktif === 'dashboard' && (
+          <Dashboard bukaHalaman={bukaHalaman} />
+        )}
 
         {halamanAktif === 'tanaman' && (
-          <h1>Halaman Data Tanaman</h1>
+          <DataTanaman
+            key={filterTanaman}
+            filterAwal={filterTanaman}
+          />
+        )}
+
+        {halamanAktif === 'jadwal' && (
+          <Perawatan
+            key={filterJadwal}
+            filterAwal={filterJadwal}
+          />
         )}
 
         {halamanAktif === 'misi' && (

@@ -1,39 +1,35 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './Perawatan.css';
+import {
+  bacaJadwal,
+  simpanJadwal,
+} from '../data/jadwalStorage';
 
 function Perawatan() {
-  const [jadwal, setJadwal] = useState([
-    {
-      id: 1,
-      tanaman: 'Pohon Mangga',
-      kegiatan: 'Penyiraman',
-      tanggal: '2026-10-10',
-      penanggungJawab: 'Anggota 1',
-      status: 'Belum Selesai',
-    },
-    {
-      id: 2,
-      tanaman: 'Pohon Ketapang',
-      kegiatan: 'Pemeriksaan Kondisi',
-      tanggal: '2026-10-11',
-      penanggungJawab: 'Anggota 2',
-      status: 'Belum Selesai',
-    },
-    {
-      id: 3,
-      tanaman: 'Pohon Jambu',
-      kegiatan: 'Pemupukan',
-      tanggal: '2026-10-12',
-      penanggungJawab: 'Anggota 1',
-      status: 'Selesai',
-    },
-  ]);
-
+  const [jadwal, setJadwal] = useState(bacaJadwal);
   const [filter, setFilter] = useState('Semua');
 
+  useEffect(() => {
+    simpanJadwal(jadwal);
+  }, [jadwal]);
+
+  useEffect(() => {
+    function muatUlangJadwal() {
+      setJadwal(bacaJadwal());
+    }
+
+    window.addEventListener('jadwal-berubah', muatUlangJadwal);
+    window.addEventListener('storage', muatUlangJadwal);
+
+    return () => {
+      window.removeEventListener('jadwal-berubah', muatUlangJadwal);
+      window.removeEventListener('storage', muatUlangJadwal);
+    };
+  }, []);
+
   function ubahStatus(id) {
-    setJadwal((daftar) =>
-      daftar.map((item) =>
+    setJadwal((daftar) => {
+      const hasil = daftar.map((item) =>
         item.id === id
           ? {
               ...item,
@@ -43,13 +39,24 @@ function Perawatan() {
                   : 'Selesai',
             }
           : item
-      )
-    );
+      );
+
+      simpanJadwal(hasil);
+      return hasil;
+    });
   }
 
   const jadwalTampil = jadwal.filter((item) =>
     filter === 'Semua' ? true : item.status === filter
   );
+
+  const totalSelesai = jadwal.filter(
+    (item) => item.status === 'Selesai'
+  ).length;
+
+  const totalBelumSelesai = jadwal.filter(
+    (item) => item.status === 'Belum Selesai'
+  ).length;
 
   return (
     <section className="page-section">
@@ -72,20 +79,12 @@ function Perawatan() {
 
         <article className="care-card">
           <span>Belum Selesai</span>
-          <h2>
-            {jadwal.filter(
-              (item) => item.status === 'Belum Selesai'
-            ).length}
-          </h2>
+          <h2>{totalBelumSelesai}</h2>
         </article>
 
         <article className="care-card">
           <span>Selesai</span>
-          <h2>
-            {jadwal.filter(
-              (item) => item.status === 'Selesai'
-            ).length}
-          </h2>
+          <h2>{totalSelesai}</h2>
         </article>
       </div>
 
