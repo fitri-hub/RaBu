@@ -1,45 +1,11 @@
-import './App.css'
+
+import './App.css';
+import Sidebar from './components/Sidebar';
 
 function App() {
   return (
     <div className="app">
-      <aside className="sidebar">
-        <div className="brand">
-          <span className="brand-icon">🌱</span>
-          <div>
-            <h2>RaBu</h2>
-            <p>RawatBumi</p>
-          </div>
-        </div>
-
-        <p className="menu-label">MENU UTAMA</p>
-
-        <nav className="navigation">
-          <a href="#dashboard" className="nav-link active">
-            <span>▦</span> Dashboard
-          </a>
-          <a href="#tanaman" className="nav-link">
-            <span>🌿</span> Data Tanaman
-          </a>
-          <a href="#jadwal" className="nav-link">
-            <span>📅</span> Jadwal Perawatan
-          </a>
-          <a href="#misi" className="nav-link">
-            <span>♡</span> Misi Penyelamatan
-          </a>
-          <a href="#estafet" className="nav-link">
-            <span>♧</span> Estafet Penjaga
-          </a>
-        </nav>
-
-        <div className="sidebar-bottom">
-          <div className="profile-avatar">P</div>
-          <div>
-            <strong>Pengelola</strong>
-            <p>Tim RaBu</p>
-          </div>
-        </div>
-      </aside>
+      <Sidebar />
 
       <main className="main-content" id="dashboard">
         <header className="topbar">
@@ -47,18 +13,22 @@ function App() {
             <p className="breadcrumb">Halaman / Dashboard</p>
             <h1>Dashboard</h1>
           </div>
-          <div className="date-label">🌱 Rawat tanaman, jaga masa depan</div>
+
+          <div className="date-label">
+            🌱 Rawat tanaman, jaga masa depan
+          </div>
         </header>
 
         <section className="welcome">
           <div>
             <p className="welcome-tag">SELAMAT DATANG DI RABU</p>
-            <h2>Halo, Pengelola! 👋</h2>
+            <h2>Halo, Pengelola! </h2>
             <p>
               Yuk, pantau dan rawat tanaman kita agar terus tumbuh
               dan memberi manfaat bagi lingkungan.
             </p>
           </div>
+
           <div className="welcome-illustration">🌳</div>
         </section>
 
@@ -138,7 +108,7 @@ function App() {
         </footer>
       </main>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
