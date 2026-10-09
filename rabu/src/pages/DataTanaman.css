@@ -1,0 +1,846 @@
+
+/* ==========================================
+   RaBu — DATA TANAMAN
+   CSS FINAL — SESUAI DENGAN DataTanaman.jsx
+   ========================================== */
+
+.tanaman-page {
+  --green: #34794b;
+  --green-dark: #245a36;
+  --green-light: #edf6e9;
+  --text: #294333;
+  --muted: #7b8b7d;
+  --border: #e4ece1;
+  --surface: #ffffff;
+
+  width: 100%;
+  min-width: 0;
+  color: var(--text);
+  font-family: inherit;
+  animation: tanamanFadeIn .3s ease;
+}
+
+.tanaman-page *,
+.tanaman-page *::before,
+.tanaman-page *::after {
+  box-sizing: border-box;
+}
+
+@keyframes tanamanFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== HEADER ===== */
+
+.tanaman-page .tanaman-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 30px;
+}
+
+.tanaman-page .tanaman-header > div {
+  min-width: 0;
+}
+
+.tanaman-page .breadcrumb {
+  margin: 0 0 10px;
+  color: #77977d;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: .3px;
+}
+
+.tanaman-page .tanaman-header h1 {
+  margin: 0;
+  color: #245535;
+  font-size: clamp(27px, 3vw, 35px);
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -1px;
+}
+
+.tanaman-page .tanaman-header > div > p:last-child {
+  margin: 10px 0 0;
+  color: #78877a;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+/* ===== TOMBOL ===== */
+
+.tanaman-page .tanaman-header button,
+.tanaman-page .tanaman-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 42px;
+  padding: 11px 17px;
+  border: 1px solid var(--green);
+  border-radius: 10px;
+  background: var(--green);
+  color: #fff;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background .2s, transform .2s, box-shadow .2s;
+}
+
+.tanaman-page .tanaman-header button:hover,
+.tanaman-page .tanaman-btn-primary:hover {
+  background: var(--green-dark);
+  border-color: var(--green-dark);
+  box-shadow: 0 4px 12px #34794b20;
+  transform: translateY(-1px);
+}
+
+.tanaman-page .tanaman-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 9px 15px;
+  border: 1px solid #dce7d9;
+  border-radius: 9px;
+  background: #fff;
+  color: var(--green);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 650;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background .2s, border-color .2s;
+}
+
+.tanaman-page .tanaman-btn-secondary:hover {
+  border-color: #b9d2b7;
+  background: #f0f7ed;
+}
+
+/* ===== PESAN FEEDBACK ===== */
+
+.tanaman-page .tanaman-feedback {
+  margin: 0 0 20px;
+  padding: 13px 16px;
+  border: 1px solid #cfe7d0;
+  border-radius: 10px;
+  background: #eff8ee;
+  color: #34794b;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* ===== KARTU RINGKASAN ===== */
+
+.tanaman-page .tanaman-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin: 0 0 28px;
+}
+
+.tanaman-page .tanaman-summary-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  min-height: 155px;
+  padding: 21px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: #fff;
+  color: var(--text);
+  text-align: left;
+  box-shadow: 0 3px 12px #263b2d06;
+  cursor: pointer;
+  transition: transform .2s, box-shadow .2s, border-color .2s;
+}
+
+.tanaman-page .tanaman-summary-card::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4px;
+  height: 100%;
+  background: #83b887;
+  content: "";
+  opacity: .75;
+}
+
+.tanaman-page .tanaman-summary-card:nth-child(2)::after {
+  background: #43a66b;
+}
+
+.tanaman-page .tanaman-summary-card:nth-child(3)::after {
+  background: #e8b65d;
+}
+
+.tanaman-page .tanaman-summary-card:hover {
+  transform: translateY(-3px);
+  border-color: #cbdcc8;
+  box-shadow: 0 9px 24px #263b2d0d;
+}
+
+.tanaman-page .tanaman-summary-card > span {
+  color: #6f8172;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.tanaman-page .tanaman-summary-card > strong {
+  margin-top: 12px;
+  color: #285b39;
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.tanaman-page .tanaman-summary-card:nth-child(2) > strong {
+  color: #33834c;
+}
+
+.tanaman-page .tanaman-summary-card:nth-child(3) > strong {
+  color: #bd8527;
+}
+
+.tanaman-page .tanaman-summary-card > small {
+  margin-top: 9px;
+  color: #96a197;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* Kartu ringkasan yang sedang dipilih */
+
+.tanaman-page .tanaman-summary-card:focus-visible {
+  outline: 3px solid #a9d5af;
+  outline-offset: 3px;
+}
+
+/* ===== PANEL DAFTAR TANAMAN ===== */
+
+.tanaman-page .tanaman-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 4px 18px #263b2d06;
+}
+
+.tanaman-page .tanaman-card-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 23px 24px;
+  border-bottom: 1px solid #edf1eb;
+  background: #fff;
+}
+
+.tanaman-page .tanaman-card-heading h2 {
+  margin: 0 0 7px;
+  color: #294c32;
+  font-size: 19px;
+  font-weight: 750;
+  letter-spacing: -.3px;
+}
+
+.tanaman-page .tanaman-card-heading p {
+  margin: 0;
+  color: #879388;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+/* ===== PENCARIAN DAN FILTER ===== */
+
+.tanaman-page .tanaman-filters {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) minmax(140px, 180px) minmax(130px, 165px) auto;
+  align-items: center;
+  gap: 11px;
+  padding: 19px 24px;
+  border-bottom: 1px solid #edf1eb;
+  background: #fafcf9;
+}
+
+.tanaman-page .tanaman-filters input,
+.tanaman-page .tanaman-filters select {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: 42px;
+  margin: 0;
+  padding: 0 13px;
+  border: 1px solid #dfe7dc;
+  border-radius: 9px;
+  outline: none;
+  background-color: #fff;
+  color: #425746;
+  font-family: inherit;
+  font-size: 12px;
+  box-shadow: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+
+.tanaman-page .tanaman-filters input {
+  appearance: none;
+}
+
+.tanaman-page .tanaman-filters input::placeholder {
+  color: #a0aaa1;
+  opacity: 1;
+}
+
+.tanaman-page .tanaman-filters select {
+  padding-right: 28px;
+  cursor: pointer;
+}
+
+.tanaman-page .tanaman-filters input:focus,
+.tanaman-page .tanaman-filters select:focus {
+  border-color: #6aa475;
+  outline: none;
+  box-shadow: 0 0 0 3px #34794b14;
+}
+
+.tanaman-page .tanaman-filters button {
+  justify-self: start;
+  height: 42px;
+  min-height: 42px;
+  padding: 0 15px;
+}
+
+/* ===== TABEL ===== */
+
+.tanaman-page .tanaman-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  background: #fff;
+}
+
+.tanaman-page .tanaman-table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.tanaman-page .tanaman-table thead th {
+  padding: 16px 15px;
+  border-bottom: 1px solid #e9efe6;
+  background: #f5f8f3;
+  color: #687b6b;
+  font-size: 10px;
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: .65px;
+}
+
+.tanaman-page .tanaman-table thead th:first-child,
+.tanaman-page .tanaman-table tbody td:first-child {
+  padding-left: 24px;
+}
+
+.tanaman-page .tanaman-table thead th:last-child,
+.tanaman-page .tanaman-table tbody td:last-child {
+  padding-right: 24px;
+}
+
+.tanaman-page .tanaman-table tbody td {
+  padding: 17px 15px;
+  border-bottom: 1px solid #edf1eb;
+  background: #fff;
+  color: #718073;
+  font-size: 11px;
+  vertical-align: middle;
+  transition: background .15s;
+}
+
+.tanaman-page .tanaman-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.tanaman-page .tanaman-table tbody tr:hover td {
+  background: #f8fbf6;
+}
+
+.tanaman-page .tanaman-table tbody td > strong {
+  color: #3e5843;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* ===== LABEL KONDISI ===== */
+
+.tanaman-page .tanaman-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: 30px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.tanaman-page .status-sehat {
+  border-color: #d9efdc;
+  background: #e8f6e9;
+  color: #328049;
+}
+
+.tanaman-page .status-perawatan {
+  border-color: #f5e5bd;
+  background: #fff4dc;
+  color: #a87416;
+}
+
+.tanaman-page .status-kritis {
+  border-color: #f5d8d4;
+  background: #fdeae7;
+  color: #bd4940;
+}
+
+/* ===== AKSI DETAIL, EDIT, HAPUS ===== */
+
+.tanaman-page .tanaman-actions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.tanaman-page .tanaman-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 39px;
+  min-height: 36px;
+  padding: 7px 10px;
+  border: 1px solid #dce7d9;
+  border-radius: 8px;
+  background: #fff;
+  color: #39804b;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s, border-color .2s;
+}
+
+.tanaman-page .tanaman-actions button:hover {
+  border-color: #b8d3b7;
+  background: #edf6e9;
+}
+
+.tanaman-page .tanaman-actions button:last-child {
+  border-color: #efd9d5;
+  color: #bd574e;
+}
+
+.tanaman-page .tanaman-actions button:last-child:hover {
+  border-color: #e8bcb5;
+  background: #fff0ed;
+}
+
+/* ===== DATA KOSONG ===== */
+
+.tanaman-page .tanaman-empty {
+  padding: 42px 20px !important;
+  color: #859287 !important;
+  text-align: center;
+  white-space: normal;
+}
+
+.tanaman-page .tanaman-empty > span {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 32px;
+}
+
+.tanaman-page .tanaman-empty p {
+  margin: 0 0 15px;
+  color: #78887a;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.tanaman-page .tanaman-empty button {
+  padding: 9px 14px;
+  border: 1px solid #dce7d9;
+  border-radius: 8px;
+  background: #f1f7ed;
+  color: #34794b;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.tanaman-page .tanaman-empty button:hover {
+  background: #e5f1df;
+}
+
+/* ===== MODAL TAMBAH / EDIT / DETAIL ===== */
+
+.tanaman-modal-backdrop {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 24px;
+  background: rgb(24 42 29 / 48%);
+  backdrop-filter: blur(4px);
+}
+
+.tanaman-modal {
+  width: 100%;
+  max-width: 620px;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  padding: 27px;
+  border: 1px solid var(--border);
+  border-radius: 17px;
+  background: #fff;
+  box-shadow: 0 20px 65px rgb(23 42 28 / 20%);
+  animation: tanamanModalIn .2s ease;
+}
+
+@keyframes tanamanModalIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.tanaman-modal-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 24px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #edf1eb;
+}
+
+.tanaman-modal-heading p {
+  margin: 0 0 7px;
+  color: #6b9273;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 1.2px;
+}
+
+.tanaman-modal-heading h2 {
+  margin: 0;
+  color: #294c32;
+  font-size: 22px;
+  font-weight: 750;
+  line-height: 1.4;
+}
+
+.tanaman-modal-heading > button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 35px;
+  height: 35px;
+  border: 1px solid #e2e9df;
+  border-radius: 9px;
+  background: #fff;
+  color: #657668;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.tanaman-modal-heading > button:hover {
+  background: #f0f6ed;
+}
+
+/* Form modal */
+
+.tanaman-modal form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 17px;
+}
+
+.tanaman-modal form > label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  color: #4b604e;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.tanaman-modal form input,
+.tanaman-modal form select,
+.tanaman-modal form textarea {
+  width: 100%;
+  min-width: 0;
+  min-height: 43px;
+  padding: 11px 12px;
+  border: 1px solid #dce5da;
+  border-radius: 9px;
+  outline: none;
+  background: #fff;
+  color: #344a38;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.tanaman-modal form textarea {
+  min-height: 85px;
+  resize: vertical;
+  line-height: 1.7;
+}
+
+.tanaman-modal form input:focus,
+.tanaman-modal form select:focus,
+.tanaman-modal form textarea:focus,
+.tanaman-modal .tanaman-detail-condition select:focus {
+  border-color: #589465;
+  box-shadow: 0 0 0 3px #58946519;
+}
+
+.tanaman-modal form input::placeholder,
+.tanaman-modal form textarea::placeholder {
+  color: #a0aaa0;
+}
+
+.tanaman-modal form .tanaman-full-field {
+  grid-column: 1 / -1;
+}
+
+/* Tombol bawah modal */
+
+.tanaman-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+  grid-column: 1 / -1;
+  margin-top: 7px;
+  padding-top: 19px;
+  border-top: 1px solid #edf1eb;
+}
+
+.tanaman-modal-actions .tanaman-btn-primary,
+.tanaman-modal-actions .tanaman-btn-secondary {
+  min-height: 41px;
+}
+
+/* ===== DETAIL TANAMAN ===== */
+
+.tanaman-detail-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.tanaman-detail-list p {
+  min-width: 0;
+  margin: 0;
+  padding: 14px;
+  overflow-wrap: anywhere;
+  border: 1px solid #e7eee4;
+  border-radius: 10px;
+  background: #fafcf9;
+  color: #718073;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.tanaman-detail-list strong {
+  color: #3c5941;
+  font-weight: 700;
+}
+
+.tanaman-modal .tanaman-detail-condition {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-top: 19px;
+  color: #4b604e;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.tanaman-modal .tanaman-detail-condition select {
+  width: 100%;
+  min-height: 43px;
+  padding: 10px 12px;
+  border: 1px solid #dce5da;
+  border-radius: 9px;
+  outline: none;
+  background: #fff;
+  color: #344a38;
+  font-family: inherit;
+  font-size: 12px;
+}
+
+/* ===== RESPONSIVE TABLET ===== */
+
+@media (max-width: 1050px) {
+  .tanaman-page .tanaman-summary {
+    gap: 12px;
+  }
+
+  .tanaman-page .tanaman-summary-card {
+    padding: 17px;
+  }
+
+  .tanaman-page .tanaman-filters {
+    grid-template-columns: minmax(180px, 1fr) minmax(130px, 1fr);
+  }
+
+  .tanaman-page .tanaman-filters button {
+    justify-self: start;
+  }
+}
+
+/* ===== RESPONSIVE HP ===== */
+
+@media (max-width: 650px) {
+  .tanaman-page .tanaman-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 17px;
+  }
+
+  .tanaman-page .tanaman-header h1 {
+    font-size: 27px;
+  }
+
+  .tanaman-page .tanaman-header button {
+    min-height: 42px;
+  }
+
+  .tanaman-page .tanaman-summary {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 21px;
+  }
+
+  .tanaman-page .tanaman-summary-card {
+    min-height: 0;
+    padding: 17px 19px;
+  }
+
+  .tanaman-page .tanaman-summary-card > strong {
+    margin-top: 7px;
+    font-size: 27px;
+  }
+
+  .tanaman-page .tanaman-card-heading {
+    padding: 19px;
+  }
+
+  .tanaman-page .tanaman-filters {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    padding: 16px 19px;
+  }
+
+  .tanaman-page .tanaman-filters input,
+  .tanaman-page .tanaman-filters select {
+    width: 100%;
+    height: 43px;
+  }
+
+  .tanaman-page .tanaman-table {
+    min-width: 760px;
+  }
+
+  .tanaman-page .tanaman-table thead th:first-child,
+  .tanaman-page .tanaman-table tbody td:first-child {
+    padding-left: 19px;
+  }
+
+  .tanaman-page .tanaman-table thead th:last-child,
+  .tanaman-page .tanaman-table tbody td:last-child {
+    padding-right: 19px;
+  }
+
+  .tanaman-modal-backdrop {
+    align-items: flex-start;
+    padding: 12px;
+  }
+
+  .tanaman-modal {
+    max-height: calc(100vh - 24px);
+    margin: auto 0;
+    padding: 20px;
+    border-radius: 14px;
+  }
+
+  .tanaman-modal form,
+  .tanaman-detail-list {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .tanaman-modal form .tanaman-full-field,
+  .tanaman-modal-actions {
+    grid-column: 1;
+  }
+
+  .tanaman-modal-actions {
+    flex-wrap: wrap;
+  }
+
+  .tanaman-modal-actions > button {
+    flex: 1;
+  }
+}
+
+/* ===== AKSESIBILITAS ===== */
+
+.tanaman-page button:focus-visible {
+  outline: 3px solid #a9d5af;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tanaman-page,
+  .tanaman-modal {
+    animation: none;
+  }
+
+  .tanaman-page *,
+  .tanaman-page *::before,
+  .tanaman-page *::after {
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
+}
