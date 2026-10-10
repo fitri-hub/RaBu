@@ -1,0 +1,581 @@
+
+/* Halaman utama */
+.pekerja-page {
+  min-height: 100vh;
+  background: #f5f8f2;
+  color: #24352a;
+  font-family: inherit;
+}
+
+/* Header */
+.pekerja-header {
+  min-height: 76px;
+  padding: 16px 7%;
+  background: #ffffff;
+  border-bottom: 1px solid #e5ebdf;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.pekerja-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #245d39;
+  font-size: 27px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.pekerja-brand-icon {
+  font-size: 29px;
+}
+
+.pekerja-brand-dot {
+  color: #82ad65;
+}
+
+.pekerja-header-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.pekerja-role {
+  padding: 8px 15px;
+  background: #e8f4e4;
+  color: #347044;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.pekerja-logout {
+  padding: 10px 19px;
+  background: #ffffff;
+  color: #45634c;
+  border: 1px solid #d7e2d3;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.pekerja-logout:hover {
+  background: #f0f5ed;
+  border-color: #8caf87;
+}
+
+/* Konten */
+.pekerja-content {
+  width: min(1100px, 86%);
+  margin: 0 auto;
+  padding: 42px 0 24px;
+}
+
+.pekerja-brand img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+}
+
+
+/* Sambutan */
+.pekerja-welcome {
+  min-height: 235px;
+  padding: 38px 42px;
+  background: linear-gradient(120deg, #e1f1dc, #f0f6e8);
+  border: 1px solid #dcebd5;
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  overflow: hidden;
+}
+
+.pekerja-welcome-text {
+  max-width: 650px;
+}
+
+.pekerja-eyebrow {
+  color: #4f7c4b;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.8px;
+}
+
+.pekerja-welcome h1 {
+  margin: 14px 0 12px;
+  color: #234d30;
+  font-size: clamp(27px, 4vw, 38px);
+  line-height: 1.2;
+}
+
+.pekerja-welcome p {
+  max-width: 580px;
+  margin: 0;
+  color: #5b6f5c;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.pekerja-welcome-illustration {
+  width: 135px;
+  height: 135px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.65);
+  border-radius: 50%;
+  font-size: 76px;
+}
+
+/* Bagian menu */
+.pekerja-section {
+  margin-top: 38px;
+}
+
+.pekerja-section-heading h2 {
+  margin: 0 0 8px;
+  color: #2c4431;
+  font-size: 23px;
+}
+
+.pekerja-section-heading p {
+  margin: 0;
+  color: #7b897b;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.pekerja-menu {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.pekerja-menu-card {
+  min-width: 0;
+  padding: 27px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  background: #ffffff;
+  border: 1px solid #e5ebdf;
+  border-radius: 18px;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.pekerja-menu-card:hover {
+  transform: translateY(-4px);
+  border-color: #b6d3ac;
+  box-shadow: 0 12px 28px rgba(45, 78, 48, 0.08);
+}
+
+.pekerja-menu-card:focus-visible,
+.pekerja-logout:focus-visible {
+  outline: 3px solid #8bbf7a;
+  outline-offset: 3px;
+}
+
+.pekerja-menu-icon {
+  width: 55px;
+  height: 55px;
+  margin-bottom: 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  font-size: 16px;
+  font-weight: 800;
+  color: #347044;
+}
+
+.tugas-icon {
+  background: #e6f3df;
+}
+
+.profil-icon {
+  background: #edf0e9;
+}
+
+.pekerja-menu-title {
+  color: #2b4932;
+  font-size: 18px;
+  font-weight: 750;
+}
+
+.pekerja-menu-description {
+  min-height: 48px;
+  margin-top: 10px;
+  color: #748174;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.pekerja-menu-action {
+  width: 100%;
+  margin-top: 23px;
+  padding-top: 17px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #edf0e9;
+  color: #387447;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.pekerja-menu-action span {
+  font-size: 20px;
+}
+
+/* Pengingat */
+.pekerja-reminder {
+  margin-top: 28px;
+  padding: 22px 25px;
+  display: flex;
+  align-items: flex-start;
+  gap: 17px;
+  background: #ffffff;
+  border: 1px solid #e5ebdf;
+  border-radius: 16px;
+}
+
+.pekerja-reminder-icon {
+  font-size: 29px;
+}
+
+.pekerja-reminder h3 {
+  margin: 2px 0 7px;
+  color: #34553a;
+  font-size: 16px;
+}
+
+.pekerja-reminder p {
+  margin: 0;
+  color: #748174;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* Footer */
+.pekerja-footer {
+  padding-top: 28px;
+  color: #8a9588;
+  font-size: 12px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+/* Tampilan tablet dan HP */
+@media (max-width: 700px) {
+  .pekerja-header {
+    min-height: 66px;
+    padding: 14px 5%;
+  }
+
+  .pekerja-brand {
+    font-size: 23px;
+  }
+
+  .pekerja-header-right {
+    gap: 8px;
+  }
+
+  .pekerja-role {
+    padding: 7px 10px;
+    font-size: 12px;
+  }
+
+  .pekerja-logout {
+    padding: 9px 12px;
+    font-size: 13px;
+  }
+
+  .pekerja-content {
+    width: 90%;
+    padding-top: 25px;
+  }
+
+  .pekerja-welcome {
+    min-height: auto;
+    padding: 27px 23px;
+    border-radius: 18px;
+  }
+
+.pekerja-welcome-illustration {
+  display: none;
+}
+
+  .pekerja-eyebrow {
+    font-size: 9px;
+    letter-spacing: 1.2px;
+  }
+
+  .pekerja-welcome p {
+    font-size: 14px;
+  }
+
+  .pekerja-section {
+    margin-top: 29px;
+  }
+
+  .pekerja-menu {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .pekerja-menu-card {
+    padding: 22px;
+  }
+
+  .pekerja-menu-description {
+    min-height: auto;
+  }
+
+  .pekerja-reminder {
+    padding: 19px;
+  }
+}
+
+
+.pekerja-welcome-illustration {
+  width: 135px;
+  height: 135px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  background: #ffffff;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+
+.pekerja-menu-photo {
+  width: 100%;
+  height: 180px;
+  margin-bottom: 20px;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 12px;
+  background: #edf3e9;
+}
+
+
+.pekerja-welcome-illustration img {
+  width: 85%;
+  height: 85%;
+  object-fit: contain;
+}
+
+@media (max-width: 400px) {
+  .pekerja-welcome-illustration {
+    display: none;
+  }
+}
+
+
+@media (max-width: 400px) {
+  .pekerja-welcome-illustration {
+    display: none;
+  }
+
+  .pekerja-brand {
+    gap: 6px;
+    font-size: 21px;
+  }
+
+  .pekerja-role {
+    font-size: 11px;
+  }
+}
+
+
+
+.pekerja-menu-card {
+  min-width: 0;
+  padding: 22px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 18px;
+  text-align: left;
+  background: #ffffff;
+  border: 1px solid #e5ebdf;
+  border-radius: 18px;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.pekerja-menu-photo {
+  width: 76px;
+  height: 76px;
+  flex: 0 0 76px;
+  margin: 0;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 50%;
+  background: #edf3e9;
+}
+
+.pekerja-menu-info {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.pekerja-menu-title {
+  color: #2b4932;
+  font-size: 18px;
+  font-weight: 750;
+}
+
+
+.pekerja-menu-description {
+  margin: 0;
+  color: #748174;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.pekerja-menu-action {
+  width: 100%;
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid #edf0e9;
+  color: #387447;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* Halaman dashboard pekerja */
+.pekerja-dashboard {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 28px;
+  color: #244b35;
+}
+
+/* Bagian sambutan */
+.pekerja-welcome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 32px 38px;
+  margin-bottom: 32px;
+  background: linear-gradient(120deg, #e8f3e7, #f7faf4);
+  border: 1px solid #dce9d8;
+  border-radius: 20px;
+}
+
+.pekerja-welcome-text {
+  max-width: 680px;
+}
+
+.pekerja-welcome-label {
+  display: inline-block;
+  margin-bottom: 12px;
+  color: #438052;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.pekerja-welcome-text h1 {
+  margin: 0 0 12px;
+  color: #244b35;
+  font-size: 30px;
+  line-height: 1.3;
+}
+
+.pekerja-welcome-text p {
+  max-width: 580px;
+  margin: 0;
+  color: #66776a;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.pekerja-welcome-logo {
+  width: 125px;
+  height: 125px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+/* Judul menu */
+.pekerja-section-heading {
+  margin-bottom: 18px;
+}
+
+.pekerja-section-heading h2 {
+  margin: 0 0 7px;
+  color: #244b35;
+  font-size: 22px;
+}
+
+.pekerja-section-heading p {
+  margin: 0;
+  color: #778379;
+  font-size: 14px;
+}
+
+/* Responsif untuk layar kecil */
+@media (max-width: 700px) {
+  .pekerja-dashboard {
+    padding: 18px;
+  }
+
+  .pekerja-welcome {
+    padding: 24px;
+    gap: 12px;
+  }
+
+  .pekerja-welcome-text h1 {
+    font-size: 23px;
+  }
+
+  .pekerja-welcome-text p {
+    font-size: 13px;
+  }
+
+  .pekerja-welcome-logo {
+    width: 75px;
+    height: 75px;
+  }
+
+  .pekerja-menu {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 400px) {
+  .pekerja-menu-card {
+    padding: 15px;
+    gap: 12px;
+  }
+
+  .pekerja-menu-photo {
+    width: 60px;
+    height: 60px;
+    flex-basis: 60px;
+  }
+}

@@ -1,0 +1,256 @@
+.tugas-pekerja {
+  width: 100%;
+  padding: 28px;
+  box-sizing: border-box;
+  color: #244b35;
+}
+
+.tugas-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.tugas-breadcrumb {
+  margin: 0 0 10px;
+  color: #829087;
+  font-size: 13px;
+}
+
+.tugas-header h1 {
+  margin: 0 0 10px;
+  font-size: 30px;
+}
+
+.tugas-subtitle {
+  margin: 0;
+  color: #738077;
+  line-height: 1.7;
+}
+
+.tugas-refresh,
+.tugas-item-aksi button {
+  border: none;
+  border-radius: 9px;
+  background: #36794c;
+  color: white;
+  padding: 11px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tugas-refresh:hover,
+.tugas-item-aksi button:hover {
+  background: #285e3a;
+}
+
+.tugas-ringkasan {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.tugas-ringkasan-card {
+  padding: 22px;
+  border: 1px solid #e3ebe1;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.tugas-ringkasan-card span {
+  display: block;
+  margin-bottom: 12px;
+  color: #718075;
+  font-size: 14px;
+}
+
+.tugas-ringkasan-card strong {
+  color: #285e3a;
+  font-size: 30px;
+}
+
+.tugas-daftar-panel {
+  padding: 24px;
+  border: 1px solid #e5ebe3;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.tugas-daftar-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.tugas-daftar-heading h2 {
+  margin: 0 0 7px;
+  font-size: 20px;
+}
+
+.tugas-daftar-heading p {
+  margin: 0;
+  color: #829087;
+  font-size: 13px;
+}
+
+.tugas-daftar-heading select {
+  padding: 10px 12px;
+  border: 1px solid #dce5da;
+  border-radius: 8px;
+  background: white;
+  color: #355440;
+}
+
+.tugas-list {
+  display: grid;
+  gap: 14px;
+}
+
+.tugas-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px;
+  border: 1px solid #e8eee6;
+  border-radius: 12px;
+  background: #fcfdfb;
+}
+
+.tugas-item-info {
+  min-width: 0;
+}
+
+.tugas-item-label {
+  color: #438052;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.tugas-item-info h3 {
+  margin: 8px 0 12px;
+  color: #294b35;
+  font-size: 18px;
+}
+
+.tugas-item-info p {
+  margin: 6px 0;
+  color: #728075;
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.tugas-item-info p strong {
+  color: #4a5f4e;
+}
+
+.tugas-item-aksi {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.tugas-status {
+  padding: 7px 11px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.tugas-status-selesai {
+  color: #276b43;
+  background: #e5f4e8;
+}
+
+.tugas-status-belum {
+  color: #986d19;
+  background: #fff2d5;
+}
+
+.tugas-item-aksi button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.tugas-kosong {
+  padding: 42px 16px;
+  text-align: center;
+}
+
+.tugas-kosong h3 {
+  margin: 0 0 10px;
+  color: #355440;
+}
+
+.tugas-kosong p {
+  margin: 0;
+  color: #829087;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.tugas-error {
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  border: 1px solid #f0caca;
+  border-radius: 10px;
+  background: #fff3f3;
+  color: #a52b2b;
+  font-size: 14px;
+}
+
+@media (max-width: 700px) {
+  .tugas-pekerja {
+    padding: 18px;
+  }
+
+  .tugas-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .tugas-header h1 {
+    font-size: 25px;
+  }
+
+  .tugas-ringkasan {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .tugas-ringkasan-card {
+    padding: 17px;
+  }
+
+  .tugas-ringkasan-card strong {
+    font-size: 25px;
+  }
+
+  .tugas-daftar-panel {
+    padding: 16px;
+  }
+
+  .tugas-daftar-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .tugas-item {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .tugas-item-aksi {
+    align-items: flex-start;
+    width: 100%;
+  }
+}

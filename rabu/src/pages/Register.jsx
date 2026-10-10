@@ -47,25 +47,35 @@ function Register({ onRegister, onLogin }) {
         return;
       }
 
-      if (data.user && data.session) {
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .upsert({
-            id: data.user.id,
-            nama_lengkap: nama,
-          });
+      
+if (data.user) {
+  const { error: profileError } = await supabase
+    .from('profiles')
+    .upsert(
+      {
+        id: data.user.id,
+        nama_lengkap: nama.trim(),
+        role: 'pekerja',
+      },
+      { onConflict: 'id' }
+    );
 
-        if (profileError) {
-          setPesan(
-            'Akun berhasil dibuat, tetapi profil belum tersimpan. Silakan coba masuk kembali.'
-          );
-          return;
-        }
+  if (profileError) {
+    console.error('Gagal menyimpan profil:', profileError);
 
-        setPesan('Pendaftaran berhasil! Mengarahkan ke aplikasi...');
-        if (onRegister) onRegister();
-        return;
-      }
+    setPesan(
+      `Akun berhasil dibuat, tetapi profil gagal disimpan: ${profileError.message}`
+    );
+    return;
+  }
+
+  setPesan('Pendaftaran berhasil! Silakan masuk ke akun.');
+  if (onLogin) onLogin();
+  return;
+}
+
+setPesan('Pendaftaran gagal. Silakan coba kembali.');
+
 
       setPesan(
         'Pendaftaran berhasil! Silakan periksa email untuk melakukan konfirmasi sebelum masuk.'

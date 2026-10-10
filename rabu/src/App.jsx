@@ -11,37 +11,88 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import PemulihanTanaman from './pages/PemulihanTanaman';
 import PenanggungJawab from './pages/PenanggungJawab';
+import DashboardPekerja from './pages/DashboardPekerja';
 import { supabase } from './lib/supabaseClient';
+import TugasPekerja from './pages/TugasPekerja';
 
 function App() {
   const [halamanAktif, setHalamanAktif] = useState('beranda');
   const [filterTanaman, setFilterTanaman] = useState('Semua');
   const [filterJadwal, setFilterJadwal] = useState('Semua');
   const [session, setSession] = useState(null);
+  const [role, setRole] = useState(null);
+  const [namaPengguna, setNamaPengguna] = useState('');
   const [memeriksaSesi, setMemeriksaSesi] = useState(true);
 
   useEffect(() => {
     let masihAktif = true;
 
-    async function periksaSesi() {
+    async function perbaruiPengguna(sesi) {
+      if (!sesi?.user) {
+        if (masihAktif) {
+          setRole(null);
+          setNamaPengguna('');
+        }
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('role, nama_lengkap')
+        .eq('id', sesi.user.id)
+        .maybeSingle();
+
+      if (!masihAktif) return;
+
+      if (error || !data) {
+        console.error(
+          'Gagal mengambil profil:',
+          error?.message || 'Profil tidak ditemukan'
+        );
+        setRole(null);
+        setNamaPengguna('');
+        return;
+      }
+
+      setRole(data.role);
+      setNamaPengguna(data.nama_lengkap || '');
+    }
+
+    async function mulai() {
       const { data, error } = await supabase.auth.getSession();
 
       if (error) {
         console.error('Gagal memeriksa sesi:', error.message);
       }
 
+      if (!masihAktif) return;
+
+      const sesiAwal = data?.session ?? null;
+      setSession(sesiAwal);
+
+      await perbaruiPengguna(sesiAwal);
+
       if (masihAktif) {
-        setSession(data?.session ?? null);
         setMemeriksaSesi(false);
       }
     }
 
-    periksaSesi();
+    mulai();
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, sessionBaru) => {
-      setSession(sessionBaru);
+    } = supabase.auth.onAuthStateChange((_event, sesiBaru) => {
+      setSession(sesiBaru);
+
+      if (!sesiBaru) {
+        setRole(null);
+        setNamaPengguna('');
+        setHalamanAktif('beranda');
+        return;
+      }
+
+      // Jalankan pengambilan profil setelah callback autentikasi selesai.
+      Promise.resolve().then(() => perbaruiPengguna(sesiBaru));
     });
 
     return () => {
@@ -51,11 +102,37 @@ function App() {
   }, []);
 
   function bukaHalaman(halaman, filter = 'Semua') {
-    if (
-      ['dashboard', 'tanaman', 'jadwal', 'misi', 'estafet'].includes(halaman) &&
-      !session
-    ) {
+    const halamanPengelola = [
+      'dashboard',
+      'tanaman',
+      'jadwal',
+      'misi',
+      'estafet',
+    ];
+
+    const halamanPekerja = [
+      'dashboard-pekerja',
+      'tugas',
+      'profil',
+    ];
+
+    if (!session) {
       setHalamanAktif('login');
+      return;
+    }
+
+    if (role === 'pekerja' && halamanPengelola.includes(halaman)) {
+      setHalamanAktif('dashboard-pekerja');
+      return;
+    }
+
+    if (role !== 'pengelola' && halamanPengelola.includes(halaman)) {
+      setHalamanAktif('dashboard-pekerja');
+      return;
+    }
+
+    if (role === 'pengelola' && halamanPekerja.includes(halaman)) {
+      setHalamanAktif('dashboard');
       return;
     }
 
@@ -73,6 +150,9 @@ function App() {
       return;
     }
 
+    setSession(null);
+    setRole(null);
+    setNamaPengguna('');
     setHalamanAktif('beranda');
   }
 
@@ -85,9 +165,15 @@ function App() {
       <Beranda
         onLogin={() => bukaHalaman('login')}
         onRegister={() => bukaHalaman('register')}
-        onJelajahi={() =>
-          bukaHalaman(session ? 'dashboard' : 'login')
-        }
+        onJelajahi={() => {
+          if (!session) {
+            bukaHalaman('login');
+          } else if (role === 'pengelola') {
+            bukaHalaman('dashboard');
+          } else if (role === 'pekerja') {
+            bukaHalaman('dashboard-pekerja');
+          }
+        }}
       />
     );
   }
@@ -95,7 +181,13 @@ function App() {
   if (halamanAktif === 'login') {
     return (
       <Login
-        onLogin={() => bukaHalaman('dashboard')}
+        onLogin={() => {
+          if (role === 'pengelola') {
+            bukaHalaman('dashboard');
+          } else {
+            bukaHalaman('dashboard-pekerja');
+          }
+        }}
         onRegister={() => bukaHalaman('register')}
       />
     );
@@ -104,7 +196,7 @@ function App() {
   if (halamanAktif === 'register') {
     return (
       <Register
-        onRegister={() => bukaHalaman('dashboard')}
+        onRegister={() => bukaHalaman('login')}
         onLogin={() => bukaHalaman('login')}
       />
     );
@@ -113,9 +205,51 @@ function App() {
   if (!session) {
     return (
       <Login
-        onLogin={() => bukaHalaman('dashboard')}
+        onLogin={() => bukaHalaman('dashboard-pekerja')}
         onRegister={() => bukaHalaman('register')}
       />
+    );
+  }
+
+  if (memeriksaSesi || !role) {
+    return (
+      <div className="app-loading">
+        <p>Memuat profil pengguna...</p>
+        <button onClick={logout}>Keluar</button>
+      </div>
+    );
+  }
+
+if (role === 'pekerja') {
+  if (halamanAktif === 'tugas') {
+    return <TugasPekerja />;
+  }
+
+  if (halamanAktif === 'profil') {
+    return (
+      <DashboardPekerja
+        nama={namaPengguna}
+        bukaHalaman={bukaHalaman}
+        onLogout={logout}
+      />
+    );
+  }
+
+  return (
+    <DashboardPekerja
+      nama={namaPengguna}
+      bukaHalaman={bukaHalaman}
+      onLogout={logout}
+    />
+  );
+}
+
+  if (role !== 'pengelola') {
+    return (
+      <div className="app-loading">
+        <p>Peran akun belum tersedia. Silakan hubungi pengelola.</p>
+        <button onClick={logout}>Keluar</button>
+      </div>
     );
   }
 
