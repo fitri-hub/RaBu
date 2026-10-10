@@ -1,132 +1,327 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./PemulihanTanaman.css";
-
-const dataAwal = [
-  {
-    id: 1,
-    nama: "Pohon Mangga",
-    lokasi: "Taman Depan",
-    masalah: "Daun menguning",
-    penanggungJawab: "Khalisa",
-    tindakan: "Memeriksa kondisi tanah dan penyiraman",
-    status: "Perlu Ditangani",
-    tanggal: "2026-10-09",
-  },
-  {
-    id: 2,
-    nama: "Pohon Ketapang",
-    lokasi: "Halaman Kampus",
-    masalah: "Daun mulai layu",
-    penanggungJawab: "Aulia",
-    tindakan: "Penyiraman dan pemeriksaan akar",
-    status: "Dalam Perawatan",
-    tanggal: "2026-10-09",
-  },
-];
+import { supabase } from "../lib/supabaseClient";
 
 const formAwal = {
-  nama: "",
-  lokasi: "",
+  tanamanId: "",
+  jadwalId: "",
   masalah: "",
-  penanggungJawab: "",
   tindakan: "",
 };
 
-function PemulihanTanaman() {
-  const [data, setData] = useState(() => {
-    try {
-      const tersimpan = localStorage.getItem("rabu-pemulihan-tanaman");
-      return tersimpan ? JSON.parse(tersimpan) : dataAwal;
-    } catch {
-      return dataAwal;
-    }
-  });
+function PemulihanTanaman({ bukaHalaman }) {
+  const [data, setData] = useState([]);
+  const [tanaman, setTanaman] = useState([]);
+  const [jadwal, setJadwal] = useState([]);
+  const [userId, setUserId] = useState(null);
+  const [role, setRole] = useState("");
+  const [memuat, setMemuat] = useState(true);
+  const [pesan, setPesan] = useState("");
 
   const [formTerbuka, setFormTerbuka] = useState(false);
   const [editId, setEditId] = useState(null);
   const [form, setForm] = useState(formAwal);
   const [pencarian, setPencarian] = useState("");
   const [filter, setFilter] = useState("Semua");
+  const [menyimpan, setMenyimpan] = useState(false);
 
-  function simpanData(dataBaru) {
-    setData(dataBaru);
-    localStorage.setItem(
-      "rabu-pemulihan-tanaman",
-      JSON.stringify(dataBaru)
-    );
+  async function muatData() {
+    setMemuat(true);
+    setPesan("");
+
+    try {
+      const { data: authData, error: authError } =
+        await supabase.auth.getUser();
+
+      if (authError) throw authError;
+      if (!authData.user) {
+        throw new Error("Silakan login kembali.");
+      }
+
+      const pengguna = authData.user;
+      setUserId(pengguna.id);
+
+      const { data: profil, error: profilError } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", pengguna.id)
+        .single();
+
+      if (profilError) throw profilError;
+      setRole(profil.role);
+
+      const { data: tanamanData, error: tanamanError } =
+        await supabase
+          .from("tanaman")
+          .select(`
+            id,
+            user_id,
+            kode,
+            nama_tanaman,
+            lokasi,
+            kondisi,
+            penanggung_jawab,
+            profiles!tanaman_user_id_fkey ( nama_lengkap )
+          `)
+          .order("id");
+
+      if (tanamanError) throw tanamanError;
+
+      setTanaman((tanamanData || []).map((t) => ({
+        id: t.id,
+        userId: t.user_id,
+        kode: t.kode || "",
+        nama: t.nama_tanaman,
+        lokasi: t.lokasi || "-",
+        kondisi: t.kondisi || "-",
+        penanggungJawab:
+          t.penanggung_jawab ||
+          t.profiles?.nama_lengkap ||
+          "-",
+      })));
+
+      const { data: jadwalData, error: jadwalError } =
+        await supabase
+          .from("jadwal_perawatan")
+          .select(`
+            id,
+            tanaman_id,
+            jenis_perawatan,
+            kegiatan,
+            tanggal,
+            waktu,
+            status
+          `)
+          .order("tanggal");
+
+      if (jadwalError) throw jadwalError;
+
+      setJadwal(jadwalData || []);
+
+      const { data: pemulihanData, error: pemulihanError } =
+        await supabase
+          .from("pemulihan_tanaman")
+          .select(`
+            id,
+            user_id,
+            tanaman_id,
+            jadwal_id,
+            masalah,
+            tindakan,
+            status,
+            tanggal,
+            created_at,
+            tanaman (
+              nama_tanaman,
+              kode,
+              lokasi,
+              kondisi,
+              user_id,
+              penanggung_jawab,
+              profiles!tanaman_user_id_fkey ( nama_lengkap )
+            ),
+            jadwal_perawatan (
+              kegiatan,
+              jenis_perawatan,
+              tanggal
+            )
+          `)
+          .order("created_at", { ascending: false });
+
+      if (pemulihanError) throw pemulihanError;
+
+      setData((pemulihanData || []).map((p) => ({
+        id: p.id,
+        userId: p.user_id,
+        tanamanId: p.tanaman_id,
+        jadwalId: p.jadwal_id || "",
+        nama: p.tanaman?.nama_tanaman || "Tanaman tidak ditemukan",
+        kode: p.tanaman?.kode || "",
+        lokasi: p.tanaman?.lokasi || "-",
+        kondisiTanaman: p.tanaman?.kondisi || "-",
+        penanggungJawab:
+          p.tanaman?.penanggung_jawab ||
+          p.tanaman?.profiles?.nama_lengkap ||
+          "-",
+        kegiatanJadwal:
+          p.jadwal_perawatan?.kegiatan ||
+          p.jadwal_perawatan?.jenis_perawatan ||
+          "",
+        masalah: p.masalah,
+        tindakan: p.tindakan,
+        status: p.status,
+        tanggal: p.tanggal,
+      })));
+    } catch (error) {
+      console.error("Gagal memuat pemulihan:", error);
+      setPesan(`Gagal memuat data: ${error.message}`);
+    } finally {
+      setMemuat(false);
+    }
   }
+
+  useEffect(() => {
+    muatData();
+  }, []);
+
+  const tanamanDipilih = tanaman.find(
+    (t) => String(t.id) === String(form.tanamanId)
+  );
+
+  const jadwalTersedia = jadwal.filter(
+    (j) => String(j.tanaman_id) === String(form.tanamanId)
+  );
 
   function bukaFormTambah() {
     setEditId(null);
     setForm({ ...formAwal });
+    setPesan("");
     setFormTerbuka(true);
   }
 
   function bukaFormEdit(item) {
     setEditId(item.id);
     setForm({
-      nama: item.nama,
-      lokasi: item.lokasi,
+      tanamanId: String(item.tanamanId),
+      jadwalId: item.jadwalId ? String(item.jadwalId) : "",
       masalah: item.masalah,
-      penanggungJawab: item.penanggungJawab,
       tindakan: item.tindakan,
     });
+    setPesan("");
     setFormTerbuka(true);
   }
 
-  function simpanLaporan(e) {
+  async function simpanLaporan(e) {
     e.preventDefault();
+    if (menyimpan) return;
 
-    if (editId !== null) {
-      const dataBaru = data.map((item) =>
-        item.id === editId ? { ...item, ...form } : item
-      );
-
-      simpanData(dataBaru);
-    } else {
-      const laporanBaru = {
-        ...form,
-        id: Date.now(),
-        status: "Perlu Ditangani",
-        tanggal: new Date().toISOString().slice(0, 10),
-      };
-
-      simpanData([laporanBaru, ...data]);
+    if (!form.tanamanId || !form.masalah.trim() ||
+        !form.tindakan.trim()) {
+      setPesan("Lengkapi tanaman, kondisi, dan tindakan.");
+      return;
     }
 
-    setForm({ ...formAwal });
-    setEditId(null);
-    setFormTerbuka(false);
+    const tanamanDipilih = tanaman.find(
+      (t) => String(t.id) === String(form.tanamanId)
+    );
+
+    if (!tanamanDipilih) {
+      setPesan("Tanaman tidak ditemukan.");
+      return;
+    }
+
+    if (
+      form.jadwalId &&
+      !jadwal.some(
+        (j) =>
+          String(j.id) === String(form.jadwalId) &&
+          String(j.tanaman_id) === String(form.tanamanId)
+      )
+    ) {
+      setPesan("Jadwal tidak sesuai dengan tanaman yang dipilih.");
+      return;
+    }
+
+    setMenyimpan(true);
+    setPesan("");
+
+    try {
+      const payload = {
+        tanaman_id: Number(form.tanamanId),
+        jadwal_id: form.jadwalId
+          ? Number(form.jadwalId)
+          : null,
+        masalah: form.masalah.trim(),
+        tindakan: form.tindakan.trim(),
+      };
+
+      if (editId !== null) {
+        const { error } = await supabase
+          .from("pemulihan_tanaman")
+          .update(payload)
+          .eq("id", editId);
+
+        if (error) throw error;
+        setPesan("Laporan pemulihan berhasil diperbarui.");
+      } else {
+        const { error } = await supabase
+          .from("pemulihan_tanaman")
+          .insert({
+            ...payload,
+            user_id: userId,
+            status: "Perlu Ditangani",
+          });
+
+        if (error) throw error;
+        setPesan("Laporan pemulihan berhasil disimpan.");
+      }
+
+      setForm({ ...formAwal });
+      setEditId(null);
+      setFormTerbuka(false);
+      await muatData();
+    } catch (error) {
+      console.error("Gagal menyimpan laporan:", error);
+      setPesan(`Gagal menyimpan laporan: ${error.message}`);
+    } finally {
+      setMenyimpan(false);
+    }
   }
 
-  function ubahStatus(id, status) {
-    simpanData(
-      data.map((item) =>
+  async function ubahStatus(id, status) {
+    setPesan("");
+
+    const { error } = await supabase
+      .from("pemulihan_tanaman")
+      .update({ status })
+      .eq("id", id);
+
+    if (error) {
+      setPesan(`Gagal mengubah status: ${error.message}`);
+      return;
+    }
+
+    setData((daftar) =>
+      daftar.map((item) =>
         item.id === id ? { ...item, status } : item
       )
     );
+    setPesan("Status pemulihan berhasil diperbarui.");
   }
 
-  function hapusLaporan(id) {
-    const yakin = window.confirm(
-      "Yakin ingin menghapus laporan tanaman ini?"
-    );
+  async function hapusLaporan(id) {
+    if (!window.confirm("Yakin ingin menghapus laporan ini?")) {
+      return;
+    }
 
-    if (!yakin) return;
+    const { error } = await supabase
+      .from("pemulihan_tanaman")
+      .delete()
+      .eq("id", id);
 
-    simpanData(data.filter((item) => item.id !== id));
+    if (error) {
+      setPesan(`Gagal menghapus laporan: ${error.message}`);
+      return;
+    }
+
+    setData((daftar) => daftar.filter((item) => item.id !== id));
+    setPesan("Laporan berhasil dihapus.");
   }
 
   const hasil = data.filter((item) => {
     const kata = pencarian.toLowerCase();
 
-    const cocokKata =
-      item.nama.toLowerCase().includes(kata) ||
-      item.lokasi.toLowerCase().includes(kata) ||
-      item.masalah.toLowerCase().includes(kata);
+    const cocokKata = [
+      item.nama,
+      item.lokasi,
+      item.masalah,
+      item.tindakan,
+      item.penanggungJawab,
+    ].some((nilai) => (nilai || "").toLowerCase().includes(kata));
 
-    return cocokKata && (filter === "Semua" || item.status === filter);
+    return cocokKata &&
+      (filter === "Semua" || item.status === filter);
   });
 
   const perluDitangani = data.filter(
@@ -141,23 +336,51 @@ function PemulihanTanaman() {
     (item) => item.status === "Pulih"
   ).length;
 
+
   return (
     <main className="pemulihan-page">
       <header className="pemulihan-header">
         <div>
+          {role === "pekerja" && (
+            <button
+              type="button"
+              className="pemulihan-btn-secondary"
+              onClick={() =>
+                bukaHalaman?.("dashboard-pekerja")
+              }
+              style={{ marginBottom: "16px" }}
+            >
+              ← Kembali ke Dashboard
+            </button>
+          )}
+
           <p className="pemulihan-eyebrow">
             RAWATBUMI · KESEHATAN TANAMAN
           </p>
+
           <h1>Pemulihan Tanaman</h1>
+
           <p>
             Pantau tanaman yang bermasalah dan catat tindakan perawatannya.
           </p>
         </div>
 
-        <button className="pemulihan-btn" onClick={bukaFormTambah}>
-          + Catat Kondisi
-        </button>
+        {role === "pengelola" && (
+          <button
+            type="button"
+            className="pemulihan-btn"
+            onClick={bukaFormTambah}
+          >
+            + Catat Kondisi
+          </button>
+        )}
       </header>
+
+      {pesan && (
+        <p role="status" className="tanaman-feedback">
+          {pesan}
+        </p>
+      )}
 
       <section className="pemulihan-stats">
         <article className="pemulihan-stat">
@@ -165,19 +388,16 @@ function PemulihanTanaman() {
           <strong>{data.length}</strong>
           <small>Tanaman yang tercatat</small>
         </article>
-
         <article className="pemulihan-stat">
           <span>Perlu Ditangani</span>
           <strong>{perluDitangani}</strong>
           <small>Menunggu perawatan</small>
         </article>
-
         <article className="pemulihan-stat">
           <span>Dalam Perawatan</span>
           <strong>{dalamPerawatan}</strong>
           <small>Sedang ditangani</small>
         </article>
-
         <article className="pemulihan-stat">
           <span>Telah Pulih</span>
           <strong>{selesai}</strong>
@@ -185,7 +405,7 @@ function PemulihanTanaman() {
         </article>
       </section>
 
-      {formTerbuka && (
+      {role === "pengelola" && formTerbuka && (
         <form className="pemulihan-form" onSubmit={simpanLaporan}>
           <h2>
             {editId !== null
@@ -196,29 +416,64 @@ function PemulihanTanaman() {
           <div className="pemulihan-form-grid">
             <label>
               Nama tanaman
-              <input
+              <select
                 required
-                value={form.nama}
-                placeholder="Contoh: Pohon Mangga"
+                value={form.tanamanId}
                 onChange={(e) =>
-                  setForm({ ...form, nama: e.target.value })
+                  setForm({
+                    ...form,
+                    tanamanId: e.target.value,
+                    jadwalId: "",
+                  })
                 }
-              />
+              >
+                <option value="">Pilih tanaman</option>
+                {tanaman.map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.kode ? `${t.kode} - ` : ""}{t.nama}
+                  </option>
+                ))}
+              </select>
             </label>
 
             <label>
               Lokasi
               <input
-                required
-                value={form.lokasi}
-                placeholder="Contoh: Taman Depan"
-                onChange={(e) =>
-                  setForm({ ...form, lokasi: e.target.value })
-                }
+                readOnly
+                value={tanamanDipilih?.lokasi || ""}
+                placeholder="Terisi otomatis"
               />
             </label>
 
             <label>
+              Penanggung jawab
+              <input
+                readOnly
+                value={tanamanDipilih?.penanggungJawab || ""}
+                placeholder="Terisi otomatis"
+              />
+            </label>
+
+            <label>
+              Jadwal perawatan terkait
+              <select
+                value={form.jadwalId}
+                onChange={(e) =>
+                  setForm({ ...form, jadwalId: e.target.value })
+                }
+              >
+                <option value="">Tidak dikaitkan dengan jadwal</option>
+                {jadwalTersedia.map((j) => (
+                  <option key={j.id} value={j.id}>
+                    {j.kegiatan || j.jenis_perawatan}
+                    {" — "}{j.tanggal}
+                    {" ("}{j.status}{")"}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="pemulihan-full">
               Kondisi atau masalah
               <input
                 required
@@ -226,21 +481,6 @@ function PemulihanTanaman() {
                 placeholder="Contoh: Daun menguning"
                 onChange={(e) =>
                   setForm({ ...form, masalah: e.target.value })
-                }
-              />
-            </label>
-
-            <label>
-              Penanggung jawab
-              <input
-                required
-                value={form.penanggungJawab}
-                placeholder="Nama petugas"
-                onChange={(e) =>
-                  setForm({
-                    ...form,
-                    penanggungJawab: e.target.value,
-                  })
                 }
               />
             </label>
@@ -270,9 +510,16 @@ function PemulihanTanaman() {
             >
               Batal
             </button>
-
-            <button type="submit" className="pemulihan-btn">
-              {editId !== null ? "Simpan Perubahan" : "Simpan Laporan"}
+            <button
+              type="submit"
+              className="pemulihan-btn"
+              disabled={menyimpan}
+            >
+              {menyimpan
+                ? "Menyimpan..."
+                : editId !== null
+                ? "Simpan Perubahan"
+                : "Simpan Laporan"}
             </button>
           </div>
         </form>
@@ -282,9 +529,7 @@ function PemulihanTanaman() {
         <div className="pemulihan-section-heading">
           <div>
             <h2>Daftar Kondisi Tanaman</h2>
-            <p>
-              Informasi masalah dan tindak lanjut perawatan tanaman.
-            </p>
+            <p>Informasi masalah dan tindak lanjut perawatan tanaman.</p>
           </div>
         </div>
 
@@ -294,24 +539,24 @@ function PemulihanTanaman() {
             onChange={(e) => setPencarian(e.target.value)}
             placeholder="Cari nama, lokasi, atau masalah..."
           />
-
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
           >
-            <option>Semua</option>
-            <option>Perlu Ditangani</option>
-            <option>Dalam Perawatan</option>
-            <option>Pulih</option>
+            <option value="Semua">Semua</option>
+            <option value="Perlu Ditangani">Perlu Ditangani</option>
+            <option value="Dalam Perawatan">Dalam Perawatan</option>
+            <option value="Pulih">Pulih</option>
           </select>
         </div>
 
         <div className="pemulihan-cards">
-          {hasil.map((item) => (
+          {memuat && <p>Memuat data pemulihan...</p>}
+
+          {!memuat && hasil.map((item) => (
             <article className="pemulihan-card" key={item.id}>
               <div className="pemulihan-card-top">
                 <div className="pemulihan-plant-icon">🌱</div>
-
                 <span
                   className={`pemulihan-status ${
                     item.status === "Pulih"
@@ -326,67 +571,91 @@ function PemulihanTanaman() {
               </div>
 
               <h3>{item.nama}</h3>
+              {item.kode && <p>Kode: {item.kode}</p>}
               <p className="pemulihan-location">📍 {item.lokasi}</p>
 
-              <div className="pemulihan-problem">
+              <div className="pemulihan-detail">
                 <span>Kondisi tanaman</span>
+                <strong>{item.kondisiTanaman}</strong>
+              </div>
+              <div className="pemulihan-problem">
+                <span>Masalah yang dilaporkan</span>
                 <strong>{item.masalah}</strong>
               </div>
-
               <div className="pemulihan-detail">
                 <span>Penanggung jawab</span>
                 <strong>{item.penanggungJawab}</strong>
               </div>
-
               <div className="pemulihan-detail">
                 <span>Tindakan perawatan</span>
                 <strong>{item.tindakan}</strong>
               </div>
-
+              {item.kegiatanJadwal && (
+                <div className="pemulihan-detail">
+                  <span>Jadwal terkait</span>
+                  <strong>{item.kegiatanJadwal}</strong>
+                </div>
+              )}
               <div className="pemulihan-detail">
                 <span>Tanggal laporan</span>
                 <strong>{item.tanggal}</strong>
               </div>
 
-              <label className="pemulihan-status-label">
-                Perbarui status
-                <select
-                  value={item.status}
-                  onChange={(e) =>
-                    ubahStatus(item.id, e.target.value)
-                  }
-                >
-                  <option>Perlu Ditangani</option>
-                  <option>Dalam Perawatan</option>
-                  <option>Pulih</option>
-                </select>
-              </label>
+              {role === "pekerja" && (
+                <label className="pemulihan-status-label">
+                  Perbarui status
+                  <select
+                    value={item.status}
+                    onChange={(e) =>
+                      ubahStatus(item.id, e.target.value)
+                    }
+                  >
+                    <option value="Perlu Ditangani">
+                      Perlu Ditangani
+                    </option>
+                    <option value="Dalam Perawatan">
+                      Dalam Perawatan
+                    </option>
+                    <option value="Pulih">Pulih</option>
+                  </select>
+                </label>
+              )}
 
-              <div className="pemulihan-form-actions">
-                <button
-                  type="button"
-                  className="pemulihan-btn-secondary"
-                  onClick={() => bukaFormEdit(item)}
-                >
-                  ✏️ Edit
-                </button>
+                            {role === "pengelola" && (
+                <div className="pemulihan-form-actions">
+                  <button
+                    type="button"
+                    className="pemulihan-btn-secondary"
+                    onClick={() => bukaFormEdit(item)}
+                  >
+                    ✏️ Edit
+                  </button>
 
-                <button
-                  type="button"
-                  className="pemulihan-btn-secondary"
-                  onClick={() => hapusLaporan(item.id)}
-                >
-                  🗑️ Hapus
-                </button>
-              </div>
+                  <button
+                    type="button"
+                    className="pemulihan-btn-secondary"
+                    onClick={() => hapusLaporan(item.id)}
+                  >
+                    🗑️ Hapus
+                  </button>
+                </div>
+              )}
             </article>
           ))}
 
-          {hasil.length === 0 && (
+          {!memuat && hasil.length === 0 && (
             <div className="pemulihan-empty">
               <span>🌿</span>
-              <h3>Data tidak ditemukan</h3>
-              <p>Coba kata pencarian atau filter status yang lain.</p>
+              <h3>
+                {data.length === 0
+                  ? "Belum ada laporan pemulihan"
+                  : "Data tidak ditemukan"}
+              </h3>
+              <p>
+                {data.length === 0
+                  ? "Pilih Catat Kondisi untuk membuat laporan pertama."
+                  : "Coba kata pencarian atau filter status yang lain."}
+              </p>
             </div>
           )}
         </div>

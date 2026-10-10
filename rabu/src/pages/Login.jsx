@@ -10,6 +10,7 @@ function Login({ onLogin, onRegister }) {
   const [loading, setLoading] = useState(false);
 
 
+
 async function handleLogin(e) {
   e.preventDefault();
   setPesan('');
@@ -36,6 +37,7 @@ async function handleLogin(e) {
     setLoading(false);
   }
 }
+
 
 
   return (
@@ -189,18 +191,22 @@ async function handleLogin(e) {
 
             <div className="login-manager-divider" />
 
+            
             <button
               className="login-manager-button"
               type="button"
-              onClick={() =>
-                setPesan(
-                  'Login pengelola akan tersedia setelah akses pengelola dikonfigurasi.'
-                )
-              }
+              onClick={() => {
+                const form = document.querySelector('.login-card');
+
+                if (form) {
+                  form.requestSubmit();
+                }
+              }}
             >
               <span>♙</span>
               Masuk sebagai Pengelola
             </button>
+
           </form>
 
           <p className="login-bottom-note">

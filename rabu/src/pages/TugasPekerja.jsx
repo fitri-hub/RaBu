@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import './TugasPekerja.css';
 
-function TugasPekerja() {
+function TugasPekerja({ bukaHalaman }) {
   const [tugas, setTugas] = useState([]);
   const [memuat, setMemuat] = useState(true);
   const [error, setError] = useState('');
@@ -26,30 +26,30 @@ function TugasPekerja() {
     console.log('User ID yang sedang login:', userId);
 
     const { data, error: tugasError } = await supabase
-  .from('jadwal_perawatan')
-  .select(`
-    id,
-    tanaman_id,
-    jenis_perawatan,
-    tanggal,
-    waktu,
-    catatan,
-    status
-  `)
-  .eq('user_id', userId)
-  .order('tanggal', { ascending: true });
+      .from('jadwal_perawatan')
+      .select(`
+        id,
+        tanaman_id,
+        jenis_perawatan,
+        tanggal,
+        waktu,
+        catatan,
+        status
+      `)
+      .eq('user_id', userId)
+      .order('tanggal', { ascending: true });
 
     if (tugasError) {
-  console.error('Detail error Supabase:', tugasError);
-  console.error('Kode:', tugasError.code);
-  console.error('Pesan:', tugasError.message);
-  console.error('Detail:', tugasError.details);
-  console.error('Hint:', tugasError.hint);
+      console.error('Detail error Supabase:', tugasError);
+      console.error('Kode:', tugasError.code);
+      console.error('Pesan:', tugasError.message);
+      console.error('Detail:', tugasError.details);
+      console.error('Hint:', tugasError.hint);
 
-  setError('Tugas belum dapat dimuat. Silakan coba lagi.');
-  setMemuat(false);
-  return;
-}
+      setError('Tugas belum dapat dimuat. Silakan coba lagi.');
+      setMemuat(false);
+      return;
+    }
 
     setTugas(data || []);
     setMemuat(false);
@@ -114,6 +114,13 @@ function TugasPekerja() {
   if (memuat) {
     return (
       <section className="tugas-pekerja">
+        <button
+          type="button"
+          className="tombol-kembali"
+          onClick={() => bukaHalaman?.('dashboard-pekerja')}
+        >
+          ← Kembali
+        </button>
         <p>Memuat tugas perawatan...</p>
       </section>
     );
@@ -121,6 +128,14 @@ function TugasPekerja() {
 
   return (
     <section className="tugas-pekerja">
+      <button
+        type="button"
+        className="tombol-kembali"
+        onClick={() => bukaHalaman?.('dashboard-pekerja')}
+      >
+        ← Kembali
+      </button>
+
       <header className="tugas-header">
         <div>
           <p className="tugas-breadcrumb">Dashboard / Tugas Perawatan</p>

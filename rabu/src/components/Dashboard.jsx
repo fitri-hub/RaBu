@@ -1,66 +1,97 @@
 
 import { useEffect, useState } from 'react';
-import { bacaTanaman } from '../data/tanamanStorage';
+import { supabase } from '../lib/supabaseClient';
 import '../App.css';
 
-const KUNCI_JADWAL = 'rawatbumi-jadwal-perawatan';
-
-function bacaJadwal() {
-  try {
-    const data = localStorage.getItem(KUNCI_JADWAL);
-
-    return data ? JSON.parse(data) : [
-      {
-        id: 1,
-        tanaman: 'Pohon Mangga',
-        kegiatan: 'Penyiraman',
-        tanggal: '2026-10-10',
-        penanggungJawab: 'Anggota 1',
-        status: 'Belum Selesai',
-      },
-      {
-        id: 2,
-        tanaman: 'Pohon Ketapang',
-        kegiatan: 'Pemeriksaan Kondisi',
-        tanggal: '2026-10-11',
-        penanggungJawab: 'Anggota 2',
-        status: 'Belum Selesai',
-      },
-      {
-        id: 3,
-        tanaman: 'Pohon Jambu',
-        kegiatan: 'Pemupukan',
-        tanggal: '2026-10-12',
-        penanggungJawab: 'Anggota 1',
-        status: 'Selesai',
-      },
-    ];
-  } catch {
-    return [];
-  }
-}
-
 function Dashboard({ bukaHalaman }) {
-  const [tanaman, setTanaman] = useState(bacaTanaman);
-  const [jadwal, setJadwal] = useState(bacaJadwal);
+  const [tanaman, setTanaman] = useState([]);
+  const [jadwal, setJadwal] = useState([]);
+  const [memuat, setMemuat] = useState(true);
+  const [pesanError, setPesanError] = useState('');
+
+  async function muatDataDashboard() {
+    setMemuat(true);
+    setPesanError('');
+
+    try {
+      // Mengambil data tanaman dari Supabase
+      const {
+        data: dataTanaman,
+        error: errorTanaman,
+      } = await supabase
+        .from('tanaman')
+        .select(
+          'id, nama_tanaman, lokasi, kondisi, penanggung_jawab'
+        )
+        .order('id', { ascending: true });
+
+      if (errorTanaman) throw errorTanaman;
+
+      // Mengambil jadwal perawatan beserta nama tanamannya
+      const {
+        data: dataJadwal,
+        error: errorJadwal,
+      } = await supabase
+        .from('jadwal_perawatan')
+        .select(`
+          id,
+          tanaman_id,
+          jenis_perawatan,
+          kegiatan,
+          tanggal,
+          waktu,
+          status,
+          tanaman (
+            nama_tanaman,
+            lokasi
+          )
+        `)
+        .order('tanggal', { ascending: false });
+
+      if (errorJadwal) throw errorJadwal;
+
+      setTanaman(dataTanaman || []);
+
+      setJadwal(
+        (dataJadwal || []).map((item) => ({
+          ...item,
+          tanaman:
+            item.tanaman?.nama_tanaman ||
+            'Tanaman tidak ditemukan',
+          kegiatan:
+            item.kegiatan ||
+            item.jenis_perawatan ||
+            'Perawatan tanaman',
+        }))
+      );
+    } catch (error) {
+      console.error('Gagal memuat dashboard:', error);
+      setPesanError(
+        'Data dashboard gagal dimuat. Periksa koneksi dan konfigurasi Supabase.'
+      );
+    } finally {
+      setMemuat(false);
+    }
+  }
 
   useEffect(() => {
-    function perbarui() {
-      setTanaman(bacaTanaman());
-      setJadwal(bacaJadwal());
-    }
+    muatDataDashboard();
+
+    // Memperbarui dashboard saat data berubah di halaman lain
+    const perbarui = () => {
+      muatDataDashboard();
+    };
 
     window.addEventListener('tanaman-berubah', perbarui);
     window.addEventListener('jadwal-berubah', perbarui);
-    window.addEventListener('storage', perbarui);
 
     return () => {
       window.removeEventListener('tanaman-berubah', perbarui);
       window.removeEventListener('jadwal-berubah', perbarui);
-      window.removeEventListener('storage', perbarui);
     };
   }, []);
 
+  // Menghitung statistik berdasarkan data Supabase
   const sehat = tanaman.filter(
     (item) => item.kondisi === 'Sehat'
   ).length;
@@ -72,13 +103,11 @@ function Dashboard({ bukaHalaman }) {
   ).length;
 
   const belumSelesai = jadwal.filter(
-    (item) => item.status === 'Belum Selesai'
+    (item) => item.status === 'Belum'
   ).length;
 
   const aktivitasSelesai = jadwal
     .filter((item) => item.status === 'Selesai')
-    .slice()
-    .reverse()
     .slice(0, 4);
 
   const tanamanPerhatian = tanaman.filter(
@@ -120,16 +149,12 @@ function Dashboard({ bukaHalaman }) {
           </p>
         </div>
 
-        {/* Logo bulat di sebelah kanan */}
         <div className="rb-welcome-logo">
-          <img
-            src="/logo-rabu.png"
-            alt="Logo RaBu"
-          />
+          <img src="/logo-rabu.png" alt="Logo RaBu" />
         </div>
       </section>
 
-      {/* Statistik tanaman */}
+      {/* Statistik tanaman dan jadwal */}
       <section className="rb-stats">
         <button
           className="rb-stat"
@@ -137,7 +162,7 @@ function Dashboard({ bukaHalaman }) {
         >
           <span className="rb-stat-icon">🌱</span>
           <span className="rb-stat-label">Total Tanaman</span>
-          <strong>{tanaman.length}</strong>
+          <strong>{memuat ? '...' : tanaman.length}</strong>
           <span className="rb-stat-foot">
             Lihat semua tanaman ↗
           </span>
@@ -149,7 +174,7 @@ function Dashboard({ bukaHalaman }) {
         >
           <span className="rb-stat-icon">🍃</span>
           <span className="rb-stat-label">Tanaman Sehat</span>
-          <strong>{sehat}</strong>
+          <strong>{memuat ? '...' : sehat}</strong>
           <span className="rb-stat-foot">
             Lihat tanaman sehat ↗
           </span>
@@ -163,7 +188,7 @@ function Dashboard({ bukaHalaman }) {
         >
           <span className="rb-stat-icon">🪴</span>
           <span className="rb-stat-label">Perlu Perhatian</span>
-          <strong>{perhatian}</strong>
+          <strong>{memuat ? '...' : perhatian}</strong>
           <span className="rb-stat-foot">
             Perlu Perawatan + Kritis ↗
           </span>
@@ -172,17 +197,26 @@ function Dashboard({ bukaHalaman }) {
         <button
           className="rb-stat"
           onClick={() =>
-            bukaHalaman('jadwal', 'Belum Selesai')
+            bukaHalaman('jadwal', 'Belum')
           }
         >
           <span className="rb-stat-icon">📅</span>
           <span className="rb-stat-label">Tugas Perawatan</span>
-          <strong>{belumSelesai}</strong>
+          <strong>{memuat ? '...' : belumSelesai}</strong>
           <span className="rb-stat-foot">
             Lihat tugas aktif ↗
           </span>
         </button>
       </section>
+
+      {pesanError && (
+        <div className="rb-empty" role="alert">
+          <p>{pesanError}</p>
+          <button type="button" onClick={muatDataDashboard}>
+            Coba lagi
+          </button>
+        </div>
+      )}
 
       {/* Aktivitas dan tanaman yang perlu perhatian */}
       <section className="rb-panels">
@@ -195,15 +229,17 @@ function Dashboard({ bukaHalaman }) {
 
             <button
               className="rb-text-button"
-              onClick={() =>
-                bukaHalaman('jadwal', 'Selesai')
-              }
+              onClick={() => bukaHalaman('jadwal', 'Selesai')}
             >
               Lihat semua ↗
             </button>
           </div>
 
-          {aktivitasSelesai.length === 0 ? (
+          {memuat ? (
+            <div className="rb-empty">
+              <p>Memuat aktivitas perawatan...</p>
+            </div>
+          ) : aktivitasSelesai.length === 0 ? (
             <div className="rb-empty">
               <span>🌿</span>
               <strong>Belum ada aktivitas selesai</strong>
@@ -211,9 +247,7 @@ function Dashboard({ bukaHalaman }) {
                 Aktivitas akan muncul setelah jadwal ditandai selesai.
               </p>
               <button
-                onClick={() =>
-                  bukaHalaman('jadwal', 'Semua')
-                }
+                onClick={() => bukaHalaman('jadwal', 'Semua')}
               >
                 Buka jadwal perawatan
               </button>
@@ -221,10 +255,7 @@ function Dashboard({ bukaHalaman }) {
           ) : (
             <div className="rb-list">
               {aktivitasSelesai.map((item) => (
-                <div
-                  className="rb-list-item"
-                  key={item.id}
-                >
+                <div className="rb-list-item" key={item.id}>
                   <span className="rb-list-icon">✓</span>
 
                   <div className="rb-list-info">
@@ -259,7 +290,11 @@ function Dashboard({ bukaHalaman }) {
             </button>
           </div>
 
-          {tanamanPerhatian.length === 0 ? (
+          {memuat ? (
+            <div className="rb-empty">
+              <p>Memuat data tanaman...</p>
+            </div>
+          ) : tanamanPerhatian.length === 0 ? (
             <div className="rb-empty">
               <span>🌳</span>
               <strong>Semua tanaman terkendali!</strong>
@@ -280,8 +315,8 @@ function Dashboard({ bukaHalaman }) {
                   <span className="rb-list-icon">🌿</span>
 
                   <span className="rb-list-info">
-                    <strong>{item.nama}</strong>
-                    <span>{item.lokasi}</span>
+                    <strong>{item.nama_tanaman}</strong>
+                    <span>{item.lokasi || '-'}</span>
                   </span>
 
                   <span

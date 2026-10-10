@@ -1,10 +1,6 @@
-
 import { useEffect, useMemo, useState } from 'react';
 import './DataTanaman.css';
-import {
-  bacaTanaman,
-  simpanTanaman,
-} from '../data/tanamanStorage';
+import { supabase } from '../lib/supabaseClient';
 
 const FORM_KOSONG = {
   nama: '',
@@ -22,8 +18,29 @@ const PILIHAN_KONDISI = [
   'Kritis',
 ];
 
+
+function ubahFormatTanaman(data) {
+  return {
+    id: data.id,
+    kode: data.kode || `TNM-${String(data.id).padStart(3, '0')}`,
+    nama: data.nama_tanaman || '',
+    jenis: data.jenis_tanaman || 'Pohon Buah',
+    lokasi: data.lokasi || '',
+    tanggalTanam: data.tanggal_tanam || '',
+    kondisi: data.kondisi || 'Sehat',
+    penanggungJawab: data.profiles?.nama_lengkap || '',
+    userId: data.user_id,
+    catatan: data.catatan || '',
+  };
+}
+
+
 function DataTanaman({ filterAwal = 'Semua' }) {
-  const [tanaman, setTanaman] = useState(bacaTanaman);
+  const [tanaman, setTanaman] = useState([]);
+  const [memuat, setMemuat] = useState(true);
+  const [role, setRole] = useState('');
+  const [pekerja, setPekerja] = useState([]);
+  const [userId, setUserId] = useState(null);
   const [kataKunci, setKataKunci] = useState('');
   const [filterKondisi, setFilterKondisi] = useState(
     filterAwal === 'Perlu Perhatian' ? 'Perlu Perhatian' : filterAwal
@@ -35,9 +52,82 @@ function DataTanaman({ filterAwal = 'Semua' }) {
   const [form, setForm] = useState(FORM_KOSONG);
   const [pesan, setPesan] = useState('');
 
-  useEffect(() => {
-    simpanTanaman(tanaman);
-  }, [tanaman]);
+
+useEffect(() => {
+  async function muatData() {
+    setMemuat(true);
+
+    try {
+      const { data: authData, error: authError } =
+        await supabase.auth.getUser();
+
+      if (authError) throw authError;
+
+      const pengguna = authData.user;
+
+      if (!pengguna) {
+        setPesan('Silakan login kembali.');
+        return;
+      }
+
+      setUserId(pengguna.id);
+
+      const { data: profil, error: profilError } =
+        await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', pengguna.id)
+          .single();
+
+      if (profilError) throw profilError;
+
+      setRole(profil.role);
+
+      if (profil.role === 'pengelola') {
+        const { data: daftarPekerja, error: pekerjaError } =
+          await supabase
+            .from('profiles')
+            .select('id, nama_lengkap')
+            .eq('role', 'pekerja')
+            .order('nama_lengkap');
+
+        if (pekerjaError) throw pekerjaError;
+
+        setPekerja(daftarPekerja || []);
+      }
+
+      const { data, error } = await supabase
+        .from('tanaman')
+        .select(`
+          id,
+          user_id,
+          kode,
+          nama_tanaman,
+          jenis_tanaman,
+          lokasi,
+          tanggal_tanam,
+          kondisi,
+          catatan,
+          profiles!tanaman_user_id_fkey (
+            nama_lengkap
+          )
+        `)
+        .order('id', { ascending: true });
+
+      if (error) throw error;
+
+      setTanaman((data || []).map(ubahFormatTanaman));
+    } catch (error) {
+      console.error('Gagal memuat tanaman:', error);
+      setPesan(`Gagal memuat data tanaman: ${error.message}`);
+    } finally {
+      setMemuat(false);
+    }
+  }
+
+  muatData();
+}, []);
+
 
   useEffect(() => {
     setFilterKondisi(
@@ -208,13 +298,17 @@ function DataTanaman({ filterAwal = 'Semua' }) {
         </button>
       </header>
 
-      {pesan && (
-        <p className="tanaman-feedback" role="status">
-          {pesan}
-        </p>
-      )}
+      
+        {pesan && (
+          <p className="tanaman-feedback" role="status">
+            {pesan}
+          </p>
+        )}
 
-      <div className="tanaman-summary">
+        {memuat && <p>Memuat data tanaman...</p>}
+
+        <div className="tanaman-summary">
+
         <button
           type="button"
           className="tanaman-summary-card"

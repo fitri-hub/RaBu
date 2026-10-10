@@ -1,8 +1,28 @@
+
 .tugas-pekerja {
   width: 100%;
   padding: 28px;
   box-sizing: border-box;
   color: #244b35;
+}
+
+.tombol-kembali {
+  display: block;
+  width: fit-content;
+  margin: 0 0 20px 0;
+  padding: 9px 16px;
+  border: 1px solid #dce7df;
+  border-radius: 8px;
+  background: #fff;
+  color: #2f6847;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.tombol-kembali:hover {
+  background: #edf5ef;
 }
 
 .tugas-header {
