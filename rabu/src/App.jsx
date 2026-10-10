@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import './App.css';
 
@@ -14,6 +13,7 @@ import PenanggungJawab from './pages/PenanggungJawab';
 import DashboardPekerja from './pages/DashboardPekerja';
 import { supabase } from './lib/supabaseClient';
 import TugasPekerja from './pages/TugasPekerja';
+import Profil from './pages/Profil';
 
 function App() {
   const [halamanAktif, setHalamanAktif] = useState('beranda');
@@ -91,7 +91,6 @@ function App() {
         return;
       }
 
-      // Jalankan pengambilan profil setelah callback autentikasi selesai.
       Promise.resolve().then(() => perbaruiPengguna(sesiBaru));
     });
 
@@ -106,38 +105,65 @@ function App() {
       'dashboard',
       'tanaman',
       'jadwal',
-      'misi',
       'estafet',
     ];
 
     const halamanPekerja = [
       'dashboard-pekerja',
       'tugas',
-      'profil',
+      'misi',
     ];
+
+    if (
+      halaman === 'beranda' ||
+      halaman === 'login' ||
+      halaman === 'register'
+    ) {
+      setHalamanAktif(halaman);
+      return;
+    }
 
     if (!session) {
       setHalamanAktif('login');
       return;
     }
 
-    if (role === 'pekerja' && halamanPengelola.includes(halaman)) {
+    if (halaman === 'misi') {
+      setHalamanAktif('misi');
+      return;
+    }
+
+    if (
+      role === 'pekerja' &&
+      halamanPengelola.includes(halaman)
+    ) {
       setHalamanAktif('dashboard-pekerja');
       return;
     }
 
-    if (role !== 'pengelola' && halamanPengelola.includes(halaman)) {
+    if (
+      role !== 'pengelola' &&
+      halamanPengelola.includes(halaman)
+    ) {
       setHalamanAktif('dashboard-pekerja');
       return;
     }
 
-    if (role === 'pengelola' && halamanPekerja.includes(halaman)) {
+    if (
+      role === 'pengelola' &&
+      halamanPekerja.includes(halaman)
+    ) {
       setHalamanAktif('dashboard');
       return;
     }
 
-    if (halaman === 'tanaman') setFilterTanaman(filter);
-    if (halaman === 'jadwal') setFilterJadwal(filter);
+    if (halaman === 'tanaman') {
+      setFilterTanaman(filter);
+    }
+
+    if (halaman === 'jadwal') {
+      setFilterJadwal(filter);
+    }
 
     setHalamanAktif(halaman);
   }
@@ -220,12 +246,32 @@ function App() {
     );
   }
 
-if (role === 'pekerja') {
-  if (halamanAktif === 'tugas') {
-    return <TugasPekerja />;
-  }
+  // Tampilan pekerja tetap tanpa Sidebar.
+  if (role === 'pekerja') {
+    if (halamanAktif === 'tugas') {
+      return <TugasPekerja bukaHalaman={bukaHalaman} />;
+    }
 
-  if (halamanAktif === 'profil') {
+    if (halamanAktif === 'misi') {
+      return (
+        <PemulihanTanaman
+          bukaHalaman={bukaHalaman}
+        />
+      );
+    }
+    
+    if (halamanAktif === 'profil') {
+      return (
+        <Profil
+          role={role}
+          onLogout={logout}
+          onKembali={() =>
+            bukaHalaman('dashboard-pekerja')
+          }
+        />
+      );
+    }
+
     return (
       <DashboardPekerja
         nama={namaPengguna}
@@ -235,24 +281,19 @@ if (role === 'pekerja') {
     );
   }
 
-  return (
-    <DashboardPekerja
-      nama={namaPengguna}
-      bukaHalaman={bukaHalaman}
-      onLogout={logout}
-    />
-  );
-}
-
   if (role !== 'pengelola') {
     return (
       <div className="app-loading">
-        <p>Peran akun belum tersedia. Silakan hubungi pengelola.</p>
+        <p>
+          Peran akun belum tersedia. Silakan hubungi pengelola.
+        </p>
         <button onClick={logout}>Keluar</button>
       </div>
     );
   }
 
+  // Tampilan pengelola tetap memiliki Sidebar,
+  // termasuk ketika membuka halaman Profil.
   return (
     <div className="app">
       <Sidebar
@@ -279,9 +320,21 @@ if (role === 'pekerja') {
           />
         )}
 
-        {halamanAktif === 'misi' && <PemulihanTanaman />}
+        {halamanAktif === 'misi' && (
+          <PemulihanTanaman />
+        )}
 
-        {halamanAktif === 'estafet' && <PenanggungJawab />}
+        {halamanAktif === 'estafet' && (
+          <PenanggungJawab />
+        )}
+
+        {halamanAktif === 'profil' && (
+          <Profil
+            role={role}
+            onLogout={logout}
+            onKembali={() => bukaHalaman('dashboard')}
+          />
+        )}
 
         <button onClick={logout}>Keluar</button>
       </main>

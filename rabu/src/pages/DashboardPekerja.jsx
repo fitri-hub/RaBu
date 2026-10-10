@@ -34,6 +34,7 @@ function DashboardPekerja({ bukaHalaman, nama, onLogout }) {
         </div>
 
         <div className="pekerja-menu">
+          {/* Menu Tugas Perawatan */}
           <button
             type="button"
             className="pekerja-menu-card"
@@ -61,6 +62,35 @@ function DashboardPekerja({ bukaHalaman, nama, onLogout }) {
             </div>
           </button>
 
+          {/* Menu Pemulihan Tanaman */}
+          <button
+            type="button"
+            className="pekerja-menu-card"
+            onClick={() => bukaHalaman('misi')}
+          >
+            <img
+              className="pekerja-menu-photo"
+              src="/logo-rabu.png"
+              alt="Pemulihan tanaman"
+            />
+
+            <div className="pekerja-menu-info">
+              <span className="pekerja-menu-title">
+                Pemulihan Tanaman
+              </span>
+
+              <span className="pekerja-menu-description">
+                Lihat laporan kondisi tanaman dan
+                lakukan tindakan pemulihan.
+              </span>
+
+              <span className="pekerja-menu-action">
+                Lihat pemulihan →
+              </span>
+            </div>
+          </button>
+
+          {/* Menu Profil Saya */}
           <button
             type="button"
             className="pekerja-menu-card"

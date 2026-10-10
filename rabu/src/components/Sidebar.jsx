@@ -5,11 +5,16 @@ function Sidebar({ halamanAktif, gantiHalaman }) {
     { id: 'tanaman', ikon: '🌿', nama: 'Data Tanaman' },
     { id: 'jadwal', ikon: '📅', nama: 'Jadwal Perawatan' },
     { id: 'misi', ikon: '🌱', nama: 'Pemulihan Tanaman' },
+    { id: 'profil', ikon: '👤', nama: 'Profil Saya' },
+
+    // Pengembangan lanjutan: Estafet Pengelola
+    /*
     {
       id: 'estafet',
       ikon: '🪴',
       nama: 'Penanggung Jawab Tanaman',
     },
+    */
   ];
 
   return (
