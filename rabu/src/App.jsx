@@ -9,6 +9,8 @@ import DataTanaman from './pages/DataTanaman';
 import Beranda from './pages/Beranda';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import PemulihanTanaman from './pages/PemulihanTanaman';
+import PenanggungJawab from './pages/PenanggungJawab';
 import { supabase } from './lib/supabaseClient';
 
 function App() {
@@ -18,37 +20,35 @@ function App() {
   const [session, setSession] = useState(null);
   const [memeriksaSesi, setMemeriksaSesi] = useState(true);
 
+  useEffect(() => {
+    let masihAktif = true;
 
-useEffect(() => {
-  let masihAktif = true;
+    async function periksaSesi() {
+      const { data, error } = await supabase.auth.getSession();
 
-  async function periksaSesi() {
-    const { data, error } = await supabase.auth.getSession();
+      if (error) {
+        console.error('Gagal memeriksa sesi:', error.message);
+      }
 
-    if (error) {
-      console.error('Gagal memeriksa sesi:', error.message);
+      if (masihAktif) {
+        setSession(data?.session ?? null);
+        setMemeriksaSesi(false);
+      }
     }
 
-    if (masihAktif) {
-      setSession(data?.session ?? null);
-      setMemeriksaSesi(false);
-    }
-  }
+    periksaSesi();
 
-  periksaSesi();
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, sessionBaru) => {
+      setSession(sessionBaru);
+    });
 
-  const {
-    data: { subscription },
-  } = supabase.auth.onAuthStateChange((_event, sessionBaru) => {
-    setSession(sessionBaru);
-  });
-
-  return () => {
-    masihAktif = false;
-    subscription.unsubscribe();
-  };
-}, []);
-
+    return () => {
+      masihAktif = false;
+      subscription.unsubscribe();
+    };
+  }, []);
 
   function bukaHalaman(halaman, filter = 'Semua') {
     if (
@@ -80,17 +80,17 @@ useEffect(() => {
     return <p>Memeriksa sesi pengguna...</p>;
   }
 
- if (halamanAktif === 'beranda') {
-  return (
-    <Beranda
-      onLogin={() => bukaHalaman('login')}
-      onRegister={() => bukaHalaman('register')}
-      onJelajahi={() =>
-        bukaHalaman(session ? 'dashboard' : 'login')
-      }
-    />
-  );
-}
+  if (halamanAktif === 'beranda') {
+    return (
+      <Beranda
+        onLogin={() => bukaHalaman('login')}
+        onRegister={() => bukaHalaman('register')}
+        onJelajahi={() =>
+          bukaHalaman(session ? 'dashboard' : 'login')
+        }
+      />
+    );
+  }
 
   if (halamanAktif === 'login') {
     return (
@@ -111,7 +111,12 @@ useEffect(() => {
   }
 
   if (!session) {
-    return <Login onLogin={() => bukaHalaman('dashboard')} onRegister={() => bukaHalaman('register')} />;
+    return (
+      <Login
+        onLogin={() => bukaHalaman('dashboard')}
+        onRegister={() => bukaHalaman('register')}
+      />
+    );
   }
 
   return (
@@ -140,13 +145,9 @@ useEffect(() => {
           />
         )}
 
-        {halamanAktif === 'misi' && (
-          <h1>Halaman Misi Penyelamatan</h1>
-        )}
+        {halamanAktif === 'misi' && <PemulihanTanaman />}
 
-        {halamanAktif === 'estafet' && (
-          <h1>Halaman Estafet Penjaga</h1>
-        )}
+        {halamanAktif === 'estafet' && <PenanggungJawab />}
 
         <button onClick={logout}>Keluar</button>
       </main>
