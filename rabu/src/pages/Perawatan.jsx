@@ -1,4 +1,4 @@
-
+// Halaman jadwal perawatan tanaman
 import { useEffect, useState } from 'react';
 import './Perawatan.css';
 import { supabase } from '../lib/supabaseClient';

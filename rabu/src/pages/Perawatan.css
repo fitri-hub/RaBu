@@ -1,7 +1,4 @@
-/* ==========================================
-   RaBu — JADWAL PERAWATAN
-   CSS MODERN - KONSISTEN DENGAN DATA TANAMAN
-   ========================================== */
+/* Styling halaman jadwal perawatan tanaman */
 
 .page-section {
   --green: #34794b;
@@ -30,6 +27,7 @@
     opacity: 0;
     transform: translateY(6px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -46,7 +44,7 @@
   margin-bottom: 24px;
 }
 
-.page-header > div {
+.page-header>div {
   min-width: 0;
 }
 
@@ -75,7 +73,7 @@
   text-shadow: 0 1px 2px rgba(255, 255, 255, 0.25);
 }
 
-.page-header h1 + p {
+.page-header h1+p {
   margin: 8px 0 0;
   color: #566d5e;
   font-size: 14px;
@@ -398,7 +396,7 @@
   margin: 20px 24px;
 }
 
-.care-empty > span {
+.care-empty>span {
   display: block;
   margin-bottom: 12px;
   font-size: 32px;
@@ -485,6 +483,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .page-section,
   .care-card,
   .care-item {
