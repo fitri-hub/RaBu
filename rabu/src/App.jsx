@@ -299,7 +299,6 @@ function App() {
       <Sidebar
         halamanAktif={halamanAktif}
         gantiHalaman={(halaman) => bukaHalaman(halaman)}
-        onLogout={logout}
       />
 
       <main className="main-content">

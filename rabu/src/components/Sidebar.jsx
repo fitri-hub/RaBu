@@ -49,7 +49,7 @@ function IconUser() {
   );
 }
 
-function Sidebar({ halamanAktif, gantiHalaman, onLogout }) {
+function Sidebar({ halamanAktif, gantiHalaman }) {
   const menu = [
     { id: 'dashboard', Icon: IconDashboard, nama: 'Dashboard' },
     { id: 'tanaman', Icon: IconLeaf, nama: 'Data Tanaman' },
@@ -73,68 +73,32 @@ function Sidebar({ halamanAktif, gantiHalaman, onLogout }) {
         </div>
       </div>
 
-      <p className="menu-label">MENU UTAMA</p>
+      <div className="menu-section">
+        <h3 className="menu-label">MENU UTAMA</h3>
 
-      <nav className="navigation">
-        {menu.map((item) => {
-          const isActive = halamanAktif === item.id;
-          const { Icon } = item;
-          return (
-            <a
-              key={item.id}
-              href={`#${item.id}`}
-              className={`nav-link ${isActive ? 'active' : ''}`}
-              onClick={(event) => {
-                event.preventDefault();
-                gantiHalaman(item.id);
-              }}
-            >
-              <span className="nav-icon">
-                <Icon />
-              </span>
-              <span className="nav-text">{item.nama}</span>
-              {isActive && <span className="nav-active-pill" aria-hidden="true" />}
-            </a>
-          );
-        })}
-      </nav>
-
-      <div className="sidebar-bottom">
-        <div className="sidebar-profile-info">
-          <div className="profile-avatar">P</div>
-
-          <div className="sidebar-profile-text">
-            <strong>Pengelola</strong>
-            <p>Tim RaBu</p>
-          </div>
-        </div>
-
-        {onLogout && (
-          <button
-            type="button"
-            className="sidebar-logout-btn"
-            onClick={onLogout}
-            title="Keluar dari akun"
-            aria-label="Keluar"
-          >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-              <polyline points="16 17 21 12 16 7" />
-              <line x1="21" y1="12" x2="9" y2="12" />
-            </svg>
-            <span>Keluar</span>
-          </button>
-        )}
+        <nav className="navigation">
+          {menu.map((item) => {
+            const isActive = halamanAktif === item.id;
+            const { Icon } = item;
+            return (
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                className={`nav-link ${isActive ? 'active' : ''}`}
+                onClick={(event) => {
+                  event.preventDefault();
+                  gantiHalaman(item.id);
+                }}
+              >
+                <span className="nav-icon">
+                  <Icon />
+                </span>
+                <span className="nav-text">{item.nama}</span>
+                {isActive && <span className="nav-active-pill" aria-hidden="true" />}
+              </a>
+            );
+          })}
+        </nav>
       </div>
     </aside>
   );
