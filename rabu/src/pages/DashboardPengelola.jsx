@@ -45,6 +45,15 @@ function IconCalendar({ className = '' }) {
   );
 }
 
+function IconClock({ className = '' }) {
+  return (
+    <svg className={className} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="10" />
+      <polyline points="12 6 12 12 16 14" />
+    </svg>
+  );
+}
+
 function IconCheck({ className = '' }) {
   return (
     <svg className={className} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -91,6 +100,7 @@ function DashboardPengelola({ bukaHalaman }) {
   const [jadwal, setJadwal] = useState([]);
   const [memuat, setMemuat] = useState(true);
   const [pesanError, setPesanError] = useState('');
+  const [waktuSekarang, setWaktuSekarang] = useState(new Date());
 
   const hariIni = new Date().toLocaleDateString('id-ID', {
     weekday: 'long',
@@ -98,6 +108,21 @@ function DashboardPengelola({ bukaHalaman }) {
     month: 'long',
     year: 'numeric',
   });
+
+  const jamSekarang = waktuSekarang.toLocaleTimeString('id-ID', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  });
+
+  // Update jam setiap detik
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setWaktuSekarang(new Date());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   async function muatDataDashboard() {
     setMemuat(true);
@@ -197,9 +222,16 @@ function DashboardPengelola({ bukaHalaman }) {
         </div>
 
         <div className="rb-topbar-right">
-          <div className="rb-date-open">
-            <IconCalendar />
-            <span>{hariIni}</span>
+          <div className="rb-datetime-group">
+            <div className="rb-date-open">
+              <IconCalendar />
+              <span>{hariIni}</span>
+            </div>
+
+            <div className="rb-time-open">
+              <IconClock />
+              <span>{jamSekarang}</span>
+            </div>
           </div>
 
           <div className="rb-actions-open">
