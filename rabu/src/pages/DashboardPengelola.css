@@ -1,0 +1,1016 @@
+/* ========================================================
+   DASHBOARD PENGELOLA — RAWATBUMI (RABU)
+   Desain Modern, Berisi, Profesional
+   - Ikon Vektor SVG Bersih (Tanpa Emote)
+   - Header Terbuka & Bersih (Tanpa Box Container)
+   - Kartu Statistik Elegan Tanpa Teks Terpantau
+   - Latar Belakang Selaras dengan bg.jpeg
+======================================================== */
+
+.rb-dashboard {
+  --rb-forest-900: #0f2818;
+  --rb-forest-800: #173b24;
+  --rb-forest-700: #235437;
+  --rb-forest-600: #2c6843;
+  --rb-forest-500: #357f52;
+  --rb-forest-100: #eaf5ed;
+  --rb-forest-50:  #f3f9f4;
+
+  --rb-amber-700:  #b45309;
+  --rb-amber-600:  #d97706;
+  --rb-amber-100:  #fef3c7;
+  --rb-amber-50:   #fffbeb;
+
+  --rb-red-700:    #b91c1c;
+  --rb-red-600:    #dc2626;
+  --rb-red-100:    #fee2e2;
+  --rb-red-50:     #fef2f2;
+
+  --rb-blue-700:   #1d4ed8;
+  --rb-blue-600:   #2563eb;
+  --rb-blue-100:   #dbeafe;
+  --rb-blue-50:    #eff6ff;
+
+  --rb-bg-card:    rgba(255, 255, 255, 0.94);
+  --rb-border:     #e0ebe0;
+  --rb-border-subtle: #edf3ec;
+  --rb-border-hover: #c4dbc3;
+
+  --rb-text-main:  #152e1f;
+  --rb-text-body:  #34493b;
+  --rb-text-muted: #566d5e;
+  --rb-text-soft:  #7d9384;
+
+  --rb-shadow-sm:  0 2px 8px rgba(18, 43, 27, 0.04);
+  --rb-shadow-card: 0 4px 18px rgba(18, 43, 27, 0.06);
+  --rb-shadow-hover: 0 10px 28px rgba(18, 43, 27, 0.1);
+
+  font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: var(--rb-text-main);
+  padding-bottom: 24px;
+}
+
+/* ================= 1. HEADER BESAR & TERBUKA (TANPA BOX CONTAINER) ================= */
+.rb-topbar-open {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 22px;
+  padding: 4px 2px 0;
+}
+
+.rb-topbar-left {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rb-system-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  width: fit-content;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  background: rgba(35, 84, 55, 0.14);
+  color: #0b2915;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.rb-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #1a5e34;
+  animation: pulseGreen 2s infinite;
+}
+
+@keyframes pulseGreen {
+  0% {
+    box-shadow: 0 0 0 0 rgba(26, 94, 52, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(26, 94, 52, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(26, 94, 52, 0);
+  }
+}
+
+.rb-title-large {
+  margin: 0;
+  color: #0b2915;
+  font-size: clamp(42px, 5vw, 56px);
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  line-height: 1.15;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.25);
+}
+
+.rb-topbar-right {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* Tanggal Jelas dengan Kontras Tinggi */
+.rb-date-open {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 18px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  color: #0b2915;
+  font-size: 13.5px;
+  font-weight: 800;
+  letter-spacing: -0.2px;
+  box-shadow: 0 4px 14px rgba(11, 41, 21, 0.08);
+}
+
+.rb-date-open svg {
+  color: #1a5e34;
+  width: 17px;
+  height: 17px;
+}
+
+/* Tombol Aksi Katalog & Jadwal Proporsional */
+.rb-actions-open {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rb-btn-open {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 20px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.95);
+  color: #0b2915;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(11, 41, 21, 0.08);
+  transition: all 0.2s ease;
+}
+
+.rb-btn-open:hover {
+  background: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(11, 41, 21, 0.12);
+}
+
+.rb-btn-open.active {
+  background: #174b29;
+  color: #ffffff;
+  border-color: #174b29;
+  box-shadow: 0 4px 14px rgba(23, 75, 41, 0.3);
+}
+
+.rb-btn-open.active:hover {
+  background: #11381e;
+  box-shadow: 0 6px 18px rgba(23, 75, 41, 0.4);
+}
+
+/* ================= 2. HERO WELCOME BANNER ================= */
+.rb-welcome {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 28px;
+  min-height: 230px;
+  padding: 34px 40px;
+  margin-bottom: 24px;
+  border-radius: 24px;
+
+  background-image:
+    linear-gradient(
+      135deg,
+      rgba(14, 38, 24, 0.88) 0%,
+      rgba(20, 54, 33, 0.74) 55%,
+      rgba(35, 84, 55, 0.45) 100%
+    ),
+    url('/latar-beranda.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  box-shadow: 0 10px 30px rgba(18, 43, 27, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.rb-welcome-content {
+  position: relative;
+  z-index: 2;
+  max-width: 640px;
+}
+
+.rb-welcome-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.rb-welcome-label {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 14px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.rb-welcome-subbadge {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.rb-welcome-title {
+  margin: 0 0 8px;
+  color: #ffffff;
+  font-size: clamp(26px, 3.2vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.4px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.rb-welcome-description {
+  margin: 0 0 16px;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 14px;
+  line-height: 1.6;
+  max-width: 520px;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+.rb-welcome-chips {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.rb-welcome-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.rb-welcome-chip strong {
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.rb-welcome-chip.alert {
+  background: rgba(245, 158, 11, 0.25);
+  border-color: rgba(245, 158, 11, 0.45);
+}
+
+.rb-welcome-logo {
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 82px;
+  height: 82px;
+  padding: 10px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.2);
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  transition: transform 0.3s ease;
+}
+
+.rb-welcome-logo:hover {
+  transform: scale(1.05) rotate(3deg);
+}
+
+.rb-welcome-logo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* ================= 3. STAT CARDS (TANPA SUBTEKS TERPANTAU) ================= */
+.rb-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(235px, 1fr));
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.rb-stat-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 22px 22px 18px;
+  background: var(--rb-bg-card);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--rb-border);
+  border-radius: 20px;
+  box-shadow: var(--rb-shadow-card);
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  overflow: hidden;
+}
+
+.rb-stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--rb-shadow-hover);
+  border-color: var(--rb-border-hover);
+}
+
+.rb-stat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.rb-stat-icon-wrapper {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  transition: transform 0.2s ease;
+}
+
+.rb-stat-card:hover .rb-stat-icon-wrapper {
+  transform: scale(1.08);
+}
+
+.rb-stat-badge {
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  background: var(--rb-forest-50);
+  color: var(--rb-forest-700);
+  border: 1px solid var(--rb-border);
+}
+
+.rb-stat-badge.badge-alert {
+  background: var(--rb-amber-50);
+  color: var(--rb-amber-700);
+  border-color: #fde68a;
+}
+
+.rb-stat-body {
+  margin-bottom: 16px;
+}
+
+.rb-stat-label {
+  display: block;
+  color: var(--rb-text-muted);
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.rb-stat-value {
+  display: block;
+  color: var(--rb-forest-900);
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+}
+
+.rb-stat-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--rb-border-subtle);
+  color: var(--rb-forest-700);
+  font-size: 12px;
+  font-weight: 700;
+  transition: color 0.2s ease;
+}
+
+.rb-stat-footer svg {
+  transition: transform 0.2s ease;
+}
+
+.rb-stat-card:hover .rb-stat-footer svg {
+  transform: translateX(4px);
+}
+
+.theme-primary .rb-stat-icon-wrapper {
+  background: var(--rb-forest-100);
+  color: var(--rb-forest-700);
+}
+
+.theme-success .rb-stat-icon-wrapper {
+  background: #e6f7ec;
+  color: #15803d;
+}
+
+.theme-warning .rb-stat-icon-wrapper {
+  background: var(--rb-amber-100);
+  color: var(--rb-amber-700);
+}
+
+.theme-info .rb-stat-icon-wrapper {
+  background: #e8f0fe;
+  color: #1e40af;
+}
+
+/* ================= 4. PANELS ================= */
+.rb-panels {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  gap: 22px;
+}
+
+.rb-panel {
+  display: flex;
+  flex-direction: column;
+  padding: 26px;
+  background: var(--rb-bg-card);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--rb-border);
+  border-radius: 22px;
+  box-shadow: var(--rb-shadow-card);
+  transition: border-color 0.2s ease;
+}
+
+.rb-panel:hover {
+  border-color: var(--rb-border-hover);
+}
+
+.rb-panel-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--rb-border-subtle);
+}
+
+.rb-panel-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rb-panel-heading-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rb-panel-heading-row h3 {
+  margin: 0;
+  color: var(--rb-forest-900);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.rb-count-chip {
+  padding: 3px 9px;
+  border-radius: 9999px;
+  background: var(--rb-forest-50);
+  color: var(--rb-forest-700);
+  border: 1px solid var(--rb-border);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.rb-count-chip.alert {
+  background: var(--rb-amber-50);
+  color: var(--rb-amber-700);
+  border-color: #fde68a;
+}
+
+.rb-panel-title-group p {
+  margin: 0;
+  color: var(--rb-text-muted);
+  font-size: 12.5px;
+}
+
+.rb-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  border: 1px solid var(--rb-border);
+  background: var(--rb-forest-50);
+  color: var(--rb-forest-700);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.rb-pill-btn:hover {
+  background: var(--rb-forest-700);
+  color: #ffffff;
+  border-color: var(--rb-forest-700);
+  box-shadow: 0 4px 12px rgba(35, 84, 55, 0.2);
+}
+
+.rb-pill-btn svg {
+  transition: transform 0.2s ease;
+}
+
+.rb-pill-btn:hover svg {
+  transform: translateX(3px);
+}
+
+/* ================= 5. FEED AKTIVITAS PERAWATAN ================= */
+.rb-activity-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.rb-feed-item {
+  position: relative;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.rb-feed-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.rb-check-bubble {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--rb-forest-100);
+  color: var(--rb-forest-700);
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 8px rgba(35, 84, 55, 0.12);
+}
+
+.rb-feed-line {
+  flex: 1;
+  width: 2px;
+  min-height: 24px;
+  background: #e2ede1;
+  margin: 4px 0 0;
+}
+
+.rb-feed-item:last-child .rb-feed-line {
+  display: none;
+}
+
+.rb-feed-content {
+  flex: 1;
+  padding: 14px 16px;
+  background: #fbfdfa;
+  border: 1px solid var(--rb-border);
+  border-radius: 16px;
+  transition: all 0.2s ease;
+}
+
+.rb-feed-content:hover {
+  background: #ffffff;
+  border-color: var(--rb-border-hover);
+  box-shadow: var(--rb-shadow-sm);
+  transform: translateX(2px);
+}
+
+.rb-feed-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.rb-feed-title {
+  margin: 0;
+  color: var(--rb-forest-900);
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.rb-feed-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.rb-meta-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  background: #f1f6ef;
+  color: var(--rb-text-body);
+}
+
+.rb-meta-pill svg {
+  color: var(--rb-forest-600);
+}
+
+.rb-meta-pill.plant {
+  font-weight: 700;
+  color: var(--rb-forest-800);
+}
+
+.rb-meta-pill.time {
+  color: var(--rb-text-muted);
+}
+
+/* ================= 6. TRIAGE LIST ================= */
+.rb-triage-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rb-triage-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 16px;
+  background: #fbfdfa;
+  border: 1px solid var(--rb-border);
+  border-radius: 16px;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+  font: inherit;
+  transition: all 0.2s ease;
+}
+
+.rb-triage-card:hover {
+  background: #ffffff;
+  box-shadow: var(--rb-shadow-sm);
+  transform: translateX(3px);
+}
+
+.rb-triage-card.card-critical {
+  border-left: 4px solid var(--rb-red-600);
+}
+
+.rb-triage-card.card-warning {
+  border-left: 4px solid var(--rb-amber-600);
+}
+
+.rb-triage-icon-col {
+  flex-shrink: 0;
+}
+
+.rb-triage-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+}
+
+.rb-triage-icon.icon-critical {
+  background: var(--rb-red-100);
+  color: var(--rb-red-700);
+}
+
+.rb-triage-icon.icon-warning {
+  background: var(--rb-amber-100);
+  color: var(--rb-amber-700);
+}
+
+.rb-triage-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.rb-triage-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.rb-triage-name {
+  color: var(--rb-forest-900);
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rb-triage-meta-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.rb-action-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--rb-forest-700);
+  opacity: 0.8;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.rb-triage-card:hover .rb-action-hint {
+  opacity: 1;
+  transform: translateX(2px);
+}
+
+/* ================= 7. STATUS PILLS ================= */
+.rb-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  flex-shrink: 0;
+}
+
+.rb-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.rb-status-pill.success {
+  background: #eaf6ec;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.rb-status-pill.success .rb-dot {
+  background: #16a34a;
+}
+
+.rb-status-pill.warning {
+  background: var(--rb-amber-50);
+  color: var(--rb-amber-700);
+  border: 1px solid #fde68a;
+}
+
+.rb-status-pill.warning .rb-dot {
+  background: var(--rb-amber-600);
+}
+
+.rb-status-pill.danger {
+  background: var(--rb-red-50);
+  color: var(--rb-red-700);
+  border: 1px solid #fecaca;
+}
+
+.rb-status-pill.danger .rb-dot {
+  background: var(--rb-red-600);
+}
+
+@keyframes pulseDot {
+  0% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(220, 38, 38, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+  }
+}
+
+.rb-dot.pulse {
+  animation: pulseDot 1.8s infinite;
+}
+
+/* ================= 8. EMPTY & LOADING STATES ================= */
+.rb-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 36px 20px;
+  border-radius: 18px;
+  background: #f9fbf8;
+  border: 1px dashed var(--rb-border);
+}
+
+.rb-empty-icon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--rb-forest-100);
+  color: var(--rb-forest-700);
+  margin-bottom: 12px;
+}
+
+.rb-empty-icon.success-icon {
+  background: #e6f7ec;
+  color: #15803d;
+}
+
+.rb-empty-state strong {
+  color: var(--rb-forest-900);
+  font-size: 15px;
+  margin-bottom: 6px;
+}
+
+.rb-empty-state p {
+  margin: 0 0 16px;
+  color: var(--rb-text-muted);
+  font-size: 13px;
+  max-width: 320px;
+  line-height: 1.5;
+}
+
+.rb-loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 40px 20px;
+  color: var(--rb-text-muted);
+  font-size: 13.5px;
+}
+
+.rb-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--rb-border);
+  border-top-color: var(--rb-forest-600);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.rb-alert-box {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  border-radius: 16px;
+  background: var(--rb-red-50);
+  border: 1px solid #fecaca;
+  color: var(--rb-red-700);
+}
+
+.rb-alert-text {
+  flex: 1;
+}
+
+.rb-alert-text strong {
+  display: block;
+  font-size: 13.5px;
+  margin-bottom: 2px;
+}
+
+.rb-alert-text p {
+  margin: 0;
+  font-size: 12.5px;
+}
+
+.rb-alert-box button {
+  padding: 6px 14px;
+  border-radius: 9999px;
+  border: none;
+  background: var(--rb-red-600);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* ================= 9. RESPONSIVE ================= */
+@media (max-width: 900px) {
+  .rb-topbar-open {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .rb-welcome {
+    flex-direction: column;
+    text-align: center;
+    padding: 30px 22px;
+  }
+
+  .rb-welcome-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .rb-welcome-badge-row {
+    justify-content: center;
+  }
+
+  .rb-welcome-chips {
+    justify-content: center;
+  }
+
+  .rb-panels {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .rb-topbar-open {
+    padding-top: 0;
+  }
+
+  .rb-welcome {
+    padding: 24px 18px;
+    border-radius: 20px;
+  }
+
+  .rb-welcome-logo {
+    width: 64px;
+    height: 64px;
+  }
+
+  .rb-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .rb-panel {
+    padding: 18px;
+    border-radius: 18px;
+  }
+
+  .rb-feed-meta,
+  .rb-triage-meta-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .rb-action-hint {
+    margin-left: 0;
+    margin-top: 4px;
+  }
+}
