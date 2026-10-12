@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import './App.css';
 
 import Sidebar from './components/Sidebar';
-import Dashboard from './components/Dashboard';
+import DashboardPengelola from './pages/DashboardPengelola';
 import Perawatan from './pages/Perawatan';
 import DataTanaman from './pages/DataTanaman';
 import Beranda from './pages/Beranda';
@@ -259,7 +259,7 @@ function App() {
         />
       );
     }
-    
+
     if (halamanAktif === 'profil') {
       return (
         <Profil
@@ -299,11 +299,12 @@ function App() {
       <Sidebar
         halamanAktif={halamanAktif}
         gantiHalaman={(halaman) => bukaHalaman(halaman)}
+        onLogout={logout}
       />
 
       <main className="main-content">
         {halamanAktif === 'dashboard' && (
-          <Dashboard bukaHalaman={bukaHalaman} />
+          <DashboardPengelola bukaHalaman={bukaHalaman} />
         )}
 
         {halamanAktif === 'tanaman' && (
@@ -335,8 +336,6 @@ function App() {
             onKembali={() => bukaHalaman('dashboard')}
           />
         )}
-
-        <button onClick={logout}>Keluar</button>
       </main>
     </div>
   );
