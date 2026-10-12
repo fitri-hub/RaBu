@@ -64,8 +64,6 @@ Untuk menjalankan aplikasi melalui Docker, siapkan Docker Desktop atau Docker En
    VITE_SUPABASE_PUBLISHABLE_KEY=PUBLISHABLE_KEY_SUPABASE_KAMU
    ```
 
-   Ganti nilai tersebut dengan konfigurasi Supabase yang sesuai.
-
 5. Jalankan aplikasi:
 
    ```bash
