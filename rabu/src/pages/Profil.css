@@ -1,210 +1,494 @@
 
 .profil-page {
+  --cream: #f5f5ed;
+  --white: #ffffff;
+  --forest: #234333;
+  --green: #4e7553;
+  --sage: #e8f0e2;
+  --muted: #7b857a;
+  --border: #e6eadd;
+
+  width: 100%;
   min-height: 100vh;
-  padding: 32px;
+  padding: 32px 24px 44px;
   box-sizing: border-box;
-  background: #f5f8f2;
-  color: #24352a;
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(226, 239, 217, 0.4),
+      transparent 32%
+    ),
+    var(--cream);
+  color: var(--forest);
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
+
+/* BATAS LEBAR KONTEN */
+
+.profil-header,
+.profil-page > .profil-card,
+.profil-page > .profil-form-card,
+.profil-page > .profil-logout-card,
+.profil-page > .profil-message,
+.profil-page > .profil-error,
+.profil-page > .profil-loading {
+  width: 100%;
+  max-width: 880px;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+/* HEADER */
 
 .profil-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   gap: 20px;
-  margin-bottom: 26px;
+  margin-bottom: 22px;
 }
 
 .profil-eyebrow {
-  margin: 0 0 8px;
-  color: #53805a;
-  font-size: 12px;
+  margin: 0 0 7px;
+  color: var(--green);
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 1.5px;
 }
 
 .profil-header h1 {
-  margin: 0 0 8px;
-  color: #244b35;
+  margin: 0;
+  color: var(--forest);
   font-size: 30px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.8px;
 }
 
-.profil-header p:last-child,
-.profil-description {
-  color: #748174;
-  font-size: 14px;
-  line-height: 1.7;
+.profil-header p:last-child {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
 }
 
-.profil-card {
+/* TOMBOL UMUM */
+
+.profil-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 11px 17px;
+  margin-top: 17px;
+  border: 1px solid var(--forest);
+  border-radius: 10px;
+  background: var(--forest);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.profil-button:hover:not(:disabled) {
+  background: #365942;
+  box-shadow: 0 4px 12px rgba(35, 67, 51, 0.12);
+  transform: translateY(-1px);
+}
+
+.profil-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.profil-header .profil-button-secondary {
+  flex-shrink: 0;
+  min-height: 40px;
+  margin-top: 0;
+  padding: 10px 14px;
+  color: var(--forest);
+  background: #ffffff;
+  border-color: var(--border);
+}
+
+.profil-header .profil-button-secondary:hover:not(:disabled) {
+  background: var(--sage);
+  box-shadow: none;
+}
+
+/* ========================================
+   KARTU IDENTITAS
+======================================== */
+
+.profil-page > .profil-card {
   display: flex;
   align-items: center;
-  gap: 20px;
-  margin-bottom: 20px;
-  padding: 26px;
-  background: #fff;
-  border: 1px solid #e5ebdf;
+  gap: 22px;
+  min-height: 142px;
+  margin-bottom: 18px;
+  padding: 25px 28px;
+  background: var(--white);
+  border: 1px solid var(--border);
   border-radius: 18px;
+  box-shadow: 0 5px 18px rgba(35, 67, 51, 0.035);
 }
 
+/* AVATAR */
+
 .profil-avatar {
-  width: 82px;
-  height: 82px;
-  flex-shrink: 0;
   display: grid;
   place-items: center;
-  border-radius: 50%;
-  background: #e6f3df;
-  color: #347044;
+  flex-shrink: 0;
+  width: 84px;
+  height: 84px;
+  box-sizing: border-box;
+  color: var(--forest);
+  background: linear-gradient(145deg, #edf4e7, #dce9d2);
+  border: 3px solid #f6f8f2;
+  border-radius: 23px;
+  box-shadow: 0 2px 8px rgba(35, 67, 51, 0.08);
   font-size: 32px;
   font-weight: 800;
 }
 
-.profil-identitas h2,
-.profil-form-card h2,
-.profil-logout-card h2 {
-  margin: 0 0 8px;
-  color: #2b4932;
-  font-size: 20px;
+.profil-identitas {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.profil-identitas h2 {
+  margin: 0 0 7px;
+  color: var(--forest);
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: -0.4px;
+  text-align: left;
 }
 
 .profil-identitas p {
-  margin: 0 0 10px;
-  color: #748174;
+  margin: 0 0 11px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: left;
   overflow-wrap: anywhere;
 }
 
 .profil-role {
-  display: inline-block;
-  padding: 6px 12px;
-  border-radius: 20px;
-  background: #e8f4e4;
-  color: #347044;
-  font-size: 12px;
-  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  color: #427047;
+  background: var(--sage);
+  border-radius: 30px;
+  font-size: 11px;
+  font-weight: 750;
 }
 
-.profil-form-card {
+/* ========================================
+   KARTU FORM
+======================================== */
+
+.profil-page > .profil-form-card {
   display: block;
+  margin-bottom: 18px;
+  padding: 26px 28px 28px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: 0 5px 18px rgba(35, 67, 51, 0.035);
 }
+
+.profil-form-card h2 {
+  margin: 0 0 7px;
+  color: var(--forest);
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.4;
+  letter-spacing: -0.3px;
+  text-align: left;
+}
+
+.profil-form-card .profil-description {
+  margin: 0 0 19px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+  text-align: left;
+}
+
+/* FORM TIDAK MEMENUHI SELURUH KARTU */
 
 .profil-form-card form {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  width: 100%;
+  max-width: 540px;
+  margin: 0;
 }
 
 .profil-form-card label {
-  margin: 16px 0 7px;
-  color: #385340;
-  font-size: 14px;
-  font-weight: 650;
+  display: block;
+  width: 100%;
+  margin: 13px 0 7px;
+  color: #405745;
+  font-size: 12px;
+  font-weight: 750;
+  text-align: left;
 }
 
 .profil-form-card input {
+  display: block;
   width: 100%;
-  max-width: 560px;
+  min-height: 45px;
+  padding: 11px 13px;
   box-sizing: border-box;
-  padding: 12px 14px;
-  border: 1px solid #d7e2d3;
+  color: #293a2e;
+  background: #fcfcf8;
+  border: 1px solid #e1e7da;
   border-radius: 10px;
-  background: #fff;
-  color: #24352a;
-  font: inherit;
+  outline: none;
+  font-family: inherit;
+  font-size: 13px;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .profil-form-card input:focus {
-  outline: 2px solid #b6d3ac;
-  border-color: #8caf87;
+  border-color: #88a77d;
+  box-shadow: 0 0 0 3px rgba(100, 139, 91, 0.12);
 }
 
 .profil-form-card input[readonly] {
-  background: #f5f7f3;
-  color: #7b897b;
+  color: #7d877a;
+  background: #f0f3ec;
+  border-color: #e5e9e0;
+  cursor: default;
 }
 
-.profil-button {
-  margin-top: 20px;
-  padding: 11px 17px;
-  border: 0;
-  border-radius: 10px;
-  background: #347044;
-  color: #fff;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
+.profil-form-card .profil-button {
+  align-self: flex-start;
+  margin-top: 17px;
 }
 
-.profil-button:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
+/* ========================================
+   KARTU KELUAR
+======================================== */
+
+.profil-page > .profil-logout-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 26px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: 0 5px 18px rgba(35, 67, 51, 0.035);
 }
 
-.profil-button-secondary {
-  margin-top: 0;
-  border: 1px solid #d7e2d3;
-  background: #fff;
-  color: #45634c;
+.profil-logout-card h2 {
+  margin: 0 0 6px;
+  color: var(--forest);
+  font-size: 16px;
+  font-weight: 800;
+  text-align: left;
+}
+
+.profil-logout-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
 }
 
 .profil-button-danger {
+  flex-shrink: 0;
+  min-height: 42px;
   margin-top: 0;
-  background: #b93838;
+  padding: 11px 17px;
+  background: #b83d3d;
+  border-color: #b83d3d;
 }
 
-.profil-logout-card {
-  justify-content: space-between;
+.profil-button-danger:hover:not(:disabled) {
+  background: #9e3232;
 }
 
-.profil-message,
-.profil-error {
-  margin-bottom: 18px;
-  padding: 13px 16px;
+/* PESAN STATUS */
+
+.profil-page > .profil-message,
+.profil-page > .profil-error {
+  margin-bottom: 16px;
+  padding: 13px 15px;
   border-radius: 10px;
-  font-size: 14px;
-}
-
-.profil-message {
-  background: #e8f4e4;
-  color: #28643b;
-}
-
-.profil-error {
-  background: #fff0ef;
-  color: #a52e2e;
+  font-size: 13px;
+  line-height: 1.6;
   overflow-wrap: anywhere;
 }
 
-.profil-loading {
-  padding: 30px;
-  color: #45634c;
+.profil-page > .profil-message {
+  color: #32643a;
+  background: #e8f3e3;
+  border: 1px solid #d9e8d2;
 }
 
-@media (max-width: 600px) {
+.profil-page > .profil-error {
+  color: #a33434;
+  background: #fff0ee;
+  border: 1px solid #f0d7d1;
+}
+
+.profil-page > .profil-loading {
+  padding: 25px 0;
+  color: var(--forest);
+}
+
+/* ========================================
+   TABLET
+======================================== */
+
+@media (max-width: 760px) {
   .profil-page {
-    padding: 20px 15px;
+    padding: 26px 18px 34px;
+  }
+
+  .profil-page > .profil-card,
+  .profil-page > .profil-form-card {
+    padding: 23px;
+  }
+
+  .profil-page > .profil-logout-card {
+    padding: 20px 23px;
+  }
+
+  .profil-avatar {
+    width: 76px;
+    height: 76px;
+    border-radius: 21px;
+    font-size: 29px;
+  }
+
+  .profil-form-card form {
+    max-width: 100%;
+  }
+}
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 520px) {
+  .profil-page {
+    padding: 19px 13px 28px;
   }
 
   .profil-header {
     align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 19px;
+  }
+
+  .profil-eyebrow {
+    font-size: 10px;
   }
 
   .profil-header h1 {
     font-size: 25px;
   }
 
-  .profil-card {
-    padding: 20px;
+  .profil-header p:last-child {
+    font-size: 12px;
   }
 
-  .profil-logout-card {
-    align-items: flex-start;
-    flex-direction: column;
+  .profil-header .profil-button-secondary {
+    min-height: 36px;
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+
+  .profil-page > .profil-card {
+    gap: 15px;
+    min-height: auto;
+    margin-bottom: 15px;
+    padding: 19px 16px;
+    border-radius: 15px;
   }
 
   .profil-avatar {
     width: 65px;
     height: 65px;
-    font-size: 26px;
+    border-radius: 17px;
+    font-size: 25px;
+  }
+
+  .profil-identitas h2 {
+    font-size: 18px;
+  }
+
+  .profil-identitas p {
+    font-size: 12px;
+  }
+
+  .profil-page > .profil-form-card {
+    margin-bottom: 15px;
+    padding: 21px 17px;
+    border-radius: 15px;
+  }
+
+  .profil-form-card h2 {
+    font-size: 18px;
+  }
+
+  .profil-form-card .profil-description {
+    margin-bottom: 17px;
+    font-size: 12px;
+  }
+
+  .profil-form-card form {
+    max-width: none;
+  }
+
+  .profil-form-card label {
+    font-size: 12px;
+  }
+
+  .profil-form-card input {
+    min-height: 44px;
+    font-size: 13px;
+  }
+
+  .profil-form-card .profil-button {
+    width: 100%;
+  }
+
+  .profil-page > .profil-logout-card {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px 17px;
+    border-radius: 15px;
+  }
+
+  .profil-logout-card h2 {
+    font-size: 15px;
+  }
+
+  .profil-button-danger {
+    width: 100%;
   }
 }
