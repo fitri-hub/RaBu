@@ -92,16 +92,19 @@ function DashboardPekerja({ bukaHalaman, nama, onLogout }) {
             className="pekerja-menu-card"
             onClick={() => bukaHalaman('misi')}
           >
-          <div className="pekerja-menu-image-wrap pemulihan">
-            <img
-              className="pekerja-menu-photo"
-              src="/misi.png"
-              alt="Pemulihan tanaman"
-              onError={(e) => {
-                console.error('Gambar gagal dimuat:', e.currentTarget.src);
-              }}
-            />
-          </div>
+            <div className="pekerja-menu-image-wrap pemulihan">
+              <img
+                className="pekerja-menu-photo"
+                src="/misi.png"
+                alt="Pemulihan tanaman"
+                onError={(e) => {
+                  console.error(
+                    'Gambar gagal dimuat:',
+                    e.currentTarget.src
+                  );
+                }}
+              />
+            </div>
 
             <div className="pekerja-menu-info">
               <span className="pekerja-menu-category">
