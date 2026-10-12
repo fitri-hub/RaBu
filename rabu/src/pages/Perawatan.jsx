@@ -149,12 +149,7 @@ function Perawatan() {
     <section className="page-section">
       <header className="page-header">
         <div>
-          <p className="breadcrumb">Halaman / Perawatan</p>
           <h1>Jadwal Perawatan</h1>
-          <p>
-            Atur kegiatan perawatan agar tanaman tetap sehat
-            dan terjaga.
-          </p>
         </div>
       </header>
 
@@ -185,7 +180,6 @@ function Perawatan() {
         <div className="panel-heading">
           <div>
             <h3>Daftar Jadwal</h3>
-            <p>Pantau kegiatan perawatan tanaman</p>
           </div>
 
           <select
@@ -199,62 +193,93 @@ function Perawatan() {
           </select>
         </div>
 
-        <div className="care-list">
-          {memuat && <p>Memuat jadwal perawatan...</p>}
+        <div className="care-table-wrap">
+          {memuat && <p className="loading-text">Memuat jadwal perawatan...</p>}
 
-          {!memuat &&
-            jadwalTampil.map((item) => (
-              <article className="care-item" key={item.id}>
-                <div className="care-item-icon">🌿</div>
-
-                <div className="care-item-info">
-                  <h4>{item.kegiatan}</h4>
-                  <p>
-                    {item.tanaman}{' '}
-                    {item.kode && `(${item.kode})`}
-                  </p>
-                  <p>Lokasi: {item.lokasi || '-'}</p>
-                  <p>Tanggal: {item.tanggal}</p>
-                  <p>
-                    Penanggung jawab:{' '}
-                    {item.penanggungJawab || '-'}
-                  </p>
-                </div>
-
-                <div className="care-item-action">
-                  <span
-                    className={
-                      item.status === 'Selesai'
-                        ? 'care-status done'
-                        : 'care-status pending'
-                    }
-                  >
-                    {item.status === 'Selesai'
-                      ? 'Selesai'
-                      : 'Belum Selesai'}
-                  </span>
-
-                  <button
-                    type="button"
-                    onClick={() => ubahStatus(item)}
-                    disabled={jadwalDiproses !== null}
-                  >
-                    {jadwalDiproses === item.id
-                      ? 'Menyimpan...'
-                      : item.status === 'Selesai'
-                        ? 'Batalkan'
-                        : 'Tandai Selesai'}
-                  </button>
-                </div>
-              </article>
-            ))}
+          {!memuat && jadwalTampil.length > 0 && (
+            <table className="care-table">
+              <thead>
+                <tr>
+                  <th>Kegiatan Perawatan</th>
+                  <th>Tanaman</th>
+                  <th>Lokasi</th>
+                  <th>Tanggal</th>
+                  <th>Penanggung Jawab</th>
+                  <th>Status</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                {jadwalTampil.map((item) => (
+                  <tr key={item.id}>
+                    <td>
+                      <div className="table-cell-activity">
+                        <div className="activity-content">
+                          <strong className="activity-title">{item.kegiatan}</strong>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="table-cell-plant">
+                        <strong className="plant-name">{item.tanaman}</strong>
+                        {item.kode && <span className="plant-code">{item.kode}</span>}
+                      </div>
+                    </td>
+                    <td>
+                      <span className="cell-text">{item.lokasi || '-'}</span>
+                    </td>
+                    <td>
+                      <span className="cell-text">{item.tanggal}</span>
+                    </td>
+                    <td>
+                      <span className="cell-text">{item.penanggungJawab || '-'}</span>
+                    </td>
+                    <td>
+                      <span
+                        className={
+                          item.status === 'Selesai'
+                            ? 'care-status done'
+                            : 'care-status pending'
+                        }
+                      >
+                        {item.status === 'Selesai'
+                          ? 'Selesai'
+                          : 'Belum Selesai'}
+                      </span>
+                    </td>
+                    <td>
+                      <button
+                        type="button"
+                        className={
+                          item.status === 'Selesai'
+                            ? 'action-btn action-cancel'
+                            : 'action-btn action-complete'
+                        }
+                        onClick={() => ubahStatus(item)}
+                        disabled={jadwalDiproses !== null}
+                      >
+                        {jadwalDiproses === item.id
+                          ? 'Menyimpan...'
+                          : item.status === 'Selesai'
+                            ? 'Batalkan'
+                            : 'Tandai Selesai'}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
 
           {!memuat && jadwalTampil.length === 0 && (
-            <p className="care-empty">
-              {jadwal.length === 0
-                ? 'Belum ada jadwal perawatan di database.'
-                : 'Tidak ada jadwal dengan status ini.'}
-            </p>
+            <div className="care-empty">
+              <span>🌱</span>
+              <p>
+                {jadwal.length === 0
+                  ? 'Belum ada jadwal perawatan di database.'
+                  : 'Tidak ada jadwal dengan status ini.'}
+              </p>
+            </div>
           )}
         </div>
       </section>
