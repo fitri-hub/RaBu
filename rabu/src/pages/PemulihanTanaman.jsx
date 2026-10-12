@@ -1,4 +1,4 @@
-
+// Halaman pengelolaan pemulihan tanaman
 import { useEffect, useState } from "react";
 import "./PemulihanTanaman.css";
 import { supabase } from "../lib/supabaseClient";
@@ -197,7 +197,7 @@ function PemulihanTanaman({ bukaHalaman }) {
     if (menyimpan) return;
 
     if (!form.tanamanId || !form.masalah.trim() ||
-        !form.tindakan.trim()) {
+      !form.tindakan.trim()) {
       setPesan("Lengkapi tanaman, kondisi, dan tindakan.");
       return;
     }
@@ -510,8 +510,8 @@ function PemulihanTanaman({ bukaHalaman }) {
               {menyimpan
                 ? "Menyimpan..."
                 : editId !== null
-                ? "Simpan Perubahan"
-                : "Simpan Laporan"}
+                  ? "Simpan Perubahan"
+                  : "Simpan Laporan"}
             </button>
           </div>
         </form>
@@ -531,13 +531,12 @@ function PemulihanTanaman({ bukaHalaman }) {
                 <div className="pemulihan-card-top">
                   <div className="pemulihan-plant-icon">🌱</div>
                   <span
-                    className={`pemulihan-status ${
-                      item.status === "Pulih"
+                    className={`pemulihan-status ${item.status === "Pulih"
                         ? "pemulihan-status-selesai"
                         : item.status === "Dalam Perawatan"
-                        ? "pemulihan-status-proses"
-                        : "pemulihan-status-menunggu"
-                    }`}
+                          ? "pemulihan-status-proses"
+                          : "pemulihan-status-menunggu"
+                      }`}
                   >
                     {item.status}
                   </span>

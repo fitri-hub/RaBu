@@ -1,7 +1,4 @@
-/* ==========================================
-   RaBu — PEMULIHAN TANAMAN
-   CSS MODERN - KONSISTEN DENGAN HALAMAN LAIN
-   ========================================== */
+/* Styling halaman pemulihan tanaman */
 
 .pemulihan-page {
   --green: #34794b;
@@ -30,6 +27,7 @@
     opacity: 0;
     transform: translateY(6px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -46,7 +44,7 @@
   margin-bottom: 24px;
 }
 
-.pemulihan-header > div {
+.pemulihan-header>div {
   min-width: 0;
 }
 
@@ -453,10 +451,10 @@
   border: 1px solid rgba(228, 236, 225, 0.8);
   border-radius: 18px;
   background: #ffffff;
-  box-shadow: 
-    0 2px 4px rgba(0,0,0,0.04),
-    0 6px 12px rgba(0,0,0,0.05),
-    0 12px 24px rgba(52,121,75,0.08);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.04),
+    0 6px 12px rgba(0, 0, 0, 0.05),
+    0 12px 24px rgba(52, 121, 75, 0.08);
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
 }
@@ -468,7 +466,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(52,121,75,0.02) 0%, rgba(74,157,101,0.03) 100%);
+  background: linear-gradient(135deg, rgba(52, 121, 75, 0.02) 0%, rgba(74, 157, 101, 0.03) 100%);
   opacity: 0;
   transition: opacity 0.35s ease;
   pointer-events: none;
@@ -476,11 +474,11 @@
 
 .pemulihan-card:hover {
   transform: translateY(-6px);
-  box-shadow: 
-    0 4px 8px rgba(0,0,0,0.06),
-    0 12px 24px rgba(0,0,0,0.08),
-    0 24px 48px rgba(52,121,75,0.12);
-  border-color: rgba(52,121,75,0.18);
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.06),
+    0 12px 24px rgba(0, 0, 0, 0.08),
+    0 24px 48px rgba(52, 121, 75, 0.12);
+  border-color: rgba(52, 121, 75, 0.18);
 }
 
 .pemulihan-card:hover::before {
@@ -492,7 +490,7 @@
 .pemulihan-card-header {
   position: relative;
   background: linear-gradient(135deg, #f0f7ed 0%, #e8f3e4 50%, #f0f7ed 100%);
-  border-bottom: 2px solid rgba(52,121,75,0.08);
+  border-bottom: 2px solid rgba(52, 121, 75, 0.08);
   padding: 0;
 }
 
@@ -513,7 +511,7 @@
   border-radius: 14px;
   background: linear-gradient(135deg, #d4eddb 0%, #b8d9c3 100%);
   font-size: 24px;
-  box-shadow: 
+  box-shadow:
     0 4px 12px rgba(52, 121, 75, 0.15),
     inset 0 2px 4px rgba(255, 255, 255, 0.8);
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
@@ -522,7 +520,7 @@
 
 .pemulihan-card:hover .pemulihan-plant-icon {
   transform: scale(1.08) rotate(-6deg);
-  box-shadow: 
+  box-shadow:
     0 6px 16px rgba(52, 121, 75, 0.20),
     inset 0 2px 4px rgba(255, 255, 255, 0.9);
 }
@@ -578,7 +576,7 @@
   letter-spacing: -0.3px;
 }
 
-.pemulihan-card-header > p {
+.pemulihan-card-header>p {
   margin: 0 0 8px;
   padding: 6px 12px;
   margin-left: 24px;
@@ -599,7 +597,7 @@
   margin: 0 24px 24px 24px;
   padding: 10px 14px;
   border-radius: 10px;
-  background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(250,252,249,0.9) 100%);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(250, 252, 249, 0.9) 100%);
   color: #2d5a3e;
   font-size: 13px;
   font-weight: 650;
@@ -731,7 +729,7 @@
 .pemulihan-card .pemulihan-form-actions {
   margin: 0;
   padding: 18px 24px;
-  border-top: 2px solid rgba(52,121,75,0.08);
+  border-top: 2px solid rgba(52, 121, 75, 0.08);
   background: linear-gradient(to bottom, #fafcf9 0%, #f5f9f3 100%);
   justify-content: center;
   gap: 10px;
@@ -768,7 +766,7 @@
   white-space: normal;
 }
 
-.pemulihan-empty > span {
+.pemulihan-empty>span {
   display: block;
   margin-bottom: 12px;
   font-size: 32px;
@@ -879,7 +877,7 @@
     flex-wrap: wrap;
   }
 
-  .pemulihan-form-actions > button {
+  .pemulihan-form-actions>button {
     flex: 1;
   }
 }
