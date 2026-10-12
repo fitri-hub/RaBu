@@ -354,15 +354,7 @@ function PemulihanTanaman({ bukaHalaman }) {
             </button>
           )}
 
-          <p className="pemulihan-eyebrow">
-            RAWATBUMI · KESEHATAN TANAMAN
-          </p>
-
           <h1>Pemulihan Tanaman</h1>
-
-          <p>
-            Pantau tanaman yang bermasalah dan catat tindakan perawatannya.
-          </p>
         </div>
 
         {role === "pengelola" && (
@@ -527,101 +519,85 @@ function PemulihanTanaman({ bukaHalaman }) {
 
       <section className="pemulihan-list">
         <div className="pemulihan-section-heading">
-          <div>
-            <h2>Daftar Kondisi Tanaman</h2>
-            <p>Informasi masalah dan tindak lanjut perawatan tanaman.</p>
-          </div>
-        </div>
-
-        <div className="pemulihan-toolbar">
-          <input
-            value={pencarian}
-            onChange={(e) => setPencarian(e.target.value)}
-            placeholder="Cari nama, lokasi, atau masalah..."
-          />
-          <select
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-          >
-            <option value="Semua">Semua</option>
-            <option value="Perlu Ditangani">Perlu Ditangani</option>
-            <option value="Dalam Perawatan">Dalam Perawatan</option>
-            <option value="Pulih">Pulih</option>
-          </select>
+          <h2>Daftar Kondisi Tanaman</h2>
         </div>
 
         <div className="pemulihan-cards">
           {memuat && <p>Memuat data pemulihan...</p>}
 
-          {!memuat && hasil.map((item) => (
+          {!memuat && data.map((item) => (
             <article className="pemulihan-card" key={item.id}>
-              <div className="pemulihan-card-top">
-                <div className="pemulihan-plant-icon">🌱</div>
-                <span
-                  className={`pemulihan-status ${
-                    item.status === "Pulih"
-                      ? "pemulihan-status-selesai"
-                      : item.status === "Dalam Perawatan"
-                      ? "pemulihan-status-proses"
-                      : "pemulihan-status-menunggu"
-                  }`}
-                >
-                  {item.status}
-                </span>
-              </div>
-
-              <h3>{item.nama}</h3>
-              {item.kode && <p>Kode: {item.kode}</p>}
-              <p className="pemulihan-location">📍 {item.lokasi}</p>
-
-              <div className="pemulihan-detail">
-                <span>Kondisi tanaman</span>
-                <strong>{item.kondisiTanaman}</strong>
-              </div>
-              <div className="pemulihan-problem">
-                <span>Masalah yang dilaporkan</span>
-                <strong>{item.masalah}</strong>
-              </div>
-              <div className="pemulihan-detail">
-                <span>Penanggung jawab</span>
-                <strong>{item.penanggungJawab}</strong>
-              </div>
-              <div className="pemulihan-detail">
-                <span>Tindakan perawatan</span>
-                <strong>{item.tindakan}</strong>
-              </div>
-              {item.kegiatanJadwal && (
-                <div className="pemulihan-detail">
-                  <span>Jadwal terkait</span>
-                  <strong>{item.kegiatanJadwal}</strong>
-                </div>
-              )}
-              <div className="pemulihan-detail">
-                <span>Tanggal laporan</span>
-                <strong>{item.tanggal}</strong>
-              </div>
-
-              {role === "pekerja" && (
-                <label className="pemulihan-status-label">
-                  Perbarui status
-                  <select
-                    value={item.status}
-                    onChange={(e) =>
-                      ubahStatus(item.id, e.target.value)
-                    }
+              <div className="pemulihan-card-header">
+                <div className="pemulihan-card-top">
+                  <div className="pemulihan-plant-icon">🌱</div>
+                  <span
+                    className={`pemulihan-status ${
+                      item.status === "Pulih"
+                        ? "pemulihan-status-selesai"
+                        : item.status === "Dalam Perawatan"
+                        ? "pemulihan-status-proses"
+                        : "pemulihan-status-menunggu"
+                    }`}
                   >
-                    <option value="Perlu Ditangani">
-                      Perlu Ditangani
-                    </option>
-                    <option value="Dalam Perawatan">
-                      Dalam Perawatan
-                    </option>
-                    <option value="Pulih">Pulih</option>
-                  </select>
-                </label>
-              )}
+                    {item.status}
+                  </span>
+                </div>
 
-                            {role === "pengelola" && (
+                <h3>{item.nama}</h3>
+                {item.kode && <p>Kode: {item.kode}</p>}
+                <p className="pemulihan-location">{item.lokasi}</p>
+              </div>
+
+              <div className="pemulihan-card-body">
+                <div className="pemulihan-detail">
+                  <span>Kondisi tanaman</span>
+                  <strong>{item.kondisiTanaman}</strong>
+                </div>
+                <div className="pemulihan-problem">
+                  <span>Masalah yang dilaporkan</span>
+                  <strong>{item.masalah}</strong>
+                </div>
+                <div className="pemulihan-detail">
+                  <span>Penanggung jawab</span>
+                  <strong>{item.penanggungJawab}</strong>
+                </div>
+                <div className="pemulihan-detail">
+                  <span>Tindakan perawatan</span>
+                  <strong>{item.tindakan}</strong>
+                </div>
+                {item.kegiatanJadwal && (
+                  <div className="pemulihan-detail">
+                    <span>Jadwal terkait</span>
+                    <strong>{item.kegiatanJadwal}</strong>
+                  </div>
+                )}
+                <div className="pemulihan-detail">
+                  <span>Tanggal laporan</span>
+                  <strong>{item.tanggal}</strong>
+                </div>
+
+                {role === "pekerja" && (
+                  <label className="pemulihan-status-label">
+                    Perbarui status
+                    <select
+                      value={item.status}
+                      onChange={(e) =>
+                        ubahStatus(item.id, e.target.value)
+                      }
+                    >
+                      <option value="Perlu Ditangani">
+                        Perlu Ditangani
+                      </option>
+                      <option value="Dalam Perawatan">
+                        Dalam Perawatan
+                      </option>
+                      <option value="Pulih">Pulih</option>
+                    </select>
+                  </label>
+                )}
+              </div>
+
+              {role === "pengelola" && (
                 <div className="pemulihan-form-actions">
                   <button
                     type="button"
@@ -630,7 +606,6 @@ function PemulihanTanaman({ bukaHalaman }) {
                   >
                     ✏️ Edit
                   </button>
-
                   <button
                     type="button"
                     className="pemulihan-btn-secondary"
@@ -643,19 +618,11 @@ function PemulihanTanaman({ bukaHalaman }) {
             </article>
           ))}
 
-          {!memuat && hasil.length === 0 && (
+          {!memuat && data.length === 0 && (
             <div className="pemulihan-empty">
               <span>🌿</span>
-              <h3>
-                {data.length === 0
-                  ? "Belum ada laporan pemulihan"
-                  : "Data tidak ditemukan"}
-              </h3>
-              <p>
-                {data.length === 0
-                  ? "Pilih Catat Kondisi untuk membuat laporan pertama."
-                  : "Coba kata pencarian atau filter status yang lain."}
-              </p>
+              <h3>Belum ada laporan pemulihan</h3>
+              <p>Pilih Catat Kondisi untuk membuat laporan pertama.</p>
             </div>
           )}
         </div>
