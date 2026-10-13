@@ -78,7 +78,7 @@ Image Docker RaBu tersedia melalui repository publik berikut:
 
 [**RaBu di Docker Hub**](https://hub.docker.com/r/fitri947/rabu-uts)
 
-Tag image untuk pengumpulan UTS: `submit-UTS`.
+Tag image untuk pengumpulan UTS: `latest`.
 
 Untuk mengunduh image dan menjalankan aplikasi:
 
