@@ -344,13 +344,10 @@ function PemulihanTanaman({ bukaHalaman }) {
           {role === "pekerja" && (
             <button
               type="button"
-              className="pemulihan-btn-secondary"
-              onClick={() =>
-                bukaHalaman?.("dashboard-pekerja")
-              }
-              style={{ marginBottom: "16px" }}
+              className="pemulihan-btn-secondary pemulihan-btn-kembali"
+              onClick={() => bukaHalaman?.("dashboard-pekerja")}
             >
-              ← Kembali ke Dashboard
+              ← Kembali
             </button>
           )}
 

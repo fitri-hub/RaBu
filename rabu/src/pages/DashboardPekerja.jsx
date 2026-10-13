@@ -70,7 +70,7 @@ function DashboardPekerja({ bukaHalaman, nama, onLogout }) {
           >
             <img
               className="pekerja-menu-photo"
-              src="/logo-rabu.png"
+              src="/misi.png"
               alt="Pemulihan tanaman"
             />
 

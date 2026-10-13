@@ -138,7 +138,7 @@ function TugasPekerja({ bukaHalaman }) {
 
       <header className="tugas-header">
         <div>
-          <p className="tugas-breadcrumb">Dashboard / Tugas Perawatan</p>
+          <p className="tugas-breadcrumb"></p>
           <h1>Tugas Perawatan</h1>
           <p className="tugas-subtitle">
             Pantau dan selesaikan tugas perawatan tanaman yang menjadi
