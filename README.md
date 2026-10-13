@@ -60,8 +60,8 @@ Untuk menjalankan aplikasi melalui Docker, siapkan Docker Desktop atau Docker En
 4. Buat file `.env.local` di direktori utama proyek dengan konfigurasi berikut:
 
    ```env
-   VITE_SUPABASE_URL=URL_SUPABASE_KAMU
-   VITE_SUPABASE_PUBLISHABLE_KEY=PUBLISHABLE_KEY_SUPABASE_KAMU
+   VITE_SUPABASE_URL=(https://bevqvhyciukudrmaawto.supabase.co)
+   VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_ZJHHxuiN_OyzGT1wXAU_Gw_U6sjYUQ5
    ```
 
 5. Jalankan aplikasi:
