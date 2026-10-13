@@ -83,8 +83,8 @@ Tag image untuk pengumpulan UTS: `submit-UTS`.
 Untuk mengunduh image dan menjalankan aplikasi:
 
 ```bash
-docker pull fitri947/rabu-uts:submit-UTS
-docker run -d --name rabu-container -p 8080:80 fitri947/rabu-uts:submit-UTS
+docker pull fitri947/rabu-uts:latest
+docker run -d --name rabu-container -p 8080:80 fitri947/rabu-uts:latest
 ```
 
 Setelah container berjalan, buka alamat berikut di browser:
