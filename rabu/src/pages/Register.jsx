@@ -38,6 +38,12 @@ function Register({ onRegister, onLogin }) {
         },
       });
 
+      console.log("HASIL REGISTRASI:", data);
+      console.log("SESSION REGISTRASI:", data.session);
+      console.log("ID USER:", data.user?.id);
+      console.log("ID SESSION:", data.session?.user?.id);
+      console.log("ACCESS TOKEN ADA:", !!data.session?.access_token);
+
       if (error) {
         setPesan(
           error.message === 'User already registered'
@@ -51,14 +57,12 @@ function Register({ onRegister, onLogin }) {
 if (data.user) {
   const { error: profileError } = await supabase
     .from('profiles')
-    .upsert(
-      {
-        id: data.user.id,
-        nama_lengkap: nama.trim(),
-        role: 'pekerja',
-      },
-      { onConflict: 'id' }
-    );
+    .insert({
+      id: data.user.id,
+      nama_lengkap: nama.trim(),
+      role: 'pekerja',
+      aktif: true,
+    });
 
   if (profileError) {
     console.error('Gagal menyimpan profil:', profileError);

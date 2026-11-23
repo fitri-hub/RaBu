@@ -94,6 +94,7 @@ function TugasPekerja({ bukaHalaman }) {
           t.id === item.id ? { ...t, status: data.status } : t
         )
       );
+      window.dispatchEvent(new Event('jadwal-berubah'));
     }
 
     setTugasDiproses(null);
