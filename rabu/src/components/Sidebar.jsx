@@ -56,6 +56,7 @@ function Sidebar({ halamanAktif, gantiHalaman }) {
     { id: 'tanaman', Icon: IconLeaf, nama: 'Data Tanaman' },
     { id: 'jadwal', Icon: IconCalendar, nama: 'Jadwal Perawatan' },
     { id: 'misi', Icon: IconRecovery, nama: 'Pemulihan Tanaman' },
+    { id: 'estafet', Icon: IconUser, nama: 'Estafet Pengelola' },
     { id: 'profil', Icon: IconUser, nama: 'Profil Saya' },
   ];
 

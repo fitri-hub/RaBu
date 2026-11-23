@@ -1,0 +1,246 @@
+
+.estafet-page {
+  min-height: 100%;
+  padding: 32px;
+  background: #f6f8f3;
+  color: #293e30;
+  font-family: inherit;
+}
+
+.estafet-header {
+  margin-bottom: 25px;
+}
+
+.estafet-eyebrow {
+  margin: 0 0 9px;
+  color: #56845f;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+}
+
+.estafet-header h1 {
+  margin: 0 0 10px;
+  color: #2d613e;
+  font-size: 30px;
+}
+
+.estafet-header > p:last-child {
+  color: #829087;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.estafet-banner {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 23px;
+  margin-bottom: 24px;
+  border: 1px solid #dcebd8;
+  border-radius: 16px;
+  background: linear-gradient(120deg, #e8f4e5, #f6faf1);
+}
+
+.estafet-banner-icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 15px;
+  background: white;
+  font-size: 30px;
+}
+
+.estafet-banner h2 {
+  margin: 0 0 8px;
+  color: #315f3d;
+  font-size: 18px;
+}
+
+.estafet-banner p {
+  margin: 0;
+  color: #718273;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.estafet-card {
+  padding: 25px;
+  margin-bottom: 24px;
+  border: 1px solid #e5ebe2;
+  border-radius: 16px;
+  background: white;
+  box-shadow: 0 4px 15px rgba(41, 62, 48, 0.04);
+}
+
+.estafet-card h2 {
+  margin: 0 0 10px;
+  color: #315f3d;
+  font-size: 19px;
+}
+
+.estafet-description {
+  margin-bottom: 24px;
+  color: #829087;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.estafet-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.estafet-card label {
+  margin-top: 8px;
+  color: #405b47;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.estafet-card select,
+.estafet-card textarea {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid #dce5da;
+  border-radius: 9px;
+  outline: none;
+  background: #fff;
+  color: #293e30;
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.estafet-card select:focus,
+.estafet-card textarea:focus {
+  border-color: #56845f;
+  box-shadow: 0 0 0 3px rgba(86, 132, 95, 0.1);
+}
+
+.estafet-card textarea {
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.estafet-card form button {
+  align-self: flex-start;
+  margin-top: 12px;
+  padding: 13px 22px;
+  border: none;
+  border-radius: 9px;
+  background: #2d613e;
+  color: white;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.estafet-card form button:hover {
+  background: #214c30;
+}
+
+.estafet-card form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.estafet-error,
+.estafet-success {
+  padding: 13px 16px;
+  margin-bottom: 18px;
+  border-radius: 9px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.estafet-error {
+  border: 1px solid #f1cccc;
+  background: #fff1f1;
+  color: #a33b3b;
+}
+
+.estafet-success {
+  border: 1px solid #d4e9d4;
+  background: #eff9ef;
+  color: #347342;
+}
+
+.estafet-empty {
+  padding: 20px 0;
+  color: #829087;
+  font-size: 13px;
+}
+
+.estafet-history {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.estafet-history-item {
+  padding: 18px;
+  border: 1px solid #e5ebe2;
+  border-left: 4px solid #56845f;
+  border-radius: 10px;
+  background: #fafcf9;
+}
+
+.estafet-history-item h3 {
+  margin: 0 0 12px;
+  color: #315f3d;
+  font-size: 15px;
+}
+
+.estafet-history-item p {
+  margin: 6px 0;
+  color: #718273;
+  font-size: 13px;
+}
+
+.estafet-history-item small {
+  display: block;
+  margin-top: 12px;
+  color: #929d93;
+  font-size: 11px;
+}
+
+@media (max-width: 768px) {
+  .estafet-page {
+    padding: 20px;
+  }
+
+  .estafet-header h1 {
+    font-size: 25px;
+  }
+
+  .estafet-banner {
+    align-items: flex-start;
+    padding: 17px;
+  }
+
+  .estafet-card {
+    padding: 18px;
+  }
+
+  .estafet-card form button {
+    width: 100%;
+  }
+}
+
+.estafet-page {
+  text-align: left;
+}
+
+.estafet-header,
+.estafet-banner,
+.estafet-card,
+.estafet-history,
+.estafet-history-item {
+  text-align: left;
+}
