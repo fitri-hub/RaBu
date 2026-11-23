@@ -130,9 +130,19 @@ function DashboardPengelola({ bukaHalaman }) {
 
     try {
       const { data: dataTanaman, error: errorTanaman } = await supabase
-        .from('tanaman')
-        .select('id, nama_tanaman, lokasi, kondisi, penanggung_jawab')
-        .order('id', { ascending: true });
+  .from('tanaman')
+  .select(`
+    id,
+    nama_tanaman,
+    lokasi,
+    kondisi,
+    penanggung_jawab,
+    pekerja:profiles!tanaman_penanggung_jawab_fkey (
+      id,
+      nama_lengkap
+    )
+  `)
+  .order('id', { ascending: true });
 
       if (errorTanaman) throw errorTanaman;
 
@@ -573,9 +583,9 @@ function DashboardPengelola({ bukaHalaman }) {
                           {item.lokasi || 'Lokasi belum diatur'}
                         </span>
 
-                        {item.penanggung_jawab && (
+                        {item.pekerja?.nama_lengkap && (
                           <span className="rb-meta-pill pj">
-                            PJ: {item.penanggung_jawab}
+                            PJ: {item.pekerja.nama_lengkap}
                           </span>
                         )}
 

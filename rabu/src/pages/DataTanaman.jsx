@@ -84,17 +84,20 @@ useEffect(() => {
       setRole(profil.role);
 
       if (profil.role === 'pengelola') {
-        const { data: daftarPekerja, error: pekerjaError } =
-          await supabase
-            .from('profiles')
-            .select('id, nama_lengkap')
-            .eq('role', 'pekerja')
-            .order('nama_lengkap');
+      const { data: daftarPekerja, error: pekerjaError } =
+        await supabase
+          .from('profiles')
+          .select('id, nama_lengkap')
+          .eq('role', 'pekerja')
+          .order('nama_lengkap');
 
-        if (pekerjaError) throw pekerjaError;
+      console.log('Daftar pekerja:', daftarPekerja);
+      console.log('Error:', pekerjaError);
 
-        setPekerja(daftarPekerja || []);
-      }
+      if (pekerjaError) throw pekerjaError;
+
+      setPekerja(daftarPekerja || []);
+    }
 
       const { data, error } = await supabase
         .from('tanaman')
@@ -114,7 +117,10 @@ useEffect(() => {
         `)
         .order('id', { ascending: true });
 
-      if (error) throw error;
+
+      console.log('Data pekerja:', data);
+    console.log('Error pekerja:', error);
+
 
       setTanaman((data || []).map(ubahFormatTanaman));
     } catch (error) {
@@ -192,62 +198,92 @@ useEffect(() => {
     setFormTerbuka(true);
   }
 
-  function simpanForm(event) {
-    event.preventDefault();
 
-    if (!form.nama.trim() || !form.lokasi.trim()) {
-      setPesan('Nama tanaman dan lokasi wajib diisi.');
-      return;
-    }
+async function simpanForm(event) {
+  event.preventDefault();
+  setPesan('');
 
-    if (
-      form.tanggalTanam &&
-      form.tanggalTanam > new Date().toLocaleDateString('en-CA')
-    ) {
-      // Validasi tambahan dilakukan di bawah menggunakan format ISO.
-      const hariIni = new Date();
-      const tahun = hariIni.getFullYear();
-      const bulan = String(hariIni.getMonth() + 1).padStart(2, '0');
-      const tanggal = String(hariIni.getDate()).padStart(2, '0');
-      const isoHariIni = `${tahun}-${bulan}-${tanggal}`;
+  if (!form.nama.trim() || !form.lokasi.trim()) {
+    setPesan('Nama tanaman dan lokasi wajib diisi.');
+    return;
+  }
 
-      if (form.tanggalTanam > isoHariIni) {
-        setPesan('Tanggal tanam tidak boleh melebihi hari ini.');
-        return;
-      }
-    }
+  const hariIni = new Date();
+  const tahun = hariIni.getFullYear();
+  const bulan = String(hariIni.getMonth() + 1).padStart(2, '0');
+  const tanggal = String(hariIni.getDate()).padStart(2, '0');
+  const isoHariIni = `${tahun}-${bulan}-${tanggal}`;
+
+  if (form.tanggalTanam && form.tanggalTanam > isoHariIni) {
+    setPesan('Tanggal tanam tidak boleh melebihi hari ini.');
+    return;
+  }
+
+  try {
+    const dataSimpan = {
+      nama_tanaman: form.nama.trim(),
+      jenis_tanaman: form.jenis,
+      lokasi: form.lokasi.trim(),
+      tanggal_tanam: form.tanggalTanam || null,
+      kondisi: form.kondisi,
+      penanggung_jawab: form.penanggungJawab || null,
+      catatan: form.catatan.trim() || null,
+    };
 
     if (idDiedit !== null) {
-      setTanaman((daftar) =>
-        daftar.map((item) =>
-          item.id === idDiedit
-            ? { ...item, ...form, nama: form.nama.trim() }
-            : item
-        )
-      );
+      const { error } = await supabase
+        .from('tanaman')
+        .update(dataSimpan)
+        .eq('id', idDiedit);
+
+      if (error) throw error;
+
       setPesan('Data tanaman berhasil diperbarui.');
     } else {
-      const nomorTerbesar = tanaman.reduce((maks, item) => {
-        const angka = Number(
-          String(item.kode || '').replace('TNM-', '')
-        );
-        return Number.isFinite(angka) ? Math.max(maks, angka) : maks;
-      }, 0);
+      const { error } = await supabase
+        .from('tanaman')
+        .insert({
+          ...dataSimpan,
+          user_id: userId,
+        });
 
-      const dataBaru = {
-        ...form,
-        nama: form.nama.trim(),
-        id: Date.now(),
-        kode: `TNM-${String(nomorTerbesar + 1).padStart(3, '0')}`,
-      };
+      if (error) throw error;
 
-      setTanaman((daftar) => [...daftar, dataBaru]);
-      setPesan('Tanaman baru berhasil ditambahkan.');
+      setPesan('Tanaman baru berhasil disimpan ke database.');
     }
 
     setFormTerbuka(false);
     setIdDiedit(null);
+
+    // Muat ulang data agar tampilan mengikuti database.
+    const { data, error } = await supabase
+      .from('tanaman')
+      .select(`
+        id,
+        user_id,
+        kode,
+        nama_tanaman,
+        jenis_tanaman,
+        lokasi,
+        tanggal_tanam,
+        kondisi,
+        catatan,
+        penanggung_jawab,
+        profiles!tanaman_user_id_fkey (
+          nama_lengkap
+        )
+      `)
+      .order('id', { ascending: true });
+
+    if (error) throw error;
+
+    setTanaman((data || []).map(ubahFormatTanaman));
+  } catch (error) {
+    console.error('Gagal menyimpan tanaman:', error);
+    setPesan(`Gagal menyimpan data: ${error.message}`);
   }
+}
+
 
   function hapusTanaman(item) {
     const setuju = window.confirm(
@@ -630,7 +666,7 @@ useEffect(() => {
 
               <label>
                 Penanggung Jawab
-                <input
+                <select
                   value={form.penanggungJawab}
                   onChange={(event) =>
                     setForm({
@@ -638,8 +674,15 @@ useEffect(() => {
                       penanggungJawab: event.target.value,
                     })
                   }
-                  placeholder="Nama penanggung jawab"
-                />
+                >
+                  <option value="">Pilih penanggung jawab</option>
+
+                  {pekerja.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.nama_lengkap}
+                    </option>
+                  ))}
+                </select>
               </label>
 
               <label className="tanaman-full-field">

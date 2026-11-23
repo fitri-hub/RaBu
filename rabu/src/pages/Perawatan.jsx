@@ -9,6 +9,100 @@ function Perawatan() {
   const [memuat, setMemuat] = useState(true);
   const [pesan, setPesan] = useState('');
   const [jadwalDiproses, setJadwalDiproses] = useState(null);
+  const [daftarTanaman, setDaftarTanaman] = useState([]);
+  const [daftarPekerja, setDaftarPekerja] = useState([]);
+  const [formTerbuka, setFormTerbuka] = useState(false);
+  const [menyimpan, setMenyimpan] = useState(false);
+  const [formData, setFormData] = useState({
+  tanaman_id: '',
+  kegiatan: '',
+  tanggal: '',
+  waktu: '',
+  user_id: '',
+  catatan: '',
+});
+
+  async function muatPilihanForm() {
+  try {
+    // Mengambil daftar tanaman
+    const { data: tanamanData, error: tanamanError } = await supabase
+      .from('tanaman')
+      .select('id, nama_tanaman, kode, lokasi')
+      .order('nama_tanaman', { ascending: true });
+
+    if (tanamanError) throw tanamanError;
+
+    // Mengambil pekerja yang masih aktif
+    const { data: pekerjaData, error: pekerjaError } = await supabase
+      .from('profiles')
+      .select('id, nama_lengkap')
+      .eq('role', 'pekerja')
+      .eq('aktif', true)
+      .order('nama_lengkap', { ascending: true });
+
+    if (pekerjaError) throw pekerjaError;
+
+    setDaftarTanaman(tanamanData || []);
+    setDaftarPekerja(pekerjaData || []);
+  } catch (error) {
+    console.error('Gagal memuat pilihan formulir:', error);
+    setPesan(`Gagal memuat pilihan formulir: ${error.message}`);
+  }
+}
+
+async function tambahJadwal(event) {
+  event.preventDefault();
+
+  if (
+    !formData.tanaman_id ||
+    !formData.kegiatan.trim() ||
+    !formData.tanggal ||
+    !formData.waktu ||
+    !formData.user_id
+  ) {
+    setPesan('Semua kolom wajib harus diisi.');
+    return;
+  }
+
+  setMenyimpan(true);
+  setPesan('');
+
+  try {
+    const { error } = await supabase
+      .from('jadwal_perawatan')
+      .insert({
+        tanaman_id: Number(formData.tanaman_id),
+        jenis_perawatan: formData.kegiatan.trim(),
+        kegiatan: formData.kegiatan.trim(),
+        tanggal: formData.tanggal,
+        waktu: formData.waktu,
+        user_id: formData.user_id,
+        catatan: formData.catatan.trim() || null,
+        status: 'Belum',
+      });
+
+    if (error) throw error;
+
+    setPesan('Jadwal perawatan berhasil ditambahkan.');
+
+    setFormData({
+      tanaman_id: '',
+      kegiatan: '',
+      tanggal: '',
+      waktu: '',
+      user_id: '',
+      catatan: '',
+    });
+
+    setFormTerbuka(false);
+    await muatJadwal();
+  } catch (error) {
+    console.error('Gagal menambahkan jadwal:', error);
+    setPesan(`Gagal menambahkan jadwal: ${error.message}`);
+  } finally {
+    setMenyimpan(false);
+  }
+}
 
   async function muatJadwal() {
     setMemuat(true);
@@ -35,38 +129,41 @@ function Perawatan() {
           jenis_perawatan,
           kegiatan,
           tanggal,
+          waktu,
           status,
+          user_id,
           tanaman!jadwal_perawatan_tanaman_id_fkey (
             id,
             nama_tanaman,
             kode,
-            lokasi,
-            user_id,
-            penanggung_jawab
+            lokasi
+          ),
+          profiles!jadwal_perawatan_user_id_fkey (
+            nama_lengkap
           )
         `)
         .order('tanggal', { ascending: true });
 
       if (error) throw error;
 
-      const daftar = (data || []).map((item) => ({
-        id: item.id,
-        tanamanId: item.tanaman_id,
-        kegiatan:
-          item.kegiatan ||
-          item.jenis_perawatan ||
-          'Perawatan tanaman',
-        tanaman:
-          item.tanaman?.nama_tanaman ||
-          'Tanaman tidak ditemukan',
-        kode: item.tanaman?.kode || '',
-        lokasi: item.tanaman?.lokasi || '',
-        penanggungJawab:
-          item.tanaman?.penanggung_jawab || '',
-        userId: item.tanaman?.user_id || null,
-        tanggal: item.tanggal,
-        status: item.status,
-      }));
+    const daftar = (data || []).map((item) => ({
+      id: item.id,
+      tanamanId: item.tanaman_id,
+      kegiatan:
+        item.kegiatan ||
+        item.jenis_perawatan ||
+        'Perawatan tanaman',
+      tanaman:
+        item.tanaman?.nama_tanaman ||
+        'Tanaman tidak ditemukan',
+      kode: item.tanaman?.kode || '',
+      lokasi: item.tanaman?.lokasi || '',
+      penanggungJawab:
+        item.profiles?.nama_lengkap || '-',
+      tanggal: item.tanggal,
+      waktu: item.waktu,
+      status: item.status,
+    }));
 
       setJadwal(daftar);
     } catch (error) {
@@ -77,9 +174,10 @@ function Perawatan() {
     }
   }
 
-  useEffect(() => {
-    muatJadwal();
-  }, []);
+    useEffect(() => {
+      muatJadwal();
+      muatPilihanForm();
+    }, []);
 
   async function ubahStatus(item) {
     if (jadwalDiproses !== null) return;
@@ -147,17 +245,144 @@ function Perawatan() {
 
   return (
     <section className="page-section">
-      <header className="page-header">
-        <div>
-          <h1>Jadwal Perawatan</h1>
-        </div>
-      </header>
+    <header className="page-header">
+      <div>
+        <h1>Jadwal Perawatan</h1>
+      </div>
+
+      <button
+        type="button"
+        className="add-schedule-btn"
+        onClick={() => setFormTerbuka(!formTerbuka)}
+      >
+        {formTerbuka ? 'Tutup Formulir' : '+ Tambah Jadwal'}
+      </button>
+    </header>
 
       {pesan && (
         <p role="status" className="tanaman-feedback">
           {pesan}
         </p>
       )}
+
+      {formTerbuka && (
+  <form className="schedule-form" onSubmit={tambahJadwal}>
+    <h3>Tambah Jadwal Perawatan</h3>
+
+    <div className="schedule-form-grid">
+      <label>
+        Pilih Tanaman *
+        <select
+          value={formData.tanaman_id}
+          onChange={(event) =>
+            setFormData({
+              ...formData,
+              tanaman_id: event.target.value,
+            })
+          }
+          required
+        >
+          <option value="">Pilih tanaman</option>
+          {daftarTanaman.map((tanaman) => (
+            <option key={tanaman.id} value={tanaman.id}>
+              {tanaman.nama_tanaman} - {tanaman.lokasi}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      <label>
+        Kegiatan Perawatan *
+        <input
+          type="text"
+          value={formData.kegiatan}
+          onChange={(event) =>
+            setFormData({
+              ...formData,
+              kegiatan: event.target.value,
+            })
+          }
+          placeholder="Contoh: Menyiram tanaman"
+          required
+        />
+      </label>
+
+      <label>
+        Tanggal *
+        <input
+          type="date"
+          value={formData.tanggal}
+          onChange={(event) =>
+            setFormData({
+              ...formData,
+              tanggal: event.target.value,
+            })
+          }
+          required
+        />
+      </label>
+
+      <label>
+        Waktu *
+        <input
+          type="time"
+          value={formData.waktu}
+          onChange={(event) =>
+            setFormData({
+              ...formData,
+              waktu: event.target.value,
+            })
+          }
+          required
+        />
+      </label>
+
+      <label>
+        Pekerja yang Ditugaskan *
+        <select
+          value={formData.user_id}
+          onChange={(event) =>
+            setFormData({
+              ...formData,
+              user_id: event.target.value,
+            })
+          }
+          required
+        >
+          <option value="">Pilih pekerja</option>
+          {daftarPekerja.map((pekerja) => (
+            <option key={pekerja.id} value={pekerja.id}>
+              {pekerja.nama_lengkap}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      <label>
+        Catatan
+        <textarea
+          value={formData.catatan}
+          onChange={(event) =>
+            setFormData({
+              ...formData,
+              catatan: event.target.value,
+            })
+          }
+          placeholder="Catatan tambahan (opsional)"
+          rows="3"
+        />
+      </label>
+    </div>
+
+    <button
+      type="submit"
+      className="save-schedule-btn"
+      disabled={menyimpan}
+    >
+      {menyimpan ? 'Menyimpan...' : 'Simpan Jadwal'}
+    </button>
+  </form>
+)}
 
       <div className="care-summary">
         <article className="care-card">
@@ -204,6 +429,7 @@ function Perawatan() {
                   <th>Tanaman</th>
                   <th>Lokasi</th>
                   <th>Tanggal</th>
+                  <th>Waktu</th>
                   <th>Penanggung Jawab</th>
                   <th>Status</th>
                   <th>Aksi</th>
@@ -232,7 +458,14 @@ function Perawatan() {
                       <span className="cell-text">{item.tanggal}</span>
                     </td>
                     <td>
-                      <span className="cell-text">{item.penanggungJawab || '-'}</span>
+                      <span className="cell-text">
+                        {item.waktu ? item.waktu.slice(0, 5) : '-'}
+                      </span>
+                    </td>
+                    <td>
+                      <span className="cell-text">
+                        {item.penanggungJawab || '-'}
+                      </span>
                     </td>
                     <td>
                       <span

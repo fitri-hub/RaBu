@@ -904,3 +904,197 @@
     transition: none !important;
   }
 }
+
+
+/* ===== PERBAIKAN HEADER DAN DAFTAR PEMULIHAN ===== */
+
+.pemulihan-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding-left: 24px;
+  padding-right: 24px;
+  text-align: left;
+}
+
+.pemulihan-header > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.pemulihan-header .pemulihan-btn {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.pemulihan-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 28px;
+  align-items: stretch;
+}
+
+@media (max-width: 650px) {
+  .pemulihan-header {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .pemulihan-header h1 {
+    font-size: 27px;
+  }
+
+  .pemulihan-header .pemulihan-btn {
+    padding: 10px 14px;
+    font-size: 11px;
+  }
+
+  .pemulihan-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* ===== TABEL DAFTAR KONDISI TANAMAN ===== */
+
+.pemulihan-list {
+  padding: 0;
+  overflow: hidden;
+}
+
+.pemulihan-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 23px 24px;
+  border-bottom: 1px solid #edf1eb;
+  background: #fff;
+}
+
+.pemulihan-section-heading h2 {
+  margin: 0;
+  color: #0b2915;
+  font-size: 28px;
+  font-weight: 800;
+  text-align: left;
+}
+
+.pemulihan-list .care-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  background: #fff;
+}
+
+.pemulihan-list .care-table {
+  width: 100%;
+  min-width: 1400px;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: left;
+}
+
+.pemulihan-list .care-table thead th {
+  padding: 18px 16px;
+  border-bottom: 2px solid #c8dcc9;
+  background: linear-gradient(to bottom, #f5f8f3 0%, #eef3ec 100%);
+  color: #3d5843;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  white-space: nowrap;
+}
+
+.pemulihan-list .care-table tbody td {
+  padding: 22px 16px;
+  border-bottom: 1px solid #e4ece1;
+  background: #fff;
+  color: #556b5f;
+  font-size: 13px;
+  vertical-align: middle;
+}
+
+.pemulihan-list .care-table tbody tr:hover td {
+  background: #f5f9f3;
+}
+
+.pemulihan-list .table-cell-plant {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 130px;
+}
+
+.pemulihan-list .plant-name {
+  color: #1a3d2a;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.pemulihan-list .plant-code {
+  color: #7b8d83;
+  font-size: 11px;
+}
+
+.pemulihan-list .cell-text {
+  color: #3d5843;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.pemulihan-list .pemulihan-table-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.pemulihan-list .pemulihan-table-actions button {
+  padding: 9px 14px;
+  border: none;
+  border-radius: 8px;
+  background: #28784e;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.pemulihan-list .pemulihan-table-actions button:last-child {
+  background: #dc5555;
+}
+
+.pemulihan-list .pemulihan-table-actions button:hover {
+  opacity: .85;
+}
+
+.pemulihan-list .care-table select {
+  min-width: 145px;
+  padding: 9px 10px;
+  border: 1px solid #dce5da;
+  border-radius: 8px;
+  background: #fff;
+  color: #344a38;
+  font-size: 12px;
+}
+
+.pemulihan-list .pemulihan-empty-cell {
+  padding: 42px 20px !important;
+  text-align: center;
+  color: #859287;
+}
+
+.pemulihan-list .pemulihan-empty-cell h3 {
+  margin: 0 0 8px;
+  color: #3e5843;
+  font-size: 16px;
+}
+
+.pemulihan-list .pemulihan-empty-cell p {
+  margin: 0;
+  font-size: 12px;
+}

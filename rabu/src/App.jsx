@@ -14,6 +14,7 @@ import DashboardPekerja from './pages/DashboardPekerja';
 import { supabase } from './lib/supabaseClient';
 import TugasPekerja from './pages/TugasPekerja';
 import Profil from './pages/Profil';
+import EstafetPengelola from './pages/EstafetPengelola';
 
 function App() {
   const [halamanAktif, setHalamanAktif] = useState('beranda');
@@ -38,7 +39,7 @@ function App() {
 
       const { data, error } = await supabase
         .from('profiles')
-        .select('role, nama_lengkap')
+        .select('role, nama_lengkap, aktif')
         .eq('id', sesi.user.id)
         .maybeSingle();
 
@@ -51,6 +52,13 @@ function App() {
         );
         setRole(null);
         setNamaPengguna('');
+        return;
+      }
+      if (!data.aktif) {
+        console.warn('Akun sudah tidak aktif.');
+        setRole(null);
+        setNamaPengguna('');
+        await supabase.auth.signOut();
         return;
       }
 
@@ -325,7 +333,7 @@ function App() {
         )}
 
         {halamanAktif === 'estafet' && (
-          <PenanggungJawab />
+          <EstafetPengelola />
         )}
 
         {halamanAktif === 'profil' && (
