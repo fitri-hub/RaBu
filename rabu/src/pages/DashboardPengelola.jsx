@@ -83,7 +83,7 @@ function IconArrowRight({ className = '' }) {
 function formatTanggal(strTanggal) {
   if (!strTanggal) return '-';
   try {
-    const d = new Date(strTanggal);
+    const d = new Date(strTanggal + 'T00:00:00');
     if (isNaN(d.getTime())) return strTanggal;
     return d.toLocaleDateString('id-ID', {
       day: 'numeric',
@@ -93,6 +93,34 @@ function formatTanggal(strTanggal) {
   } catch {
     return strTanggal;
   }
+}
+
+// Sama persis dengan helper di Perawatan.jsx
+function statusTanggal(tanggalStr, statusItem) {
+  if (statusItem === 'Selesai') return 'selesai';
+  const hariIniDate = new Date();
+  hariIniDate.setHours(0, 0, 0, 0);
+  const tgl = new Date(tanggalStr + 'T00:00:00');
+  if (tgl < hariIniDate) return 'terlambat';
+  if (tgl.getTime() === hariIniDate.getTime()) return 'hari_ini';
+  return 'akan_datang';
+}
+
+function LabelStatusJadwal({ item }) {
+  const tglStatus = statusTanggal(item.tanggal, item.status);
+  const map = {
+    selesai:     { cls: 'success', label: '✓ Selesai' },
+    terlambat:   { cls: 'danger',  label: '🚨 Terlambat' },
+    hari_ini:    { cls: 'info',    label: '📅 Hari Ini' },
+    akan_datang: { cls: 'neutral', label: '🕐 Mendatang' },
+  };
+  const { cls, label } = map[tglStatus] || map.akan_datang;
+  return (
+    <span className={`rb-status-pill ${cls}`}>
+      <span className={`rb-dot${tglStatus === 'terlambat' ? ' pulse' : ''}`} />
+      {label}
+    </span>
+  );
 }
 
 function DashboardPengelola({ bukaHalaman }) {
@@ -156,12 +184,17 @@ function DashboardPengelola({ bukaHalaman }) {
           tanggal,
           waktu,
           status,
-          tanaman (
+          catatan,
+          tanaman!jadwal_perawatan_tanaman_id_fkey (
             nama_tanaman,
+            kode,
             lokasi
+          ),
+          profiles!jadwal_perawatan_user_id_fkey (
+            nama_lengkap
           )
         `)
-        .order('tanggal', { ascending: false });
+        .order('tanggal', { ascending: true });
 
       if (errorJadwal) throw errorJadwal;
 
@@ -172,7 +205,10 @@ function DashboardPengelola({ bukaHalaman }) {
           ...item,
           tanaman:
             item.tanaman?.nama_tanaman || 'Tanaman tidak ditemukan',
+          kode: item.tanaman?.kode || '',
           lokasiTanaman: item.tanaman?.lokasi || '',
+          penanggungJawab: item.profiles?.nama_lengkap || '-',
+          catatan: item.catatan || '',
           kegiatan:
             item.kegiatan ||
             item.jenis_perawatan ||
@@ -190,7 +226,14 @@ function DashboardPengelola({ bukaHalaman }) {
   }
 
   useEffect(() => {
-    muatDataDashboard();
+    let aktif = true;
+
+    async function inisialisasi() {
+      if (!aktif) return;
+      await muatDataDashboard();
+    }
+
+    inisialisasi();
 
     const perbarui = () => {
       muatDataDashboard();
@@ -200,6 +243,7 @@ function DashboardPengelola({ bukaHalaman }) {
     window.addEventListener('jadwal-berubah', perbarui);
 
     return () => {
+      aktif = false;
       window.removeEventListener('tanaman-berubah', perbarui);
       window.removeEventListener('jadwal-berubah', perbarui);
     };
@@ -210,11 +254,32 @@ function DashboardPengelola({ bukaHalaman }) {
   const perhatian = tanaman.filter(
     (item) => item.kondisi === 'Perlu Perawatan' || item.kondisi === 'Kritis'
   ).length;
-  const belumSelesai = jadwal.filter((item) => item.status === 'Belum').length;
 
-  const aktivitasSelesai = jadwal
-    .filter((item) => item.status === 'Selesai')
-    .slice(0, 5);
+  const hari_ini_str = new Date().toISOString().slice(0, 10);
+
+  const belumSelesai = jadwal.filter((item) => item.status !== 'Selesai').length;
+  const jadwalTerlambat = jadwal.filter(
+    (item) => item.status !== 'Selesai' && item.tanggal < hari_ini_str
+  ).length;
+  const jadwalHariIni = jadwal.filter(
+    (item) => item.status !== 'Selesai' && item.tanggal === hari_ini_str
+  ).length;
+
+  // Aktivitas terkini: semua jadwal diurutkan: terlambat → hari ini → mendatang → selesai
+  const aktivitasTampil = jadwal
+    .slice()
+    .sort((a, b) => {
+      const prioritas = (item) => {
+        if (item.status === 'Selesai') return 3;
+        if (item.tanggal < hari_ini_str) return 0;
+        if (item.tanggal === hari_ini_str) return 1;
+        return 2;
+      };
+      const pa = prioritas(a), pb = prioritas(b);
+      if (pa !== pb) return pa - pb;
+      return a.tanggal.localeCompare(b.tanggal);
+    })
+    .slice(0, 6);
 
   const tanamanPerhatian = tanaman.filter(
     (item) => item.kondisi === 'Perlu Perawatan' || item.kondisi === 'Kritis'
@@ -391,8 +456,12 @@ function DashboardPengelola({ bukaHalaman }) {
             <span className="rb-stat-icon-wrapper">
               <IconCalendar />
             </span>
-            <span className="rb-stat-badge">
-              {belumSelesai > 0 ? `${belumSelesai} Jadwal Aktif` : 'Tugas Bersih'}
+            <span className={`rb-stat-badge ${jadwalTerlambat > 0 ? 'badge-alert' : ''}`}>
+              {jadwalTerlambat > 0
+                ? `${jadwalTerlambat} Terlambat`
+                : jadwalHariIni > 0
+                  ? `${jadwalHariIni} Hari Ini`
+                  : 'Tugas Bersih'}
             </span>
           </div>
 
@@ -423,92 +492,116 @@ function DashboardPengelola({ bukaHalaman }) {
 
       {/* Bagian Riwayat & Pemantauan */}
       <section className="rb-panels">
-        {/* PANEL 1: Riwayat Aktivitas Perawatan */}
+        {/* PANEL 1: Aktivitas Perawatan Terkini */}
         <article className="rb-panel">
           <div className="rb-panel-heading">
             <div className="rb-panel-title-group">
               <div className="rb-panel-heading-row">
                 <h3>Aktivitas Perawatan Terkini</h3>
                 <span className="rb-count-chip">
-                  {memuat ? '...' : `${aktivitasSelesai.length} Terdata`}
+                  {memuat ? '...' : `${aktivitasTampil.length} ditampilkan`}
                 </span>
               </div>
-              <p>Log perawatan yang telah diselesaikan oleh tim pekerja</p>
+              <p>Jadwal terlambat, hari ini, mendatang, dan yang sudah selesai</p>
             </div>
 
             <button
               type="button"
               className="rb-pill-btn"
-              onClick={() => bukaHalaman('jadwal', 'Selesai')}
+              onClick={() => bukaHalaman('jadwal')}
             >
-              <span>Semua Riwayat</span>
+              <span>Lihat Semua</span>
               <IconArrowRight />
             </button>
           </div>
+
 
           {memuat ? (
             <div className="rb-loading-state">
               <div className="rb-spinner" />
               <span>Memuat data aktivitas...</span>
             </div>
-          ) : aktivitasSelesai.length === 0 ? (
+          ) : aktivitasTampil.length === 0 ? (
             <div className="rb-empty-state">
               <div className="rb-empty-icon">
                 <IconCalendar />
               </div>
-              <strong>Belum Ada Riwayat Perawatan</strong>
+              <strong>Belum Ada Jadwal Perawatan</strong>
               <p>
-                Aktivitas akan tercatat otomatis saat pekerja menyelesaikan jadwal perawatan.
+                Tambahkan jadwal perawatan agar aktivitas tim terpantau di sini.
               </p>
               <button
                 type="button"
                 className="rb-pill-btn"
-                onClick={() => bukaHalaman('jadwal', 'Semua')}
+                onClick={() => bukaHalaman('jadwal')}
               >
                 Buka Jadwal Perawatan
               </button>
             </div>
           ) : (
             <div className="rb-activity-feed">
-              {aktivitasSelesai.map((item) => (
-                <div className="rb-feed-item" key={item.id}>
-                  <div className="rb-feed-indicator">
-                    <span className="rb-check-bubble">
-                      <IconCheck />
-                    </span>
-                    <span className="rb-feed-line" />
-                  </div>
-
-                  <div className="rb-feed-content">
-                    <div className="rb-feed-header">
-                      <h4 className="rb-feed-title">{item.kegiatan}</h4>
-                      <span className="rb-status-pill success">
-                        <span className="rb-dot" />
-                        Selesai
+              {aktivitasTampil.map((item) => {
+                const tglStatus = statusTanggal(item.tanggal, item.status);
+                return (
+                  <div
+                    className={`rb-feed-item rb-feed-item--${tglStatus}`}
+                    key={item.id}
+                  >
+                    <div className="rb-feed-indicator">
+                      <span className={`rb-check-bubble rb-check-bubble--${tglStatus}`}>
+                        {tglStatus === 'selesai' && <IconCheck />}
+                        {tglStatus === 'terlambat' && '🚨'}
+                        {tglStatus === 'hari_ini' && '📅'}
+                        {tglStatus === 'akan_datang' && <IconClock />}
                       </span>
+                      <span className="rb-feed-line" />
                     </div>
 
-                    <div className="rb-feed-meta">
-                      <span className="rb-meta-pill plant">
-                        <IconPlant />
-                        {item.tanaman}
-                      </span>
+                    <div
+                      className="rb-feed-content"
+                      onClick={() => bukaHalaman('jadwal')}
+                      role="button"
+                      tabIndex={0}
+                    >
+                      <div className="rb-feed-header">
+                        <h4 className="rb-feed-title">{item.kegiatan}</h4>
+                        <LabelStatusJadwal item={item} />
+                      </div>
 
-                      {item.lokasiTanaman && (
-                        <span className="rb-meta-pill location">
-                          <IconMapPin />
-                          {item.lokasiTanaman}
+                      <div className="rb-feed-meta">
+                        <span className="rb-meta-pill plant">
+                          <IconPlant />
+                          {item.tanaman}
+                          {item.kode ? ` (${item.kode})` : ''}
                         </span>
-                      )}
 
-                      <span className="rb-meta-pill time">
-                        <IconCalendar />
-                        {formatTanggal(item.tanggal)}
-                      </span>
+                        {item.lokasiTanaman && (
+                          <span className="rb-meta-pill location">
+                            <IconMapPin />
+                            {item.lokasiTanaman}
+                          </span>
+                        )}
+
+                        <span className="rb-meta-pill time">
+                          <IconCalendar />
+                          {formatTanggal(item.tanggal)}
+                          {item.waktu ? ` · ${item.waktu.slice(0, 5)}` : ''}
+                        </span>
+
+                        {item.penanggungJawab && item.penanggungJawab !== '-' && (
+                          <span className="rb-meta-pill pj">
+                            👤 {item.penanggungJawab}
+                          </span>
+                        )}
+                      </div>
+
+                      {item.catatan && (
+                        <p className="rb-feed-catatan">📝 {item.catatan}</p>
+                      )}
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </article>

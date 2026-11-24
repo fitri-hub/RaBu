@@ -23,15 +23,8 @@
 }
 
 @keyframes pageIn {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* ===== HEADER ===== */
@@ -41,96 +34,155 @@
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
-.page-header>div {
-  min-width: 0;
-}
-
-.breadcrumb {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin: 0 0 6px;
-  padding: 4px 12px;
-  border-radius: 9999px;
-  background: rgba(35, 84, 55, 0.14);
-  color: #0b2915;
-  font-size: 10.5px;
-  font-weight: 800;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-}
+.page-header > div { min-width: 0; }
 
 .page-header h1 {
   margin: 0;
   color: #0b2915;
-  font-size: clamp(42px, 5vw, 56px);
+  font-size: clamp(32px, 5vw, 48px);
   font-weight: 900;
   line-height: 1.15;
   letter-spacing: -1.5px;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.25);
 }
 
-.page-header h1+p {
-  margin: 8px 0 0;
+.page-desc {
+  margin: 6px 0 0;
   color: #566d5e;
   font-size: 14px;
   line-height: 1.6;
 }
 
-/* ===== KARTU RINGKASAN ===== */
-.page-header h1+p {
-  margin: 8px 0 0;
-  color: #6d8379;
-  font-size: 15px;
+/* ===== FEEDBACK ===== */
+
+.perawatan-feedback {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 18px;
+  padding: 13px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.5;
+  animation: fadeIn .25s ease;
 }
+
+.perawatan-feedback--sukses {
+  background: #edfaf1;
+  border: 1px solid #a3d9b4;
+  color: #1a6e3c;
+}
+
+.perawatan-feedback--error {
+  background: #fff4f4;
+  border: 1px solid #f4b8b8;
+  color: #c0392b;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== BANNER PENGINGAT ===== */
+
+.pengingat-banner {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0 0 22px;
+}
+
+.pengingat-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-radius: 14px;
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pengingat-item:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.1); }
+
+.pengingat-item--merah {
+  background: linear-gradient(135deg, #fff5f5 0%, #fdeaea 100%);
+  border-color: #f4b8b8;
+  color: #9b2b2b;
+}
+
+.pengingat-item--biru {
+  background: linear-gradient(135deg, #f0f7ff 0%, #e3f0fd 100%);
+  border-color: #a8c9f0;
+  color: #1e4d8c;
+}
+
+.pengingat-ikon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.pengingat-item > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.pengingat-item strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.pengingat-item p {
+  margin: 2px 0 0;
+  font-size: 12.5px;
+  opacity: 0.85;
+}
+
+.pengingat-lihat {
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ===== KARTU STATISTIK ===== */
 
 .care-summary {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-  margin: 0 0 24px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0 0 22px;
 }
 
 .care-card {
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: 24px;
+  padding: 20px 18px;
   border: 1px solid #e0ebe0;
-  border-radius: 22px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(250, 252, 249, 0.95) 100%);
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(255,255,255,.98) 0%, rgba(250,252,249,.95) 100%);
   backdrop-filter: blur(12px);
   color: #152e1f;
   text-align: left;
-  box-shadow: 0 4px 20px rgba(18, 43, 27, 0.08), 0 1px 4px rgba(18, 43, 27, 0.04);
+  box-shadow: 0 4px 16px rgba(18,43,27,.07), 0 1px 4px rgba(18,43,27,.03);
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all .3s cubic-bezier(.4,0,.2,1);
   overflow: hidden;
 }
 
 .care-card::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #34794b, #4a9960, #34794b);
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #34794b, #4a9960);
   opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.care-card:hover::before {
-  opacity: 1;
-}
-
-.care-card:hover {
-  transform: translateY(-4px);
-  border-color: #b8d3b7;
-  box-shadow: 0 12px 32px rgba(18, 43, 27, 0.14), 0 4px 12px rgba(18, 43, 27, 0.08);
+  transition: opacity .3s ease;
 }
 
 .care-card:hover::before { opacity: 1; }
@@ -146,475 +198,77 @@
 .care-card span {
   display: block;
   color: #566d5e;
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 800;
-  letter-spacing: 0.8px;
+  letter-spacing: .6px;
   text-transform: uppercase;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .care-card h2 {
   display: block;
   color: #0f2818;
-  font-size: 36px;
+  font-size: 32px;
   font-weight: 800;
   line-height: 1.1;
-  letter-spacing: -0.5px;
+  letter-spacing: -.5px;
   margin: 0;
 }
 
-/* ===== PANEL DAFTAR JADWAL ===== */
+/* ===== FORM ===== */
 
-.care-panel {
-  min-width: 0;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  background: linear-gradient(to bottom, #ffffff 0%, #fafcf9 100%);
-  box-shadow: 0 6px 24px rgba(38, 59, 45, 0.08), 0 2px 8px rgba(38, 59, 45, 0.04);
+.schedule-form {
+  margin-bottom: 22px;
+  padding: 24px;
+  border: 1px solid #e0ebe0;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 4px 18px rgba(38,59,45,.07);
+  animation: fadeIn .2s ease;
 }
 
 .schedule-form-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  padding: 23px 24px;
-  border-bottom: 1px solid #edf1eb;
-  background: #fff;
+  margin-bottom: 22px;
 }
 
 .schedule-form-header h3 {
   margin: 0;
   color: #0b2915;
-  font-size: 28px;
+  font-size: 20px;
   font-weight: 800;
-  letter-spacing: -.5px;
 }
 
-.panel-heading p {
-  margin: 0;
-  color: #879388;
-  font-size: 12px;
-  line-height: 1.7;
-}
-
-.panel-heading select {
-  min-width: 180px;
-  display: block;
-  height: 44px;
-  padding: 0 14px;
-  padding-right: 32px;
-  border: 1px solid #dfe7dc;
-  border-radius: 10px;
-  outline: none;
-  background: linear-gradient(135deg, #ffffff 0%, #fafcf9 100%);
-  color: #425746;
-  font-family: inherit;
-  font-size: 12px;
-  box-shadow: 0 1px 3px rgba(52, 121, 75, 0.04);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: pointer;
-}
-
-.panel-heading select:focus {
-  border-color: #6aa475;
-  background: #ffffff;
-  box-shadow: 0 0 0 4px rgba(52, 121, 75, 0.12), 0 2px 6px rgba(52, 121, 75, 0.08);
-  transform: translateY(-1px);
-}
-
-/* ===== DAFTAR PERAWATAN (TABEL) ===== */
-
-.care-table-wrap {
-  width: 100%;
-  overflow-x: auto;
-  background: #fff;
-}
-
-.loading-text {
-  padding: 32px 24px;
-  text-align: center;
-  color: #7b8d83;
-  font-size: 13px;
-}
-
-.care-table {
-  width: 100%;
-  min-width: 1000px;
-  border-collapse: separate;
-  border-spacing: 0;
-  text-align: left;
-}
-
-.care-table thead th {
-  padding: 18px 16px;
-  border-bottom: 2px solid #c8dcc9;
-  background: linear-gradient(to bottom, #f5f8f3 0%, #eef3ec 100%);
-  color: #3d5843;
-  font-size: 11px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: .8px;
-  white-space: nowrap;
-}
-
-.care-table thead th:first-child {
-  padding-left: 24px;
-}
-
-.care-table thead th:last-child {
-  padding-right: 24px;
-}
-
-.care-table tbody td {
-  padding: 22px 16px;
-  border-bottom: 1px solid #e4ece1;
-  background: #fff;
-  color: #556b5f;
-  font-size: 13px;
-  vertical-align: middle;
-  transition: background .15s;
-  font-weight: 500;
-}
-
-.care-table tbody td:first-child {
-  padding-left: 24px;
-}
-
-.care-table tbody td:last-child {
-  padding-right: 24px;
-}
-
-.care-table tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.care-table tbody tr:hover td {
-  background: linear-gradient(90deg, #f8fbf6 0%, #f3f9f0 50%, #f8fbf6 100%);
-  transition: all 0.25s ease;
-}
-
-/* Cell Kegiatan (Activity) */
-.table-cell-activity {
+.form-close-btn {
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
-  gap: 0;
-  max-width: 350px;
-}
-
-.table-cell-activity .activity-content {
-  flex: 1;
-  min-width: 0;
-}
-
-.table-cell-activity .activity-title {
-  display: block;
-  color: #1a3d2a;
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 1.5;
-  white-space: normal;
-  word-wrap: break-word;
-}
-
-/* Cell Tanaman */
-.table-cell-plant {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 140px;
-}
-
-.table-cell-plant .plant-name {
-  color: #1a3d2a;
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 1.4;
-}
-
-.table-cell-plant .plant-code {
-  color: #7b8d83;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-}
-
-/* Cell Text Standard */
-.cell-text {
-  color: #3d5843;
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1.5;
-}
-
-/* Tombol aksi di tabel */
-.care-table .action-btn {
-  display: inline-flex;
-  align-items: center;
   justify-content: center;
-  gap: 6px;
-  min-width: 110px;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 9px;
-  color: #ffffff;
-  font-size: 12px;
-  font-weight: 650;
+  border: 1px solid #dde6da;
+  border-radius: 8px;
+  background: #f8fbf6;
+  color: #556d5e;
+  font-size: 14px;
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  white-space: nowrap;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transition: .15s;
 }
 
-/* Tombol Tandai Selesai (Hijau) */
-.care-table .action-complete {
-  background: linear-gradient(135deg, #28784e 0%, #1f6440 100%);
-}
-
-.care-table .action-complete:hover:not(:disabled) {
-  background: linear-gradient(135deg, #1f6440 0%, #195d3a 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 14px rgba(40, 120, 78, 0.3);
-}
-
-/* Tombol Batalkan (Abu-abu) */
-.care-table .action-cancel {
-  background: linear-gradient(135deg, #64748b 0%, #475569 100%);
-}
-
-.care-table .action-cancel:hover:not(:disabled) {
-  background: linear-gradient(135deg, #475569 0%, #334155 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 14px rgba(100, 116, 139, 0.3);
-}
-
-.care-table .action-btn:active:not(:disabled) {
-  transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-}
-
-.care-table .action-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-}
-
-/* ===== DATA KOSONG ===== */
-
-.care-empty {
-  padding: 42px 20px;
-  color: #859287;
-  text-align: center;
-  white-space: normal;
-  background: #fafcf9;
-  margin: 20px 24px;
-}
-
-.care-empty>span {
-  display: block;
-  margin-bottom: 12px;
-  font-size: 32px;
-}
-
-.care-empty p {
-  margin: 0;
-  color: #78887a;
-  font-size: 12px;
-  line-height: 1.7;
-}
-
-/* ===== RESPONSIVE TABLET ===== */
-
-@media (max-width: 1050px) {
-  .care-summary {
-    gap: 12px;
-  }
-
-  .care-card {
-    padding: 17px;
-  }
-}
-
-/* ===== RESPONSIVE HP ===== */
-
-@media (max-width: 650px) {
-  .page-header {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 17px;
-  }
-
-  .page-header h1 {
-    font-size: 27px;
-  }
-
-  .care-summary {
-    grid-template-columns: 1fr;
-    gap: 12px;
-    margin-bottom: 21px;
-  }
-
-  .care-card {
-    min-height: 0;
-    padding: 17px 19px;
-  }
-
-  .care-card h2 {
-    margin-top: 7px;
-    font-size: 27px;
-  }
-
-  .panel-heading {
-    padding: 19px;
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .panel-heading select {
-    width: 100%;
-  }
-
-  .care-table {
-    min-width: 1000px;
-  }
-
-  .care-table thead th:first-child,
-  .care-table tbody td:first-child {
-    padding-left: 19px;
-  }
-
-  .care-table thead th:last-child,
-  .care-table tbody td:last-child {
-    padding-right: 19px;
-  }
-}
-
-/* ===== AKSESIBILITAS ===== */
-
-.page-section button:focus-visible {
-  outline: 3px solid #a9d5af;
-  outline-offset: 3px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-
-  .page-section,
-  .care-card,
-  .care-item {
-    animation: none;
-  }
-
-  .page-section *,
-  .page-section *::before,
-  .page-section *::after {
-    scroll-behavior: auto !important;
-    transition: none !important;
-  }
-}
-
-/* ===== STATUS & AKSI ===== */
-
-.care-status {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  max-width: 100%;
-  padding: 9px 14px;
-  border: 1px solid transparent;
-  border-radius: 30px;
-  font-size: 10px;
-  font-weight: 700;
-  line-height: 1.4;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-  transition: all 0.2s ease;
-  white-space: nowrap;
-}
-
-.care-status:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-}
-
-.care-status.done {
-  border-color: #d9efdc;
-  background: linear-gradient(135deg, #e8f6e9 0%, #d4f1d7 100%);
-  color: #328049;
-}
-
-.care-status.pending {
-  border-color: #f5e5bd;
-  background: linear-gradient(135deg, #fff4dc 0%, #ffeaa7 100%);
-  color: #a87416;
-}
-
-/* ===== PESAN FEEDBACK ===== */
-
-.tanaman-feedback {
-  margin: 0 0 20px;
-  padding: 13px 16px;
-  border: 1px solid #cfe7d0;
-  border-radius: 10px;
-  background: #eff8ee;
-  color: #34794b;
-  font-size: 12px;
-  line-height: 1.6;
-}
-
-/* ===== FORM TAMBAH JADWAL ===== */
-
-.add-schedule-btn,
-.save-schedule-btn {
-  padding: 12px 20px;
-  border: none;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #34794b, #245a36);
-  color: #fff;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.add-schedule-btn:hover,
-.save-schedule-btn:hover:not(:disabled) {
-  background: #245a36;
-  transform: translateY(-2px);
-}
-
-.save-schedule-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.schedule-form {
-  margin-bottom: 24px;
-  padding: 24px;
-  border: 1px solid #e0ebe0;
-  border-radius: 18px;
-  background: #fff;
-  box-shadow: 0 4px 18px rgba(38, 59, 45, 0.07);
-}
-
-.schedule-form h3 {
-  margin: 0 0 22px;
-  color: #0b2915;
-  font-size: 21px;
-  font-weight: 800;
-}
+.form-close-btn:hover { background: #ffdede; color: #c0392b; border-color: #f4b8b8; }
 
 .schedule-form-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
-  margin-bottom: 22px;
+  gap: 16px;
+  margin-bottom: 20px;
 }
 
 .schedule-form-grid label {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 7px;
   color: #3d5843;
   font-size: 13px;
   font-weight: 700;
@@ -625,37 +279,432 @@
 .schedule-form-grid textarea {
   width: 100%;
   min-width: 0;
-  padding: 12px 14px;
-  border: 1px solid #dfe7dc;
+  padding: 11px 14px;
+  border: 1.5px solid #dfe7dc;
   border-radius: 9px;
   outline: none;
-  background: #fff;
+  background: #fafcf9;
   color: #294333;
   font-family: inherit;
   font-size: 13px;
+  transition: .2s;
 }
 
 .schedule-form-grid input:focus,
 .schedule-form-grid select:focus,
 .schedule-form-grid textarea:focus {
   border-color: #6aa475;
-  box-shadow: 0 0 0 3px rgba(52, 121, 75, 0.12);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(52,121,75,.12);
 }
 
-.schedule-form-grid textarea {
-  resize: vertical;
+.schedule-form-grid textarea { resize: vertical; }
+
+.schedule-form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
 }
 
-@media (max-width: 650px) {
-  .schedule-form-grid {
-    grid-template-columns: 1fr;
-  }
+.cancel-btn {
+  padding: 11px 20px;
+  border: 1.5px solid #d6e4d6;
+  border-radius: 10px;
+  background: #fff;
+  color: #3d5843;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: .2s;
+}
 
-  .schedule-form {
-    padding: 18px;
-  }
+.cancel-btn:hover { background: #f0f6f0; }
 
-  .add-schedule-btn {
-    width: 100%;
+.add-schedule-btn,
+.save-schedule-btn {
+  padding: 11px 20px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #34794b, #245a36);
+  color: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: .2s ease;
+}
+
+.add-schedule-btn:hover,
+.save-schedule-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #245a36, #1b4529);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(36,90,54,.3);
+}
+
+.save-schedule-btn:disabled { opacity: .6; cursor: not-allowed; }
+
+/* ===== PANEL TABEL ===== */
+
+.care-panel {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: linear-gradient(to bottom, #ffffff 0%, #fafcf9 100%);
+  box-shadow: 0 6px 24px rgba(38,59,45,.08), 0 2px 8px rgba(38,59,45,.04);
+}
+
+.panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 24px;
+  border-bottom: 1px solid #edf1eb;
+  background: #fff;
+  flex-wrap: wrap;
+}
+
+.panel-heading h3 {
+  margin: 0;
+  color: #0b2915;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -.5px;
+}
+
+.panel-heading p {
+  margin: 3px 0 0;
+  color: #879388;
+  font-size: 12px;
+}
+
+.panel-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.cari-jadwal {
+  height: 40px;
+  padding: 0 14px;
+  border: 1.5px solid #dfe7dc;
+  border-radius: 10px;
+  outline: none;
+  background: #fafcf9;
+  color: #294333;
+  font-family: inherit;
+  font-size: 13px;
+  min-width: 200px;
+  transition: .2s;
+}
+
+.cari-jadwal:focus {
+  border-color: #6aa475;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(52,121,75,.1);
+}
+
+.panel-heading select,
+.panel-controls select {
+  height: 40px;
+  padding: 0 12px;
+  border: 1.5px solid #dfe7dc;
+  border-radius: 10px;
+  outline: none;
+  background: #fff;
+  color: #425746;
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.panel-controls select:focus { border-color: #6aa475; box-shadow: 0 0 0 3px rgba(52,121,75,.1); }
+
+/* ===== TABEL ===== */
+
+.care-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  background: #fff;
+}
+
+.loading-text {
+  padding: 36px 24px;
+  text-align: center;
+  color: #7b8d83;
+  font-size: 13px;
+}
+
+.care-table {
+  width: 100%;
+  min-width: 980px;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: left;
+}
+
+.care-table thead th {
+  padding: 16px;
+  border-bottom: 2px solid #c8dcc9;
+  background: linear-gradient(to bottom, #f5f8f3 0%, #eef3ec 100%);
+  color: #3d5843;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  white-space: nowrap;
+}
+
+.care-table thead th:first-child { padding-left: 24px; }
+.care-table thead th:last-child  { padding-right: 24px; }
+
+.care-table tbody td {
+  padding: 18px 16px;
+  border-bottom: 1px solid #e4ece1;
+  background: #fff;
+  color: #556b5f;
+  font-size: 13px;
+  vertical-align: middle;
+  transition: background .15s;
+  font-weight: 500;
+}
+
+.care-table tbody td:first-child { padding-left: 24px; }
+.care-table tbody td:last-child  { padding-right: 24px; }
+.care-table tbody tr:last-child td { border-bottom: none; }
+.care-table tbody tr:hover td { background: #f8fbf6; }
+
+/* Highlight baris berdasarkan status tanggal */
+.row-terlambat td { background: #fff9f9 !important; border-left: 3px solid #e74c3c; }
+.row-terlambat td:first-child { padding-left: 21px; }
+.row-hari_ini td { background: #f4f8ff !important; border-left: 3px solid #3498db; }
+.row-hari_ini td:first-child { padding-left: 21px; }
+
+/* Cell datetime */
+.cell-datetime {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cell-date {
+  color: #2d4f3a;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.cell-time {
+  color: #7b8d83;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+/* Cell catatan */
+.cell-catatan {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: #556b5f;
+  font-size: 12px;
+  line-height: 1.5;
+  max-width: 180px;
+}
+
+.no-catatan { color: #bcc7bd; font-style: normal; }
+
+/* Cell tanaman */
+.table-cell-activity { max-width: 200px; }
+.activity-title { display: block; color: #1a3d2a; font-size: 14px; font-weight: 700; line-height: 1.4; white-space: normal; }
+
+.table-cell-plant { display: flex; flex-direction: column; gap: 3px; min-width: 120px; }
+.plant-name { color: #1a3d2a; font-size: 13px; font-weight: 700; }
+.plant-code { color: #7b8d83; font-size: 11px; font-weight: 600; }
+
+.cell-text { color: #3d5843; font-size: 13px; font-weight: 600; }
+
+/* ===== STATUS BADGE ===== */
+
+.care-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  letter-spacing: .3px;
+}
+
+.care-status--selesai    { background: #e5f7ea; color: #1e6b39; border: 1px solid #a3d9b4; }
+.care-status--terlambat  { background: #fdeaea; color: #9b2b2b; border: 1px solid #f4b8b8; }
+.care-status--hari_ini   { background: #e8f2fd; color: #1e4d8c; border: 1px solid #a8c9f0; }
+.care-status--akan_datang{ background: #f5f8f3; color: #3d5843; border: 1px solid #ccdac9; }
+
+/* ===== TOMBOL AKSI ===== */
+
+.aksi-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 650;
+  cursor: pointer;
+  transition: all .22s ease;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0,0,0,.1);
+}
+
+.action-complete { background: linear-gradient(135deg, #28784e, #1f6440); }
+.action-complete:hover:not(:disabled) { background: linear-gradient(135deg, #1f6440, #195d3a); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(40,120,78,.35); }
+
+.action-cancel { background: linear-gradient(135deg, #64748b, #475569); }
+.action-cancel:hover:not(:disabled) { background: linear-gradient(135deg, #475569, #334155); transform: translateY(-2px); }
+
+.action-edit { background: linear-gradient(135deg, #2a7be8, #1a5ecb); padding: 8px 12px; }
+.action-edit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(42,123,232,.35); }
+
+.action-delete { background: linear-gradient(135deg, #e74c3c, #c0392b); padding: 8px 12px; }
+.action-delete:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(231,76,60,.35); }
+
+.action-btn:disabled { opacity: .55; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+
+/* ===== MODAL KONFIRMASI ===== */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  backdrop-filter: blur(3px);
+  animation: fadeIn .2s ease;
+  padding: 16px;
+}
+
+.modal-box {
+  background: #fff;
+  border-radius: 18px;
+  padding: 28px;
+  max-width: 440px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0,0,0,.2);
+  animation: slideUp .2s ease;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.modal-box h3 {
+  margin: 0 0 14px;
+  color: #1a3d2a;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.modal-box p {
+  margin: 0 0 22px;
+  color: #556b5f;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.action-delete-confirm {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  padding: 11px 20px;
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+/* ===== KOSONG ===== */
+
+.care-empty {
+  padding: 48px 20px;
+  text-align: center;
+  background: #fafcf9;
+  margin: 20px 24px;
+  border-radius: 14px;
+}
+
+.care-empty > span { display: block; margin-bottom: 14px; font-size: 36px; }
+.care-empty p { margin: 0; color: #78887a; font-size: 13px; line-height: 1.7; }
+
+.reset-filter-btn {
+  margin-top: 16px;
+  padding: 10px 20px;
+  border: 1.5px solid #d6e4d6;
+  border-radius: 10px;
+  background: #fff;
+  color: #34794b;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.reset-filter-btn:hover { background: #edf6e9; }
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 1100px) {
+  .care-summary { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 750px) {
+  .page-header { flex-direction: column; align-items: flex-start; gap: 14px; }
+  .page-header h1 { font-size: 28px; }
+  .care-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .schedule-form-grid { grid-template-columns: 1fr; }
+  .panel-heading { flex-direction: column; align-items: stretch; padding: 16px; }
+  .panel-controls { flex-direction: column; align-items: stretch; }
+  .cari-jadwal { min-width: 0; }
+  .add-schedule-btn { width: 100%; }
+  .schedule-form-actions { flex-direction: column-reverse; }
+  .cancel-btn, .save-schedule-btn { width: 100%; text-align: center; }
+}
+
+@media (max-width: 480px) {
+  .care-summary { grid-template-columns: 1fr; }
+  .pengingat-item { flex-wrap: wrap; }
+}
+
+/* ===== AKSESIBILITAS ===== */
+
+.page-section button:focus-visible,
+.page-section a:focus-visible { outline: 3px solid #a9d5af; outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .page-section, .care-card, .pengingat-item, .schedule-form, .modal-overlay, .modal-box {
+    animation: none !important;
+    transition: none !important;
   }
 }
