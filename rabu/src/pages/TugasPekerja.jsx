@@ -86,9 +86,11 @@ function TugasPekerja({ bukaHalaman }) {
     if (updateError || !data) {
       setError('Status belum berhasil diperbarui. Coba lagi.');
     } else {
-      setTugas((daftar) => daftar.map((t) => t.id === item.id ? { ...t, status: data.status } : t));
-      setPesanSukses(statusBaru === 'Selesai' ? 'Tugas ditandai selesai ✓' : 'Tugas dikembalikan ke belum selesai.');
-      setTimeout(() => setPesanSukses(''), 3500);
+      setTugas((daftar) =>
+        daftar.map((t) =>
+          t.id === item.id ? { ...t, status: data.status } : t
+        )
+      );
       window.dispatchEvent(new Event('jadwal-berubah'));
     }
     setTugasDiproses(null);
@@ -137,8 +139,12 @@ function TugasPekerja({ bukaHalaman }) {
 
       <header className="tugas-header">
         <div>
-          <h1>Tugas Perawatan Saya</h1>
-          <p className="tugas-subtitle">Pantau dan selesaikan tugas perawatan tanaman yang menjadi tanggung jawabmu.</p>
+          <p className="tugas-breadcrumb"></p>
+          <h1>Tugas Perawatan</h1>
+          <p className="tugas-subtitle">
+            Pantau dan selesaikan tugas perawatan tanaman yang menjadi
+            tanggung jawabmu.
+          </p>
         </div>
         <button type="button" className="tugas-refresh" onClick={muatTugas}>↻ Muat Ulang</button>
       </header>

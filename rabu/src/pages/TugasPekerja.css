@@ -37,7 +37,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 28px;
 }
 
 .tugas-header h1 {
@@ -50,9 +50,8 @@
 
 .tugas-subtitle {
   margin: 0;
-  color: #7b8d83;
-  font-size: 13.5px;
-  line-height: 1.6;
+  color: #f4f8f6;
+  line-height: 1.7;
 }
 
 .tugas-refresh {
@@ -167,7 +166,6 @@
   border-radius: 18px;
   background: #fff;
   text-align: left;
-  box-shadow: 0 4px 16px rgba(38,59,45,.06);
 }
 
 .tugas-daftar-heading {

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import './App.css';
 
 import Sidebar from './components/Sidebar';
-import Dashboard from './components/Dashboard';
+import DashboardPengelola from './pages/DashboardPengelola';
 import Perawatan from './pages/Perawatan';
 import DataTanaman from './pages/DataTanaman';
 import Beranda from './pages/Beranda';
@@ -14,6 +14,7 @@ import DashboardPekerja from './pages/DashboardPekerja';
 import { supabase } from './lib/supabaseClient';
 import TugasPekerja from './pages/TugasPekerja';
 import Profil from './pages/Profil';
+import EstafetPengelola from './pages/EstafetPengelola';
 
 function App() {
   const [halamanAktif, setHalamanAktif] = useState('beranda');
@@ -38,7 +39,7 @@ function App() {
 
       const { data, error } = await supabase
         .from('profiles')
-        .select('role, nama_lengkap')
+        .select('role, nama_lengkap, aktif')
         .eq('id', sesi.user.id)
         .maybeSingle();
 
@@ -51,6 +52,13 @@ function App() {
         );
         setRole(null);
         setNamaPengguna('');
+        return;
+      }
+      if (!data.aktif) {
+        console.warn('Akun sudah tidak aktif.');
+        setRole(null);
+        setNamaPengguna('');
+        await supabase.auth.signOut();
         return;
       }
 
@@ -259,7 +267,7 @@ function App() {
         />
       );
     }
-    
+
     if (halamanAktif === 'profil') {
       return (
         <Profil
@@ -303,7 +311,7 @@ function App() {
 
       <main className="main-content">
         {halamanAktif === 'dashboard' && (
-          <Dashboard bukaHalaman={bukaHalaman} />
+          <DashboardPengelola bukaHalaman={bukaHalaman} />
         )}
 
         {halamanAktif === 'tanaman' && (
@@ -325,7 +333,7 @@ function App() {
         )}
 
         {halamanAktif === 'estafet' && (
-          <PenanggungJawab />
+          <EstafetPengelola />
         )}
 
         {halamanAktif === 'profil' && (
@@ -335,8 +343,6 @@ function App() {
             onKembali={() => bukaHalaman('dashboard')}
           />
         )}
-
-        <button onClick={logout}>Keluar</button>
       </main>
     </div>
   );

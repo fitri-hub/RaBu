@@ -60,11 +60,9 @@ Untuk menjalankan aplikasi melalui Docker, siapkan Docker Desktop atau Docker En
 4. Buat file `.env.local` di direktori utama proyek dengan konfigurasi berikut:
 
    ```env
-   VITE_SUPABASE_URL=URL_SUPABASE_KAMU
-   VITE_SUPABASE_PUBLISHABLE_KEY=PUBLISHABLE_KEY_SUPABASE_KAMU
+   VITE_SUPABASE_URL=(https://bevqvhyciukudrmaawto.supabase.co)
+   VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_ZJHHxuiN_OyzGT1wXAU_Gw_U6sjYUQ5
    ```
-
-   Ganti nilai tersebut dengan konfigurasi Supabase yang sesuai.
 
 5. Jalankan aplikasi:
 
@@ -80,13 +78,13 @@ Image Docker RaBu tersedia melalui repository publik berikut:
 
 [**RaBu di Docker Hub**](https://hub.docker.com/r/fitri947/rabu-uts)
 
-Tag image untuk pengumpulan UTS: `submit-UTS`.
+Tag image untuk pengumpulan UTS: `latest`.
 
 Untuk mengunduh image dan menjalankan aplikasi:
 
 ```bash
-docker pull fitri947/rabu-uts:submit-UTS
-docker run -d --name rabu-container -p 8080:80 fitri947/rabu-uts:submit-UTS
+docker pull fitri947/rabu-uts:latest
+docker run -d --name rabu-container -p 8080:80 fitri947/rabu-uts:latest
 ```
 
 Setelah container berjalan, buka alamat berikut di browser:
