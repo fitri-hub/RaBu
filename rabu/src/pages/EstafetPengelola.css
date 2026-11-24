@@ -1,246 +1,912 @@
+/* =========================================================
+   RaBu — ESTAFET PENGELOLA (STYLING MODERN & KONSISTEN)
+   Selaras dengan tema Dashboard, Data Tanaman & Perawatan
+   ========================================================= */
 
 .estafet-page {
-  min-height: 100%;
-  padding: 32px;
-  background: #f6f8f3;
-  color: #293e30;
+  --green: #34794b;
+  --green-dark: #245a36;
+  --green-light: #edf6e9;
+  --text: #294333;
+  --text-muted: #6f8073;
+  --border: #e4ece1;
+  --surface: #ffffff;
+
+  width: 100%;
+  min-width: 0;
+  color: var(--text);
   font-family: inherit;
+  background: transparent !important;
+  animation: estafetFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: left;
 }
 
-.estafet-header {
-  margin-bottom: 25px;
+.estafet-page *,
+.estafet-page *::before,
+.estafet-page *::after {
+  box-sizing: border-box;
 }
 
-.estafet-eyebrow {
-  margin: 0 0 9px;
-  color: #56845f;
+@keyframes estafetFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== HEADER ===== */
+
+.estafet-page .page-header {
+  margin-bottom: 24px;
+}
+
+.estafet-page .breadcrumb {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 8px;
+  padding: 4px 13px;
+  border-radius: 9999px;
+  background: rgba(35, 84, 55, 0.14);
+  color: #0b2915;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.estafet-page .page-header h1 {
+  margin: 0 0 8px;
+  color: #0b2915;
+  font-size: clamp(34px, 5vw, 48px);
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: -1.5px;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+.estafet-page .page-desc {
+  margin: 0;
+  color: #4a6352;
+  font-size: 14.5px;
+  line-height: 1.6;
+  max-width: 720px;
+}
+
+/* ===== FEEDBACK ALERTS ===== */
+
+.estafet-feedback {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  margin-bottom: 22px;
+  border-radius: 14px;
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.5;
+  animation: estafetFadeIn 0.25s ease;
+}
+
+.estafet-feedback--error {
+  background: #fff4f4;
+  border: 1.5px solid #f8c2c2;
+  color: #b02a2a;
+}
+
+.estafet-feedback--sukses {
+  background: #edfaf1;
+  border: 1.5px solid #a8dcba;
+  color: #196f3e;
+}
+
+/* ===== STATISTIK CARDS (RINGKASAN) ===== */
+
+.estafet-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.estafet-stat-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 22px 24px;
+  border: 1px solid #e0ebe0;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(250, 252, 249, 0.95) 100%);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 18px rgba(18, 43, 27, 0.06), 0 1px 4px rgba(18, 43, 27, 0.03);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.estafet-stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #34794b, #4a9960);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.estafet-stat-card:hover {
+  transform: translateY(-3px);
+  border-color: #b8d3b7;
+  box-shadow: 0 10px 28px rgba(18, 43, 27, 0.12);
+}
+
+.estafet-stat-card:hover::before {
+  opacity: 1;
+}
+
+.stat-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.stat-card-icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: #edf6e9;
+  color: #245a36;
+}
+
+.stat-card-badge {
+  padding: 3px 9px;
+  border-radius: 9999px;
+  background: #f1f6ef;
+  color: #4a6352;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.stat-card-label {
+  display: block;
+  color: #6f8073;
   font-size: 11px;
   font-weight: 800;
-  letter-spacing: 1.4px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
 }
 
-.estafet-header h1 {
-  margin: 0 0 10px;
-  color: #2d613e;
-  font-size: 30px;
+.stat-card-value {
+  display: block;
+  color: #0b2915;
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
 }
 
-.estafet-header > p:last-child {
-  color: #829087;
-  font-size: 13px;
-  line-height: 1.7;
-}
+/* ===== BANNER KEBERLANJUTAN ===== */
 
 .estafet-banner {
   display: flex;
   align-items: center;
-  gap: 18px;
-  padding: 23px;
-  margin-bottom: 24px;
-  border: 1px solid #dcebd8;
-  border-radius: 16px;
-  background: linear-gradient(120deg, #e8f4e5, #f6faf1);
+  gap: 20px;
+  padding: 22px 26px;
+  margin-bottom: 28px;
+  border: 1px solid #cce2ca;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(238, 248, 235, 0.92) 100%);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 18px rgba(38, 59, 45, 0.05);
 }
 
 .estafet-banner-icon {
   display: grid;
-  flex-shrink: 0;
   place-items: center;
-  width: 58px;
-  height: 58px;
-  border-radius: 15px;
-  background: white;
-  font-size: 30px;
-}
-
-.estafet-banner h2 {
-  margin: 0 0 8px;
-  color: #315f3d;
-  font-size: 18px;
-}
-
-.estafet-banner p {
-  margin: 0;
-  color: #718273;
-  font-size: 13px;
-  line-height: 1.7;
-}
-
-.estafet-card {
-  padding: 25px;
-  margin-bottom: 24px;
-  border: 1px solid #e5ebe2;
+  width: 54px;
+  height: 54px;
+  flex-shrink: 0;
   border-radius: 16px;
-  background: white;
-  box-shadow: 0 4px 15px rgba(41, 62, 48, 0.04);
+  background: #ffffff;
+  border: 1.5px solid #d4e7d1;
+  font-size: 26px;
+  box-shadow: 0 4px 12px rgba(38, 59, 45, 0.08);
 }
 
-.estafet-card h2 {
-  margin: 0 0 10px;
-  color: #315f3d;
-  font-size: 19px;
+.estafet-banner-text h3 {
+  margin: 0 0 6px;
+  color: #0b2915;
+  font-size: 17px;
+  font-weight: 800;
 }
 
-.estafet-description {
-  margin-bottom: 24px;
-  color: #829087;
-  font-size: 13px;
-  line-height: 1.7;
+.estafet-banner-text p {
+  margin: 0;
+  color: #4f6857;
+  font-size: 13.5px;
+  line-height: 1.6;
 }
 
-.estafet-card form {
+/* ===== PANEL UTAMA ===== */
+
+.estafet-panel {
+  border: 1px solid #e4ece1;
+  border-radius: 22px;
+  background: #ffffff;
+  box-shadow: 0 6px 24px rgba(38, 59, 45, 0.07), 0 2px 8px rgba(38, 59, 45, 0.03);
+  margin-bottom: 28px;
+  overflow: hidden;
+}
+
+.panel-header-block {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 24px 28px;
+  border-bottom: 1px solid #edf2ec;
+  background: linear-gradient(to bottom, #ffffff 0%, #fafcf9 100%);
+  flex-wrap: wrap;
 }
 
-.estafet-card label {
-  margin-top: 8px;
-  color: #405b47;
+.panel-pre-title {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #34794b;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.panel-title-group h2 {
+  margin: 0 0 4px;
+  color: #0b2915;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+}
+
+.panel-title-group p {
+  margin: 0;
+  color: #7b8d80;
   font-size: 13px;
+  line-height: 1.5;
+}
+
+.history-count-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  background: #edf6e9;
+  border: 1px solid #c8dcc9;
+  color: #245a36;
+  font-size: 12px;
   font-weight: 700;
 }
 
-.estafet-card select,
-.estafet-card textarea {
+.panel-content-body {
+  padding: 28px;
+}
+
+/* ===== FORMULIR ===== */
+
+.estafet-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  color: #1e3a28;
+  font-size: 13.5px;
+  font-weight: 750;
+}
+
+.form-group select,
+.form-group textarea {
   width: 100%;
-  padding: 13px 14px;
-  border: 1px solid #dce5da;
-  border-radius: 9px;
-  outline: none;
-  background: #fff;
-  color: #293e30;
+  padding: 13px 16px;
+  border: 1.5px solid #dfe7dc;
+  border-radius: 12px;
+  background: #fafcf9;
+  color: #1a3d2a;
   font-family: inherit;
-  font-size: 13px;
+  font-size: 13.5px;
+  font-weight: 600;
+  outline: none;
+  transition: all 0.2s ease;
 }
 
-.estafet-card select:focus,
-.estafet-card textarea:focus {
-  border-color: #56845f;
-  box-shadow: 0 0 0 3px rgba(86, 132, 95, 0.1);
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #6aa475;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(52, 121, 75, 0.12);
 }
 
-.estafet-card textarea {
+.form-group textarea {
   resize: vertical;
   line-height: 1.6;
 }
 
-.estafet-card form button {
-  align-self: flex-start;
-  margin-top: 12px;
-  padding: 13px 22px;
+.form-hint {
+  color: #7d8f82;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* ===== PREVIEW SERAH TERIMA ===== */
+
+.estafet-preview-card {
+  margin-top: 6px;
+  padding: 18px 22px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #f3f9f1 0%, #e8f4e5 100%);
+  border: 1.5px dashed #a8cca4;
+  animation: estafetFadeIn 0.25s ease;
+}
+
+.preview-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  color: #245a36;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.preview-flow {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.preview-person {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  text-align: center;
+  padding: 10px 16px;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #d4e7d1;
+  min-width: 180px;
+}
+
+.preview-person.highlight {
+  border-color: #34794b;
+  box-shadow: 0 4px 12px rgba(52, 121, 75, 0.15);
+}
+
+.person-role {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: #7b8d80;
+}
+
+.person-name {
+  color: #0b2915;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.person-future {
+  font-size: 11px;
+  font-weight: 700;
+  color: #34794b;
+}
+
+.preview-arrow {
+  color: #34794b;
+  display: grid;
+  place-items: center;
+}
+
+/* ===== TOMBOL SUBMIT ===== */
+
+.form-actions-row {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 10px;
+}
+
+.btn-submit-estafet {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 13px 26px;
   border: none;
-  border-radius: 9px;
-  background: #2d613e;
-  color: white;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #2d7a4d 0%, #1b542e 100%);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(27, 84, 46, 0.3);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-submit-estafet:hover:not(:disabled) {
+  background: linear-gradient(135deg, #24653f 0%, #154524 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(27, 84, 46, 0.4);
+}
+
+.btn-submit-estafet:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-submit-estafet:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ===== DAFTAR RIWAYAT ESTAFET ===== */
+
+.estafet-history-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.estafet-history-card {
+  padding: 20px 24px;
+  border: 1.5px solid #e5ebe2;
+  border-radius: 16px;
+  background: #fafcf9;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.estafet-history-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(to bottom, #34794b, #245a36);
+  opacity: 0.8;
+}
+
+.estafet-history-card:hover {
+  background: #ffffff;
+  border-color: #bcd4b7;
+  box-shadow: 0 6px 20px rgba(38, 59, 45, 0.08);
+  transform: translateX(3px);
+}
+
+.history-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.history-transfer-flow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.person-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 14px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 750;
+  border: 1px solid transparent;
+}
+
+.person-pill.from {
+  background: #f0f4ee;
+  border-color: #dbe4d9;
+  color: #3b5443;
+}
+
+.person-pill.to {
+  background: #eaf6ec;
+  border-color: #bfe5c7;
+  color: #124d27;
+}
+
+.pill-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #6f8073;
+}
+
+.pill-crown {
+  font-size: 14px;
+}
+
+.history-arrow {
+  color: #34794b;
+  display: grid;
+  place-items: center;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  border-radius: 9999px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.status-pekerja {
+  background: #edf8ef;
+  color: #1c6b38;
+  border: 1px solid #b7e3c1;
+}
+
+.status-nonaktif {
+  background: #f4f6f4;
+  color: #6d7d71;
+  border: 1px solid #d8dfd9;
+}
+
+.history-reason-box {
+  margin: 10px 0 14px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid #e6ede4;
+}
+
+.reason-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #6f8073;
+  margin-bottom: 3px;
+}
+
+.reason-text {
+  margin: 0;
+  color: #1e3a28;
+  font-size: 13px;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.history-no-reason {
+  margin: 6px 0 12px;
+  color: #92a295;
+  font-size: 12px;
+  font-style: italic;
+}
+
+.history-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed #e8efe6;
+  font-size: 12px;
+}
+
+.history-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #6f8073;
+  font-weight: 600;
+}
+
+.history-verified {
+  color: #276b43;
+  font-weight: 700;
+}
+
+/* ===== EMPTY & LOADING STATES ===== */
+
+.estafet-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px 20px;
+  color: #6f8073;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.estafet-spinner {
+  width: 22px;
+  height: 22px;
+  border: 2.5px solid #dce5da;
+  border-top-color: #34794b;
+  border-radius: 50%;
+  animation: spinEstafet 0.8s linear infinite;
+}
+
+@keyframes spinEstafet {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.estafet-empty-state,
+.estafet-empty-workers {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 44px 20px;
+  background: #fafcf9;
+  border-radius: 16px;
+  border: 1px dashed #d5e2d2;
+}
+
+.empty-state-icon,
+.empty-icon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #edf6e9;
+  color: #245a36;
+  font-size: 24px;
+  margin-bottom: 12px;
+}
+
+.estafet-empty-state h4,
+.estafet-empty-workers h4 {
+  margin: 0 0 6px;
+  color: #0b2915;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.estafet-empty-state p,
+.estafet-empty-workers p {
+  margin: 0;
+  color: #7b8d80;
+  font-size: 13px;
+  max-width: 360px;
+  line-height: 1.6;
+}
+
+/* ===== MODAL KONFIRMASI ===== */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 41, 21, 0.45);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: estafetFadeIn 0.2s ease;
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 480px;
+  padding: 30px;
+  border-radius: 22px;
+  background: #ffffff;
+  border: 1px solid #dce8db;
+  box-shadow: 0 20px 60px rgba(11, 41, 21, 0.25);
+  text-align: left;
+  animation: modalSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-icon-badge {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: #fff4f4;
+  color: #c0392b;
+  border: 1.5px solid #f8c2c2;
+  margin-bottom: 16px;
+}
+
+.modal-card h3 {
+  margin: 0 0 8px;
+  color: #0b2915;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.modal-card p {
+  margin: 0 0 14px;
+  color: #4a6352;
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
+.modal-target-box {
+  padding: 14px 18px;
+  margin-bottom: 14px;
+  border-radius: 12px;
+  background: #f1f7ef;
+  border: 1px solid #cce2ca;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.modal-target-box strong {
+  color: #0b2915;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.modal-target-box span {
+  color: #34794b;
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.modal-warning-text {
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #fff8eb;
+  border: 1px solid #f8dfb2;
+  color: #925808;
+  font-size: 12.5px !important;
+  line-height: 1.55 !important;
+  font-weight: 600;
+}
+
+.modal-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.btn-modal-cancel {
+  padding: 11px 20px;
+  border-radius: 10px;
+  border: 1.5px solid #dce5da;
+  background: #ffffff;
+  color: #4a6352;
   font-family: inherit;
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s ease;
 }
 
-.estafet-card form button:hover {
-  background: #214c30;
+.btn-modal-cancel:hover {
+  background: #f0f6f0;
 }
 
-.estafet-card form button:disabled {
+.btn-modal-confirm {
+  padding: 11px 22px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, #c0392b 0%, #96281b 100%);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(192, 57, 43, 0.3);
+  transition: all 0.2s ease;
+}
+
+.btn-modal-confirm:hover:not(:disabled) {
+  background: linear-gradient(135deg, #a93226 0%, #782015 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(192, 57, 43, 0.4);
+}
+
+.btn-modal-confirm:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-.estafet-error,
-.estafet-success {
-  padding: 13px 16px;
-  margin-bottom: 18px;
-  border-radius: 9px;
-  font-size: 13px;
-  line-height: 1.6;
-}
+/* ===== RESPONSIVE ===== */
 
-.estafet-error {
-  border: 1px solid #f1cccc;
-  background: #fff1f1;
-  color: #a33b3b;
-}
-
-.estafet-success {
-  border: 1px solid #d4e9d4;
-  background: #eff9ef;
-  color: #347342;
-}
-
-.estafet-empty {
-  padding: 20px 0;
-  color: #829087;
-  font-size: 13px;
-}
-
-.estafet-history {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  margin-top: 20px;
-}
-
-.estafet-history-item {
-  padding: 18px;
-  border: 1px solid #e5ebe2;
-  border-left: 4px solid #56845f;
-  border-radius: 10px;
-  background: #fafcf9;
-}
-
-.estafet-history-item h3 {
-  margin: 0 0 12px;
-  color: #315f3d;
-  font-size: 15px;
-}
-
-.estafet-history-item p {
-  margin: 6px 0;
-  color: #718273;
-  font-size: 13px;
-}
-
-.estafet-history-item small {
-  display: block;
-  margin-top: 12px;
-  color: #929d93;
-  font-size: 11px;
-}
-
-@media (max-width: 768px) {
-  .estafet-page {
-    padding: 20px;
+@media (max-width: 900px) {
+  .estafet-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
 
-  .estafet-header h1 {
-    font-size: 25px;
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
   }
 
-  .estafet-banner {
-    align-items: flex-start;
-    padding: 17px;
+  .preview-flow {
+    flex-direction: column;
   }
 
-  .estafet-card {
-    padding: 18px;
-  }
-
-  .estafet-card form button {
+  .preview-person {
     width: 100%;
   }
+
+  .panel-header-block {
+    padding: 18px 20px;
+  }
+
+  .panel-content-body {
+    padding: 20px;
+  }
 }
 
-.estafet-page {
-  text-align: left;
-}
+@media (max-width: 600px) {
+  .estafet-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
-.estafet-header,
-.estafet-banner,
-.estafet-card,
-.estafet-history,
-.estafet-history-item {
-  text-align: left;
+  .history-card-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .btn-submit-estafet {
+    width: 100%;
+  }
 }
