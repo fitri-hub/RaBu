@@ -1,6 +1,23 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import './TugasPekerja.css';
+
+// ===== HELPER =====
+function formatTanggal(tanggalStr) {
+  if (!tanggalStr) return '-';
+  const d = new Date(tanggalStr + 'T00:00:00');
+  return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+function statusTanggal(tanggalStr, statusItem) {
+  if (statusItem === 'Selesai') return 'selesai';
+  const hari_ini = new Date();
+  hari_ini.setHours(0, 0, 0, 0);
+  const tgl = new Date(tanggalStr + 'T00:00:00');
+  if (tgl < hari_ini) return 'terlambat';
+  if (tgl.getTime() === hari_ini.getTime()) return 'hari_ini';
+  return 'akan_datang';
+}
 
 function TugasPekerja({ bukaHalaman }) {
   const [tugas, setTugas] = useState([]);
@@ -8,14 +25,13 @@ function TugasPekerja({ bukaHalaman }) {
   const [error, setError] = useState('');
   const [tugasDiproses, setTugasDiproses] = useState(null);
   const [filter, setFilter] = useState('Semua');
+  const [pesanSukses, setPesanSukses] = useState('');
 
   async function muatTugas() {
     setMemuat(true);
     setError('');
 
-    const { data: sesiData, error: sesiError } =
-      await supabase.auth.getSession();
-
+    const { data: sesiData, error: sesiError } = await supabase.auth.getSession();
     if (sesiError || !sesiData.session) {
       setError('Sesi login tidak ditemukan. Silakan login kembali.');
       setMemuat(false);
@@ -23,29 +39,17 @@ function TugasPekerja({ bukaHalaman }) {
     }
 
     const userId = sesiData.session.user.id;
-    console.log('User ID yang sedang login:', userId);
 
     const { data, error: tugasError } = await supabase
       .from('jadwal_perawatan')
       .select(`
-        id,
-        tanaman_id,
-        jenis_perawatan,
-        tanggal,
-        waktu,
-        catatan,
-        status
+        id, tanaman_id, jenis_perawatan, kegiatan, tanggal, waktu, catatan, status,
+        tanaman!jadwal_perawatan_tanaman_id_fkey (id, nama_tanaman, kode, lokasi)
       `)
       .eq('user_id', userId)
       .order('tanggal', { ascending: true });
 
     if (tugasError) {
-      console.error('Detail error Supabase:', tugasError);
-      console.error('Kode:', tugasError.code);
-      console.error('Pesan:', tugasError.message);
-      console.error('Detail:', tugasError.details);
-      console.error('Hint:', tugasError.hint);
-
       setError('Tugas belum dapat dimuat. Silakan coba lagi.');
       setMemuat(false);
       return;
@@ -55,13 +59,10 @@ function TugasPekerja({ bukaHalaman }) {
     setMemuat(false);
   }
 
-  useEffect(() => {
-    muatTugas();
-  }, []);
+  useEffect(() => { muatTugas(); }, []);
 
   async function ubahStatus(item) {
     const statusBaru = item.status === 'Selesai' ? 'Belum' : 'Selesai';
-
     setTugasDiproses(item.id);
     setError('');
 
@@ -83,10 +84,6 @@ function TugasPekerja({ bukaHalaman }) {
       .maybeSingle();
 
     if (updateError || !data) {
-      console.error(
-        'Gagal memperbarui status:',
-        updateError?.message || 'Tidak ada jadwal yang diperbarui'
-      );
       setError('Status belum berhasil diperbarui. Coba lagi.');
     } else {
       setTugas((daftar) =>
@@ -96,46 +93,49 @@ function TugasPekerja({ bukaHalaman }) {
       );
       window.dispatchEvent(new Event('jadwal-berubah'));
     }
-
     setTugasDiproses(null);
   }
 
-  const tugasTampil = tugas.filter((item) => {
-    if (filter === 'Semua') return true;
-    if (filter === 'Belum') return item.status !== 'Selesai';
-    return item.status === 'Selesai';
-  });
+  const hari_ini_str = new Date().toISOString().slice(0, 10);
 
-  const totalSelesai = tugas.filter(
-    (item) => item.status === 'Selesai'
-  ).length;
+  const statistik = useMemo(() => {
+    const selesai = tugas.filter((t) => t.status === 'Selesai').length;
+    const terlambat = tugas.filter((t) => t.status !== 'Selesai' && t.tanggal < hari_ini_str).length;
+    const hariIni = tugas.filter((t) => t.status !== 'Selesai' && t.tanggal === hari_ini_str).length;
+    return { total: tugas.length, selesai, terlambat, hariIni, belum: tugas.length - selesai };
+  }, [tugas]);
 
-  const totalBelum = tugas.length - totalSelesai;
+  const tugasTampil = useMemo(() => {
+    let hasil = tugas;
+    if (filter === 'Belum') hasil = hasil.filter((t) => t.status !== 'Selesai');
+    else if (filter === 'Selesai') hasil = hasil.filter((t) => t.status === 'Selesai');
+    else if (filter === 'HariIni') hasil = hasil.filter((t) => t.tanggal === hari_ini_str && t.status !== 'Selesai');
+    else if (filter === 'Terlambat') hasil = hasil.filter((t) => t.status !== 'Selesai' && t.tanggal < hari_ini_str);
+
+    // Urutan: terlambat → hari ini → akan datang → selesai
+    return hasil.slice().sort((a, b) => {
+      const p = (item) => {
+        if (item.status === 'Selesai') return 3;
+        if (item.tanggal < hari_ini_str) return 0;
+        if (item.tanggal === hari_ini_str) return 1;
+        return 2;
+      };
+      return p(a) - p(b) || a.tanggal.localeCompare(b.tanggal);
+    });
+  }, [tugas, filter]);
 
   if (memuat) {
     return (
       <section className="tugas-pekerja">
-        <button
-          type="button"
-          className="tombol-kembali"
-          onClick={() => bukaHalaman?.('dashboard-pekerja')}
-        >
-          ← Kembali
-        </button>
-        <p>Memuat tugas perawatan...</p>
+        <button type="button" className="tombol-kembali" onClick={() => bukaHalaman?.('dashboard-pekerja')}>← Kembali</button>
+        <p className="tugas-loading">⏳ Memuat tugas perawatan...</p>
       </section>
     );
   }
 
   return (
     <section className="tugas-pekerja">
-      <button
-        type="button"
-        className="tombol-kembali"
-        onClick={() => bukaHalaman?.('dashboard-pekerja')}
-      >
-        ← Kembali
-      </button>
+      <button type="button" className="tombol-kembali" onClick={() => bukaHalaman?.('dashboard-pekerja')}>← Kembali</button>
 
       <header className="tugas-header">
         <div>
@@ -146,52 +146,67 @@ function TugasPekerja({ bukaHalaman }) {
             tanggung jawabmu.
           </p>
         </div>
-
-        <button
-          type="button"
-          className="tugas-refresh"
-          onClick={muatTugas}
-        >
-          Muat Ulang
-        </button>
+        <button type="button" className="tugas-refresh" onClick={muatTugas}>↻ Muat Ulang</button>
       </header>
 
-      {error && (
-        <div className="tugas-error" role="alert">
-          {error}
+      {error && <div className="tugas-error" role="alert">{error}</div>}
+      {pesanSukses && <div className="tugas-sukses" role="status">{pesanSukses}</div>}
+
+      {/* BANNER PENGINGAT */}
+      {(statistik.terlambat > 0 || statistik.hariIni > 0) && (
+        <div className="tugas-pengingat-banner">
+          {statistik.terlambat > 0 && (
+            <div className="tugas-pengingat tugas-pengingat--merah" onClick={() => setFilter('Terlambat')} role="button" tabIndex={0}>
+              <span>🚨</span>
+              <div>
+                <strong>{statistik.terlambat} tugas terlambat</strong>
+                <p>Belum selesai dan sudah melewati batas waktu.</p>
+              </div>
+            </div>
+          )}
+          {statistik.hariIni > 0 && (
+            <div className="tugas-pengingat tugas-pengingat--biru" onClick={() => setFilter('HariIni')} role="button" tabIndex={0}>
+              <span>📅</span>
+              <div>
+                <strong>{statistik.hariIni} tugas hari ini</strong>
+                <p>Harus diselesaikan hari ini.</p>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
+      {/* RINGKASAN */}
       <div className="tugas-ringkasan">
-        <article className="tugas-ringkasan-card">
+        <article className="tugas-ringkasan-card" onClick={() => setFilter('Semua')}>
           <span>Total Tugas</span>
-          <strong>{tugas.length}</strong>
+          <strong>{statistik.total}</strong>
         </article>
-
-        <article className="tugas-ringkasan-card">
-          <span>Belum Selesai</span>
-          <strong>{totalBelum}</strong>
+        <article className="tugas-ringkasan-card tugas-ringkasan-card--warning" onClick={() => setFilter('Terlambat')}>
+          <span>🚨 Terlambat</span>
+          <strong>{statistik.terlambat}</strong>
         </article>
-
-        <article className="tugas-ringkasan-card">
-          <span>Selesai</span>
-          <strong>{totalSelesai}</strong>
+        <article className="tugas-ringkasan-card tugas-ringkasan-card--info" onClick={() => setFilter('HariIni')}>
+          <span>📅 Hari Ini</span>
+          <strong>{statistik.hariIni}</strong>
+        </article>
+        <article className="tugas-ringkasan-card tugas-ringkasan-card--done" onClick={() => setFilter('Selesai')}>
+          <span>✓ Selesai</span>
+          <strong>{statistik.selesai}</strong>
         </article>
       </div>
 
+      {/* DAFTAR TUGAS */}
       <div className="tugas-daftar-panel">
         <div className="tugas-daftar-heading">
           <div>
             <h2>Daftar Tugas Saya</h2>
-            <p>Kerjakan tugas sesuai jadwal yang diberikan.</p>
+            <p>{tugasTampil.length} tugas ditampilkan</p>
           </div>
-
-          <select
-            value={filter}
-            onChange={(event) => setFilter(event.target.value)}
-            aria-label="Filter status tugas"
-          >
+          <select value={filter} onChange={(e) => setFilter(e.target.value)} aria-label="Filter status tugas">
             <option value="Semua">Semua Status</option>
+            <option value="HariIni">📅 Hari Ini</option>
+            <option value="Terlambat">🚨 Terlambat</option>
             <option value="Belum">Belum Selesai</option>
             <option value="Selesai">Selesai</option>
           </select>
@@ -199,68 +214,77 @@ function TugasPekerja({ bukaHalaman }) {
 
         {tugasTampil.length === 0 ? (
           <div className="tugas-kosong">
-            <h3>Belum Ada Tugas</h3>
+            <span className="tugas-kosong-ikon">🌱</span>
+            <h3>Tidak Ada Tugas</h3>
             <p>
               {tugas.length === 0
                 ? 'Belum ada jadwal perawatan yang ditugaskan ke akunmu.'
                 : 'Tidak ada tugas dengan status yang dipilih.'}
             </p>
+            {filter !== 'Semua' && (
+              <button type="button" className="reset-filter-tugas" onClick={() => setFilter('Semua')}>Lihat Semua Tugas</button>
+            )}
           </div>
         ) : (
           <div className="tugas-list">
-            {tugasTampil.map((item) => (
-              <article className="tugas-item" key={item.id}>
-                <div className="tugas-item-info">
-                  <span className="tugas-item-label">
-                    {item.jenis_perawatan}
-                  </span>
+            {tugasTampil.map((item) => {
+              const tglStatus = statusTanggal(item.tanggal, item.status);
+              const namaKegiatan = item.kegiatan || item.jenis_perawatan || 'Perawatan tanaman';
+              const namaTanaman = item.tanaman?.nama_tanaman || `Tanaman #${item.tanaman_id ?? '-'}`;
+              const lokasi = item.tanaman?.lokasi || '';
+              const kode = item.tanaman?.kode || '';
 
-                  <h3>
-                    {item.tanaman?.nama || `Tanaman #${item.tanaman_id ?? '-'}`}
-                  </h3>
+              return (
+                <article className={`tugas-item tugas-item--${tglStatus}`} key={item.id}>
+                  <div className="tugas-item-kiri">
+                    <div className="tugas-item-tanggal">
+                      <span className="tugas-tgl-bulan">{new Date(item.tanggal + 'T00:00:00').toLocaleDateString('id-ID', { month: 'short' })}</span>
+                      <span className="tugas-tgl-hari">{new Date(item.tanggal + 'T00:00:00').getDate()}</span>
+                    </div>
+                  </div>
 
-                  <p>
-                    <strong>Tanggal:</strong> {item.tanggal}
-                  </p>
+                  <div className="tugas-item-info">
+                    <div className="tugas-item-top">
+                      <span className={`tugas-status tugas-status--${tglStatus}`}>
+                        {tglStatus === 'selesai' && '✓ Selesai'}
+                        {tglStatus === 'terlambat' && '🚨 Terlambat'}
+                        {tglStatus === 'hari_ini' && '📅 Hari Ini'}
+                        {tglStatus === 'akan_datang' && '🕐 Akan Datang'}
+                      </span>
+                    </div>
 
-                  {item.waktu && (
-                    <p>
-                      <strong>Waktu:</strong> {item.waktu.slice(0, 5)}
-                    </p>
-                  )}
+                    <span className="tugas-item-label">{namaKegiatan}</span>
+                    <h3>{namaTanaman}{kode ? ` (${kode})` : ''}</h3>
 
-                  {item.catatan && (
-                    <p>
-                      <strong>Catatan:</strong> {item.catatan}
-                    </p>
-                  )}
-                </div>
+                    <div className="tugas-item-meta">
+                      {lokasi && <span>📍 {lokasi}</span>}
+                      <span>🗓 {formatTanggal(item.tanggal)}{item.waktu ? ` · ${item.waktu.slice(0, 5)}` : ''}</span>
+                    </div>
 
-                <div className="tugas-item-aksi">
-                  <span
-                    className={
-                      item.status === 'Selesai'
-                        ? 'tugas-status tugas-status-selesai'
-                        : 'tugas-status tugas-status-belum'
-                    }
-                  >
-                    {item.status === 'Selesai' ? 'Selesai' : 'Belum Selesai'}
-                  </span>
+                    {item.catatan && (
+                      <div className="tugas-catatan">
+                        <strong>📝 Catatan:</strong> {item.catatan}
+                      </div>
+                    )}
+                  </div>
 
-                  <button
-                    type="button"
-                    disabled={tugasDiproses === item.id}
-                    onClick={() => ubahStatus(item)}
-                  >
-                    {tugasDiproses === item.id
-                      ? 'Menyimpan...'
-                      : item.status === 'Selesai'
-                        ? 'Batalkan'
-                        : 'Tandai Selesai'}
-                  </button>
-                </div>
-              </article>
-            ))}
+                  <div className="tugas-item-aksi">
+                    <button
+                      type="button"
+                      className={item.status === 'Selesai' ? 'tugas-btn tugas-btn--batal' : 'tugas-btn tugas-btn--selesai'}
+                      disabled={tugasDiproses === item.id}
+                      onClick={() => ubahStatus(item)}
+                    >
+                      {tugasDiproses === item.id
+                        ? 'Menyimpan...'
+                        : item.status === 'Selesai'
+                          ? 'Batalkan'
+                          : '✓ Tandai Selesai'}
+                    </button>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         )}
       </div>

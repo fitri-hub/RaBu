@@ -1,13 +1,44 @@
-// Halaman jadwal perawatan tanaman
-import { useEffect, useState } from 'react';
+// Halaman jadwal & pencatatan perawatan tanaman
+import { useEffect, useState, useMemo } from 'react';
 import './Perawatan.css';
 import { supabase } from '../lib/supabaseClient';
 
-function Perawatan() {
+// ===== HELPER =====
+function formatTanggal(tanggalStr) {
+  if (!tanggalStr) return '-';
+  const d = new Date(tanggalStr + 'T00:00:00');
+  return d.toLocaleDateString('id-ID', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
+}
+
+function statusTanggal(tanggalStr, statusItem) {
+  if (statusItem === 'Selesai') return 'selesai';
+  const hari_ini = new Date();
+  hari_ini.setHours(0, 0, 0, 0);
+  const tgl = new Date(tanggalStr + 'T00:00:00');
+  if (tgl < hari_ini) return 'terlambat';
+  if (tgl.getTime() === hari_ini.getTime()) return 'hari_ini';
+  return 'akan_datang';
+}
+
+const FORM_KOSONG = {
+  tanaman_id: '',
+  kegiatan: '',
+  tanggal: '',
+  waktu: '',
+  user_id: '',
+  catatan: '',
+};
+
+function Perawatan({ filterAwal = 'Semua' }) {
   const [jadwal, setJadwal] = useState([]);
-  const [filter, setFilter] = useState('Semua');
+  const [filter, setFilter] = useState(filterAwal);
+  const [kataKunci, setKataKunci] = useState('');
   const [memuat, setMemuat] = useState(true);
-  const [pesan, setPesan] = useState('');
+  const [pesan, setPesan] = useState({ teks: '', tipe: '' });
   const [jadwalDiproses, setJadwalDiproses] = useState(null);
   const [daftarTanaman, setDaftarTanaman] = useState([]);
   const [daftarPekerja, setDaftarPekerja] = useState([]);
@@ -106,20 +137,10 @@ async function tambahJadwal(event) {
 
   async function muatJadwal() {
     setMemuat(true);
-    setPesan('');
-
     try {
-      const { data: authData, error: authError } =
-        await supabase.auth.getUser();
-
+      const { data: authData, error: authError } = await supabase.auth.getUser();
       if (authError) throw authError;
-
-      const pengguna = authData.user;
-
-      if (!pengguna) {
-        setPesan('Silakan login kembali.');
-        return;
-      }
+      if (!authData.user) { tampilPesan('Silakan login kembali.', 'error'); return; }
 
       const { data, error } = await supabase
         .from('jadwal_perawatan')
@@ -166,9 +187,8 @@ async function tambahJadwal(event) {
     }));
 
       setJadwal(daftar);
-    } catch (error) {
-      console.error('Gagal memuat jadwal:', error);
-      setPesan(`Gagal memuat jadwal: ${error.message}`);
+    } catch (err) {
+      tampilPesan('Gagal memuat jadwal: ' + err.message, 'error');
     } finally {
       setMemuat(false);
     }
@@ -179,70 +199,166 @@ async function tambahJadwal(event) {
       muatPilihanForm();
     }, []);
 
+  // ===== HELPER PESAN =====
+  function tampilPesan(teks, tipe = 'sukses') {
+    setPesan({ teks, tipe });
+    setTimeout(() => setPesan({ teks: '', tipe: '' }), 4000);
+  }
+
+  // ===== FORM =====
+  function bukaFormTambah() {
+    setIdDiedit(null);
+    setFormData(FORM_KOSONG);
+    setFormTerbuka(true);
+    setDetailTerbuka(null);
+  }
+
+  function bukaFormEdit(item) {
+    setIdDiedit(item.id);
+    setFormData({
+      tanaman_id: String(item.tanamanId),
+      kegiatan: item.kegiatan,
+      tanggal: item.tanggal,
+      waktu: item.waktu || '',
+      user_id: item.userId || '',
+      catatan: item.catatan,
+    });
+    setFormTerbuka(true);
+    setDetailTerbuka(null);
+  }
+
+  function tutupForm() {
+    setFormTerbuka(false);
+    setIdDiedit(null);
+    setFormData(FORM_KOSONG);
+  }
+
+  function handleFormChange(field, value) {
+    setFormData((f) => ({ ...f, [field]: value }));
+  }
+
+  async function simpanJadwal(event) {
+    event.preventDefault();
+    if (!formData.tanaman_id || !formData.kegiatan.trim() || !formData.tanggal || !formData.waktu || !formData.user_id) {
+      tampilPesan('Semua kolom wajib harus diisi.', 'error');
+      return;
+    }
+    setMenyimpan(true);
+    try {
+      const payload = {
+        tanaman_id: Number(formData.tanaman_id),
+        jenis_perawatan: formData.kegiatan.trim(),
+        kegiatan: formData.kegiatan.trim(),
+        tanggal: formData.tanggal,
+        waktu: formData.waktu,
+        user_id: formData.user_id,
+        catatan: formData.catatan.trim() || null,
+      };
+
+      if (idDiedit) {
+        const { error } = await supabase.from('jadwal_perawatan').update(payload).eq('id', idDiedit);
+        if (error) throw error;
+        tampilPesan('Jadwal berhasil diperbarui.');
+      } else {
+        const { error } = await supabase.from('jadwal_perawatan').insert({ ...payload, status: 'Belum' });
+        if (error) throw error;
+        tampilPesan('Jadwal perawatan berhasil ditambahkan.');
+      }
+
+      tutupForm();
+      await muatJadwal();
+      window.dispatchEvent(new Event('jadwal-berubah'));
+    } catch (err) {
+      tampilPesan('Gagal menyimpan jadwal: ' + err.message, 'error');
+    } finally {
+      setMenyimpan(false);
+    }
+  }
+
+  // ===== HAPUS =====
+  async function hapusJadwal(id) {
+    setIdHapus(id);
+    try {
+      const { error } = await supabase.from('jadwal_perawatan').delete().eq('id', id);
+      if (error) throw error;
+      setJadwal((d) => d.filter((j) => j.id !== id));
+      setKonfirmasiHapus(null);
+      setDetailTerbuka(null);
+      tampilPesan('Jadwal berhasil dihapus.');
+      window.dispatchEvent(new Event('jadwal-berubah'));
+    } catch (err) {
+      tampilPesan('Gagal menghapus jadwal: ' + err.message, 'error');
+    } finally {
+      setIdHapus(null);
+    }
+  }
+
+  // ===== UBAH STATUS =====
   async function ubahStatus(item) {
     if (jadwalDiproses !== null) return;
-
-    const statusLama = item.status;
-    const statusBaru =
-      statusLama === 'Selesai' ? 'Belum' : 'Selesai';
-
+    const statusBaru = item.status === 'Selesai' ? 'Belum' : 'Selesai';
     setJadwalDiproses(item.id);
-    setPesan('');
-
     try {
       const { data, error } = await supabase
         .from('jadwal_perawatan')
         .update({ status: statusBaru })
         .eq('id', item.id)
         .select('id, status');
-
       if (error) throw error;
-
-      // Pastikan database benar-benar mengembalikan baris yang diubah.
-      if (!data || data.length === 0) {
-        throw new Error(
-          'Status tidak berubah. Periksa izin pembaruan jadwal di Supabase (RLS).'
-        );
-      }
-
-      setJadwal((daftar) =>
-        daftar.map((jadwalItem) =>
-          jadwalItem.id === item.id
-            ? { ...jadwalItem, status: data[0].status }
-            : jadwalItem
-        )
-      );
-
-      setPesan(
-        statusBaru === 'Selesai'
-          ? 'Jadwal berhasil ditandai selesai.'
-          : 'Jadwal dikembalikan ke status belum selesai.'
-      );
-
-      // Beri tahu dashboard jika menggunakan event pembaruan.
+      if (!data || data.length === 0) throw new Error('Status tidak berubah. Periksa izin RLS di Supabase.');
+      setJadwal((d) => d.map((j) => (j.id === item.id ? { ...j, status: data[0].status } : j)));
+      tampilPesan(statusBaru === 'Selesai' ? 'Jadwal ditandai selesai ✓' : 'Jadwal dikembalikan ke belum selesai.');
       window.dispatchEvent(new Event('jadwal-berubah'));
-    } catch (error) {
-      console.error('Gagal mengubah status:', error);
-      setPesan(`Gagal mengubah status: ${error.message}`);
+    } catch (err) {
+      tampilPesan('Gagal mengubah status: ' + err.message, 'error');
     } finally {
       setJadwalDiproses(null);
     }
   }
 
-  const jadwalTampil = jadwal.filter((item) => {
-    if (filter === 'Semua') return true;
-    if (filter === 'Belum') return item.status === 'Belum';
-    return item.status === filter;
-  });
+  // ===== FILTER & STATISTIK =====
+  const hari_ini_str = new Date().toISOString().slice(0, 10);
 
-  const totalSelesai = jadwal.filter(
-    (item) => item.status === 'Selesai'
-  ).length;
+  const statistik = useMemo(() => {
+    const selesai = jadwal.filter((j) => j.status === 'Selesai').length;
+    const terlambat = jadwal.filter((j) => j.status !== 'Selesai' && j.tanggal < hari_ini_str).length;
+    const hariIni = jadwal.filter((j) => j.status !== 'Selesai' && j.tanggal === hari_ini_str).length;
+    return { total: jadwal.length, selesai, terlambat, hariIni, belum: jadwal.length - selesai };
+  }, [jadwal]);
 
-  const totalBelumSelesai = jadwal.filter(
-    (item) => item.status === 'Belum'
-  ).length;
+  const jadwalTampil = useMemo(() => {
+    let hasil = jadwal;
+    // Filter status
+    if (filter === 'Belum') hasil = hasil.filter((j) => j.status !== 'Selesai');
+    else if (filter === 'Selesai') hasil = hasil.filter((j) => j.status === 'Selesai');
+    else if (filter === 'Terlambat') hasil = hasil.filter((j) => j.status !== 'Selesai' && j.tanggal < hari_ini_str);
+    else if (filter === 'HariIni') hasil = hasil.filter((j) => j.tanggal === hari_ini_str && j.status !== 'Selesai');
+    // Pencarian
+    if (kataKunci.trim()) {
+      const q = kataKunci.trim().toLowerCase();
+      hasil = hasil.filter(
+        (j) =>
+          j.tanaman.toLowerCase().includes(q) ||
+          j.kegiatan.toLowerCase().includes(q) ||
+          j.lokasi.toLowerCase().includes(q) ||
+          j.penanggungJawab.toLowerCase().includes(q)
+      );
+    }
+    // Urutan: terlambat → hari ini → akan datang → selesai
+    return hasil.slice().sort((a, b) => {
+      const prioritas = (item) => {
+        if (item.status === 'Selesai') return 3;
+        if (item.tanggal < hari_ini_str) return 0;
+        if (item.tanggal === hari_ini_str) return 1;
+        return 2;
+      };
+      const pa = prioritas(a), pb = prioritas(b);
+      if (pa !== pb) return pa - pb;
+      return a.tanggal.localeCompare(b.tanggal);
+    });
+  }, [jadwal, filter, kataKunci]);
 
+  // ===== RENDER =====
   return (
     <section className="page-section">
     <header className="page-header">
@@ -259,10 +375,37 @@ async function tambahJadwal(event) {
       </button>
     </header>
 
-      {pesan && (
-        <p role="status" className="tanaman-feedback">
-          {pesan}
-        </p>
+      {/* PESAN FEEDBACK */}
+      {pesan.teks && (
+        <div role="status" className={`perawatan-feedback perawatan-feedback--${pesan.tipe}`}>
+          {pesan.tipe === 'sukses' ? '✓ ' : '⚠ '}{pesan.teks}
+        </div>
+      )}
+
+      {/* BANNER PENGINGAT */}
+      {!memuat && (statistik.terlambat > 0 || statistik.hariIni > 0) && (
+        <div className="pengingat-banner">
+          {statistik.terlambat > 0 && (
+            <div className="pengingat-item pengingat-item--merah" onClick={() => setFilter('Terlambat')} role="button" tabIndex={0}>
+              <span className="pengingat-ikon">🚨</span>
+              <div>
+                <strong>{statistik.terlambat} jadwal terlambat</strong>
+                <p>Belum selesai dan sudah melewati tanggal yang dijadwalkan.</p>
+              </div>
+              <span className="pengingat-lihat">Lihat →</span>
+            </div>
+          )}
+          {statistik.hariIni > 0 && (
+            <div className="pengingat-item pengingat-item--biru" onClick={() => setFilter('HariIni')} role="button" tabIndex={0}>
+              <span className="pengingat-ikon">📅</span>
+              <div>
+                <strong>{statistik.hariIni} jadwal hari ini</strong>
+                <p>Harus diselesaikan hari ini.</p>
+              </div>
+              <span className="pengingat-lihat">Lihat →</span>
+            </div>
+          )}
+        </div>
       )}
 
       {formTerbuka && (
@@ -385,37 +528,113 @@ async function tambahJadwal(event) {
 )}
 
       <div className="care-summary">
-        <article className="care-card">
+        <article className="care-card" onClick={() => setFilter('Semua')}>
           <span>Total Jadwal</span>
-          <h2>{jadwal.length}</h2>
+          <h2>{statistik.total}</h2>
         </article>
-
-        <article className="care-card">
+        <article className="care-card care-card--warning" onClick={() => setFilter('Terlambat')}>
+          <span>⚠ Terlambat</span>
+          <h2>{statistik.terlambat}</h2>
+        </article>
+        <article className="care-card care-card--info" onClick={() => setFilter('HariIni')}>
+          <span>📅 Hari Ini</span>
+          <h2>{statistik.hariIni}</h2>
+        </article>
+        <article className="care-card" onClick={() => setFilter('Belum')}>
           <span>Belum Selesai</span>
-          <h2>{totalBelumSelesai}</h2>
+          <h2>{statistik.belum}</h2>
         </article>
-
-        <article className="care-card">
-          <span>Selesai</span>
-          <h2>{totalSelesai}</h2>
+        <article className="care-card care-card--done" onClick={() => setFilter('Selesai')}>
+          <span>✓ Selesai</span>
+          <h2>{statistik.selesai}</h2>
         </article>
       </div>
 
+      {/* FORM TAMBAH / EDIT */}
+      {formTerbuka && (
+        <form className="schedule-form" onSubmit={simpanJadwal}>
+          <div className="schedule-form-header">
+            <h3>{idDiedit ? '✏️ Edit Jadwal Perawatan' : '➕ Tambah Jadwal Perawatan'}</h3>
+            <button type="button" className="form-close-btn" onClick={tutupForm} aria-label="Tutup form">✕</button>
+          </div>
+
+          <div className="schedule-form-grid">
+            <label>
+              Pilih Tanaman *
+              <select value={formData.tanaman_id} onChange={(e) => handleFormChange('tanaman_id', e.target.value)} required>
+                <option value="">Pilih tanaman</option>
+                {daftarTanaman.map((t) => (
+                  <option key={t.id} value={t.id}>{t.nama_tanaman} — {t.lokasi}</option>
+                ))}
+              </select>
+            </label>
+
+            <label>
+              Kegiatan Perawatan *
+              <input
+                type="text"
+                value={formData.kegiatan}
+                onChange={(e) => handleFormChange('kegiatan', e.target.value)}
+                placeholder="Contoh: Menyiram, Pemupukan, Pemangkasan"
+                list="saran-kegiatan"
+                required
+              />
+              <datalist id="saran-kegiatan">
+                <option value="Menyiram tanaman" />
+                <option value="Pemupukan rutin" />
+                <option value="Pemangkasan daun" />
+                <option value="Pengecekan hama" />
+                <option value="Penggantian media tanam" />
+                <option value="Pembersihan area tanam" />
+              </datalist>
+            </label>
+
+            <label>
+              Tanggal *
+              <input type="date" value={formData.tanggal} onChange={(e) => handleFormChange('tanggal', e.target.value)} required />
+            </label>
+
+            <label>
+              Waktu *
+              <input type="time" value={formData.waktu} onChange={(e) => handleFormChange('waktu', e.target.value)} required />
+            </label>
+
+            <label>
+              Pekerja yang Ditugaskan *
+              <select value={formData.user_id} onChange={(e) => handleFormChange('user_id', e.target.value)} required>
+                <option value="">Pilih pekerja</option>
+                {daftarPekerja.map((p) => (
+                  <option key={p.id} value={p.id}>{p.nama_lengkap}</option>
+                ))}
+              </select>
+            </label>
+
+            <label>
+              Catatan
+              <textarea
+                value={formData.catatan}
+                onChange={(e) => handleFormChange('catatan', e.target.value)}
+                placeholder="Instruksi khusus, kondisi tanaman, dsb. (opsional)"
+                rows={3}
+              />
+            </label>
+          </div>
+
+          <div className="schedule-form-actions">
+            <button type="button" className="cancel-btn" onClick={tutupForm}>Batal</button>
+            <button type="submit" className="save-schedule-btn" disabled={menyimpan}>
+              {menyimpan ? 'Menyimpan...' : idDiedit ? 'Perbarui Jadwal' : 'Simpan Jadwal'}
+            </button>
+          </div>
+        </form>
+      )}
+
+      {/* PANEL TABEL */}
       <section className="panel care-panel">
         <div className="panel-heading">
           <div>
             <h3>Daftar Jadwal</h3>
           </div>
-
-          <select
-            value={filter}
-            onChange={(event) => setFilter(event.target.value)}
-            aria-label="Filter status jadwal"
-          >
-            <option value="Semua">Semua Status</option>
-            <option value="Belum">Belum Selesai</option>
-            <option value="Selesai">Selesai</option>
-          </select>
         </div>
 
         <div className="care-table-wrap">
@@ -516,6 +735,31 @@ async function tambahJadwal(event) {
           )}
         </div>
       </section>
+
+      {/* MODAL KONFIRMASI HAPUS */}
+      {konfirmasiHapus && (
+        <div className="modal-overlay" role="dialog" aria-modal="true" aria-label="Konfirmasi hapus jadwal">
+          <div className="modal-box">
+            <h3>🗑️ Hapus Jadwal?</h3>
+            <p>
+              Jadwal <strong>"{konfirmasiHapus.kegiatan}"</strong> untuk tanaman{' '}
+              <strong>{konfirmasiHapus.tanaman}</strong> pada{' '}
+              <strong>{formatTanggal(konfirmasiHapus.tanggal)}</strong> akan dihapus secara permanen.
+            </p>
+            <div className="modal-actions">
+              <button type="button" className="cancel-btn" onClick={() => setKonfirmasiHapus(null)}>Batal</button>
+              <button
+                type="button"
+                className="action-btn action-delete-confirm"
+                onClick={() => hapusJadwal(konfirmasiHapus.id)}
+                disabled={idHapus === konfirmasiHapus.id}
+              >
+                {idHapus === konfirmasiHapus.id ? 'Menghapus...' : 'Ya, Hapus'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
