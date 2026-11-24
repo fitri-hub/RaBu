@@ -17,8 +17,9 @@ RaBu adalah aplikasi berbasis web yang dirancang untuk membantu komunitas lingku
 - **Dashboard:** Halaman utama setelah pengguna berhasil masuk.
 - **Data Tanaman:** Mengelola informasi dan data tanaman.
 - **Perawatan:** Membantu pencatatan dan pengelolaan perawatan tanaman.
-- **Pemulihan Tanaman:** Fitur yang berkaitan dengan penanganan dan pemulihan kondisi tanaman.
-- **Penanggung Jawab:** Mengelola informasi pihak yang bertanggung jawab terhadap tanaman.
+- **Pemulihan Tanaman:** Mencatat kondisi tanaman serta proses penanganan dan pemulihannya.
+- **Penanggung Jawab:** Mengelola informasi pengelola yang bertanggung jawab terhadap tanaman.
+- **Estafet Pengelola:** Memfasilitasi pergantian tanggung jawab pengelolaan tanaman dari satu pengelola kepada pengelola berikutnya melalui proses serah terima.
 
 ## Teknologi yang Digunakan
 
@@ -60,8 +61,8 @@ Untuk menjalankan aplikasi melalui Docker, siapkan Docker Desktop atau Docker En
 4. Buat file `.env.local` di direktori utama proyek dengan konfigurasi berikut:
 
    ```env
-   VITE_SUPABASE_URL=(https://bevqvhyciukudrmaawto.supabase.co)
-   VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_ZJHHxuiN_OyzGT1wXAU_Gw_U6sjYUQ5
+   VITE_SUPABASE_URL=https://vzeovowvbcoefaznrrlq.supabase.co
+   VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_jqgYG8pHaMjQvGCVXIK_xA_HZ0p79Zf
    ```
 
 5. Jalankan aplikasi:
@@ -74,26 +75,31 @@ Untuk menjalankan aplikasi melalui Docker, siapkan Docker Desktop atau Docker En
 
 ## Menjalankan dengan Docker
 
-Image Docker RaBu tersedia melalui repository publik berikut:
+Aplikasi RaBu dapat dijalankan menggunakan Docker. Proses pembangunan aplikasi menggunakan Node.js, sedangkan Nginx digunakan sebagai web server untuk menjalankan hasil build aplikasi.
 
-[**RaBu di Docker Hub**](https://hub.docker.com/r/fitri947/rabu-uts)
+### 1. Membangun Docker Image
+Jalankan perintah berikut di terminal pada direktori utama proyek:
 
-Tag image untuk pengumpulan UTS: `latest`.
+```powershell
+docker build --no-cache --build-arg VITE_SUPABASE_URL="//vzeovowvbcoefaznrrlq.supabase.co" --build-arg VITE_SUPABASE_PUBLISHABLE_KEY="sb_publishable_jqgYG8pHaMjQvGCVXIK_xA_HZ0p79Zf" -t rabu-app .
+ ```
 
-Untuk mengunduh image dan menjalankan aplikasi:
+### 2. Menjalankan Container
+Setelah proses build berhasil, jalankan perintah berikut:
 
-```bash
-docker pull fitri947/rabu-uts:latest
-docker run -d --name rabu-container -p 8080:80 fitri947/rabu-uts:latest
-```
+```powershell
+docker run -d --name rabu-container-baru -p 8080:80 rabu-app
+ ```
+### 3. Mengakses Aplikasi
+Setelah container berhasil berjalan, buka aplikasi melalui browser:
 
-Setelah container berjalan, buka alamat berikut di browser:
-
-`http://localhost:8080`
+[http://localhost:8080]
 
 ## Dokumentasi Docker
 
-Proyek ini menggunakan Dockerfile untuk membangun image aplikasi. Hasil build dikemas dan dijalankan menggunakan Nginx. Image tersedia pada repository publik Docker Hub yang tercantum di atas.
+Proyek ini menggunakan Dockerfile dengan metode multi-stage build. Node.js digunakan untuk membangun aplikasi React + Vite, sedangkan Nginx digunakan sebagai web server untuk menjalankan hasil build aplikasi.
+
+Docker digunakan untuk mempermudah proses pembangunan dan menjalankan aplikasi dalam container sehingga aplikasi dapat dijalankan di lingkungan yang berbeda dengan konfigurasi yang konsisten.
 
 ## Anggota
 
